@@ -1,4 +1,4 @@
-package com.acme.jga.spi.jdbc;
+package com.acme.jga.spi.jdbc.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

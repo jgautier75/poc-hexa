@@ -1,4 +1,4 @@
-package com.acme.jga.spi.jdbc;
+package com.acme.jga.spi.jdbc.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

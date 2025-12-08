@@ -2,7 +2,7 @@ package com.acme.jga.spi.adapter.tenant;
 
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.output.functions.tenants.TenantCreate;
+import com.acme.jga.domain.output.functions.tenants.TenantCreateOutput;
 import com.acme.jga.spi.dao.tenant.api.TenantsDao;
 import com.acme.jga.spi.jdbc.model.RdbmsTenantCreate;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class TenantCreateImpl implements TenantCreate {
+public class TenantCreateOutputImpl implements TenantCreateOutput {
     private final TenantsDao tenantsDao;
 
-    public TenantCreateImpl(TenantsDao tenantsDao) {
+    public TenantCreateOutputImpl(TenantsDao tenantsDao) {
         this.tenantsDao = tenantsDao;
     }
 

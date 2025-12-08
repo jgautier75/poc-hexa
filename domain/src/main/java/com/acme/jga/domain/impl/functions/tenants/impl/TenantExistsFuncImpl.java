@@ -1,4 +1,24 @@
 package com.acme.jga.domain.impl.functions.tenants.impl;
 
-public class TenantExistsFuncImpl {
+import com.acme.jga.domain.annotations.DomainService;
+import com.acme.jga.domain.impl.functions.tenants.api.TenantExistsFunc;
+import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
+
+@DomainService
+public class TenantExistsFuncImpl implements TenantExistsFunc {
+    private final TenantExistsOutput tenantExistsOutput;
+
+    public TenantExistsFuncImpl(TenantExistsOutput tenantExistsOutput) {
+        this.tenantExistsOutput = tenantExistsOutput;
+    }
+
+    @Override
+    public boolean existByCode(String code) {
+        return tenantExistsOutput.existsByCode(code);
+    }
+
+    @Override
+    public boolean existsByExternalId(String externalId) {
+        return tenantExistsOutput.existsByExternalId(externalId);
+    }
 }

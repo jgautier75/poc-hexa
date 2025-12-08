@@ -1,4 +1,4 @@
-package com.acme.jga.spi.jdbc;
+package com.acme.jga.domain.model.sorting;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

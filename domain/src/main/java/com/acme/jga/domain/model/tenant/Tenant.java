@@ -1,9 +1,9 @@
-package com.acme.jga.domain.model;
+package com.acme.jga.domain.model.tenant;
 
-public record Tenant(Long internalId, String externalId, String code, String label,
-                     TenantStatus tenantStatus) implements ExternalId {
+public record Tenant(TenantId tenantId, String code, String label,
+                     TenantStatus tenantStatus) implements TenantId {
     @Override
-    public String getExternalId() {
-        return externalId;
+    public String get() {
+        return tenantId.get();
     }
 }

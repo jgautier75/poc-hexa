@@ -1,4 +1,4 @@
-package com.acme.jga.spi.model;
+package com.acme.jga.spi.jdbc.model;
 
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.TenantStatus;

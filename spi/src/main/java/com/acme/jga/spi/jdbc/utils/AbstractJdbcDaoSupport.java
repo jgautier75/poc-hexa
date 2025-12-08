@@ -1,4 +1,4 @@
-package com.acme.jga.spi.jdbc;
+package com.acme.jga.spi.jdbc.utils;
 
 import com.acme.jga.domain.model.sorting.OrderByClause;
 import org.postgresql.util.PGobject;
@@ -102,11 +102,9 @@ public abstract class AbstractJdbcDaoSupport {
     protected String buildFullQuery(String baseQuery, List<WhereClause> whereClauseList,
                                     List<OrderByClause> orderByClauseList, String... groupByClause) {
         StringBuilder queryBuilder = new StringBuilder(baseQuery);
-
         appendWhereClause(queryBuilder, whereClauseList);
         appendGroupByClause(queryBuilder, groupByClause);
         appendOrderByClause(queryBuilder, orderByClauseList);
-
         return queryBuilder.toString();
     }
 

@@ -1,4 +1,4 @@
-package com.acme.jga.app.rest;
+package com.acme.jga;
 
 public class PocApplication {
 }

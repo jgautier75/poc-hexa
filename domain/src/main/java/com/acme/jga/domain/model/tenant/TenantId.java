@@ -1,5 +1,5 @@
-package com.acme.jga.domain.model;
+package com.acme.jga.domain.model.tenant;
 
-public interface ExternalId {
-    String getExternalId();
+public interface TenantId {
+    String get();
 }
