@@ -4,8 +4,8 @@ import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
-import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
+import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantId;
@@ -25,9 +25,9 @@ public class TenantFindFuncImpl implements TenantFindInput {
     public Tenant findByCode(String code) throws FunctionalException {
 
         // Ensure tenant exists
-        boolean exists = tenantExistsFunc.existByCode(code);
+        boolean exists = tenantExistsFunc.existsByCode(code);
         if (!exists) {
-            throwException(FunctionalErrors.NOT_FOUND.name(), "tenant.not_found", code);
+            throwException(code);
         }
 
         // Fetch tenant
@@ -40,14 +40,14 @@ public class TenantFindFuncImpl implements TenantFindInput {
         // Ensure tenant exists
         boolean exists = tenantExistsFunc.existsByExternalId(tenantId.get());
         if (!exists) {
-            throwException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), "tenant.not_found", tenantId.get());
+            throwException(tenantId.get());
         }
 
-        return null;
+        return tenantFindOutput.findByExternalId(tenantId);
     }
 
-    private void throwException(String scope, String code, String key, Object... args) throws FunctionalException {
-        throw new FunctionalException(scope, key, BundleFactory.getMessage(code, args));
+    private void throwException(String args) throws FunctionalException {
+        throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", args));
     }
 
 }
