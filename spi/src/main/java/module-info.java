@@ -1,11 +1,13 @@
 module spi {
     requires domain;
-    requires spring.context;
     requires java.sql;
-    requires spring.jdbc;
-    requires org.slf4j;
-    requires org.postgresql.jdbc;
-    requires static lombok;
-    requires spring.core;
+    exports com.acme.jga.spi.dao.tenant.api;
+    exports com.acme.jga.spi.dao.tenant.impl;
+    exports com.acme.jga.spi.jdbc.model;
+    requires spring.context;
     requires spring.tx;
+    requires static lombok;
+    requires spring.jdbc;
+    requires org.postgresql.jdbc;
+    requires org.slf4j;
 }

@@ -1,4 +1,4 @@
-package com.acme.jga.domain.impl.functions.tenants.impl;
+package com.acme.jga.domain.functions.tenants.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.input.functions.tenants.TenantListInput;

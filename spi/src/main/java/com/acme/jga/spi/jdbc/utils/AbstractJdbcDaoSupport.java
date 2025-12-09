@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -176,7 +175,7 @@ public abstract class AbstractJdbcDaoSupport {
             if (whereClause.getParamName() != null && whereClause.getParamValue() != null) {
                 params.put(whereClause.getParamName(), whereClause.getParamValue());
             }
-            if (!CollectionUtils.isEmpty(whereClause.getParamNames()) && !CollectionUtils.isEmpty(whereClause.getParamValues())) {
+            if (whereClause.getParamNames()!=null && whereClause.getParamValues()!=null) {
                 int inc = 0;
                 for (var pName : whereClause.getParamNames()) {
                     params.put(pName, whereClause.getParamValues().get(inc));

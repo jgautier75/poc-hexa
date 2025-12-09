@@ -10,6 +10,8 @@
         <module>domain</module>
         <module>spi</module>
         <module>app</module>
+        <module>db-migration</module>
+        <module>test-spi</module>
     </modules>
     <properties>
         <java.version>25</java.version>
@@ -89,4 +91,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 </project>

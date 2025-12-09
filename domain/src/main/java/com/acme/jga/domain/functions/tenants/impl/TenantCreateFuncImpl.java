@@ -1,10 +1,11 @@
-package com.acme.jga.domain.impl.functions.tenants.impl;
+package com.acme.jga.domain.functions.tenants.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
+import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.i18n.BundleFactory;
-import com.acme.jga.domain.impl.functions.tenants.api.TenantExistsFunc;
+import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
 import com.acme.jga.domain.input.functions.tenants.TenantCreateInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
@@ -26,7 +27,7 @@ public class TenantCreateFuncImpl implements TenantCreateInput {
     public TenantId create(Tenant tenant) throws FunctionalException {
         boolean alreadyExists = tenantExistsFunc.existByCode(tenant.code());
         if (alreadyExists) {
-            throw new FunctionalException(BundleFactory.getMessage("tenant.already_exist", tenant.code()), FunctionalErrors.NOT_FOUND.name());
+            throw new FunctionalException(Scope.TENANT.name(),FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.already_exist", tenant.code()));
         }
         CompositeId compositeId = tenantCreateOutput.save(tenant);
         return compositeId::externalId;

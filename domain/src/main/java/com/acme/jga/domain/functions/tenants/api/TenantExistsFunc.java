@@ -1,4 +1,4 @@
-package com.acme.jga.domain.impl.functions.tenants.api;
+package com.acme.jga.domain.functions.tenants.api;
 
 public interface TenantExistsFunc {
     boolean existByCode(String code);

@@ -16,6 +16,8 @@ public interface TenantsDao {
 
     RdbmsTenant findByCode(String code);
 
+    RdbmsTenant findByExternalId(String externalId);
+
     List<RdbmsTenant> findAll();
 
     boolean update(RdbmsTenant tenant);

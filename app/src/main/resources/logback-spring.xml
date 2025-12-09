@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{ISO8601} %-5level [%thread] - %msg%n%throwable</pattern>
+        </encoder>
+    </appender>
+    <appender name="APP-MAIN-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./poc-st.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>./poc-st.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{ISO8601} %-5level [%thread] - %msg%n%throwable</pattern>
+        </encoder>
+    </appender>
+    <root level="info">
+        <appender-ref ref="Console" />
+    </root>
+   <logger name="org.springframework.jdbc" level="info" additivity="false">
+        <appender-ref ref="Console" />
+    </logger>
+    <logger name="org.springframework" level="off" additivity="false">
+        <appender-ref ref="Console" />
+    </logger>
+    <logger name="com.acme" level="info" additivity="false">
+        <appender-ref ref="Console" />
+        <appender-ref ref="APP-MAIN-FILE" />
+    </logger>
+    <logger name="org.jboss" level="off" additivity="false">
+        <appender-ref ref="Console" />
+    </logger>
+    <logger name="org.apache" level="off" additivity="false">
+        <appender-ref ref="Console" />
+    </logger>
+    <logger name="org.postgresql" level="off" additivity="false">
+        <appender-ref ref="Console" />
+    </logger>
+    <logger name="com.zaxxer" level="off" additivity="false">
+        <appender-ref ref="Console" />
+    </logger>
+    <logger name="app-logger" level="debug" additivity="false">
+        <appender-ref ref="Console" />
+        <appender-ref ref="APP-MAIN-FILE" />
+    </logger>
+</configuration>

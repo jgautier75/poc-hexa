@@ -1,10 +1,7 @@
 package com.acme.jga.rest.services.tenants.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.input.functions.tenants.TenantCreateInput;
-import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
-import com.acme.jga.domain.input.functions.tenants.TenantListInput;
-import com.acme.jga.domain.input.functions.tenants.TenantUpdateInput;
+import com.acme.jga.domain.input.functions.tenants.*;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantId;
 import com.acme.jga.domain.shared.StreamUtil;
@@ -23,13 +20,15 @@ public class AppTenantsServiceImpl implements AppTenantsService {
     private final TenantFindInput tenantFindInput;
     private final TenantListInput tenantListInput;
     private final TenantUpdateInput tenantUpdateInput;
+    private final TenantDeleteInput tenantDeleteInput;
 
     public AppTenantsServiceImpl(TenantCreateInput tenantCreateInput, TenantFindInput tenantFindInput,
-                                 TenantListInput tenantListInput, TenantUpdateInput tenantUpdateInput) {
+                                 TenantListInput tenantListInput, TenantUpdateInput tenantUpdateInput, TenantDeleteInput tenantDeleteInput) {
         this.tenantCreateInput = tenantCreateInput;
         this.tenantFindInput = tenantFindInput;
         this.tenantListInput = tenantListInput;
         this.tenantUpdateInput = tenantUpdateInput;
+        this.tenantDeleteInput = tenantDeleteInput;
     }
 
     @Override
@@ -59,6 +58,6 @@ public class AppTenantsServiceImpl implements AppTenantsService {
 
     @Override
     public boolean deleteTenant(String uid) throws FunctionalException {
-        return false;
+        return tenantDeleteInput.deleteTenant(() -> uid);
     }
 }

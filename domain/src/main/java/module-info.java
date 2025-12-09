@@ -6,6 +6,6 @@ module domain {
     exports com.acme.jga.domain.annotations to app, spi;
     exports com.acme.jga.domain.model.tenant to app, spi;
     exports com.acme.jga.domain.model.sorting to app, spi;
-    exports com.acme.jga.domain.model.generic to spi;
+    exports com.acme.jga.domain.model.generic to app, spi;
     exports com.acme.jga.domain.shared to app, spi;
 }
