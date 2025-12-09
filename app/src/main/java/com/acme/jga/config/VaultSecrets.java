@@ -20,8 +20,6 @@ public class VaultSecrets {
 
     @Bean
     public CryptoEncoder cryptoEngine() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        CryptoEncoder cryptoEngine = new CryptoEncoder();
-        cryptoEngine.initCrypto(Objects.requireNonNull(env.getProperty("cipherKey")));
-        return cryptoEngine;
+        return new CryptoEncoder(Objects.requireNonNull(env.getProperty("cipherKey")));
     }
 }

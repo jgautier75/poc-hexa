@@ -97,8 +97,7 @@ app:
     errorPath: "./errors"
     otlp-endpoint: http://localhost:4317
     otlp-push-frequency: 5
-    vault-path: dev-secrets
-    vault-secret: creds
+    vault-path: dev-secrets/creds
   debugging:
     forceDebugMode: "false"
     headerName: "X-APP-DEBUG"

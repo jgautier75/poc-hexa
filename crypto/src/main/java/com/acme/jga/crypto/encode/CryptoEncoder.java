@@ -12,9 +12,9 @@ import java.util.Base64;
 public class CryptoEncoder {
 
     private static final String ALGORITHM = "AES";
-    private Cipher encodingCipher;
+    private final Cipher encodingCipher;
 
-    public void initCrypto(String secretKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    public CryptoEncoder(String secretKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
         this.encodingCipher = Cipher.getInstance(ALGORITHM);
         this.encodingCipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);

@@ -71,11 +71,10 @@ public class UserSpiProvider implements UserLookupProvider, UserStorageProvider,
                     .token(getEnvVariable(FederationConstants.VAULT_TOKEN))
                     .build();
             Vault vault = Vault.create(vaultConfig, FederationConstants.VAULT_VERSION);
-            this.cryptoDecoder = new CryptoDecoder();
             String secretPath = getEnvVariable(FederationConstants.VAULT_PATH) + "/" + getEnvVariable(FederationConstants.VAULT_SECRETS);
             LogicalResponse logicalResponse = vault.logical().read(secretPath);
             Map<String, String> responseData = logicalResponse.getData();
-            this.cryptoDecoder.initCrypto(responseData.get(FederationConstants.VAULT_CIPHER_KEY));
+            this.cryptoDecoder = new CryptoDecoder(responseData.get(FederationConstants.VAULT_CIPHER_KEY));
         } catch (VaultException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException(e);
         }

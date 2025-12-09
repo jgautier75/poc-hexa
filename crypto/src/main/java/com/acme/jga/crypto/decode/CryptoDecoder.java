@@ -12,9 +12,9 @@ import java.util.Base64;
 public class CryptoDecoder {
 
     private static final String ALGORITHM = "AES";
-    private Cipher decodingCipher;
+    private final Cipher decodingCipher;
 
-    public void initCrypto(String secretKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    public CryptoDecoder(String secretKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
         this.decodingCipher = Cipher.getInstance(ALGORITHM);
         this.decodingCipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
