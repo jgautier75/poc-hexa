@@ -13,11 +13,14 @@
         <module>db-migration</module>
         <module>test-spi</module>
         <module>keycloak-spi</module>
+        <module>auditing</module>
+        <module>crypto</module>
     </modules>
     <properties>
         <java.version>25</java.version>
         <project-encoding>UTF-8</project-encoding>
         <lombok-version>1.18.42</lombok-version>
+        <protobuf-version>4.33.1</protobuf-version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>

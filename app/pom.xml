@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>app</artifactId>
+    <name>Exposition Layers (Rest APP, Kafka Consumer)</name>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -21,6 +22,11 @@
         <dependency>
             <groupId>com.acme.jga</groupId>
             <artifactId>domain</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.acme.jga</groupId>
+            <artifactId>crypto</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
@@ -42,6 +48,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-vault-config</artifactId>
+            <version>5.0.0</version>
         </dependency>
     </dependencies>
 

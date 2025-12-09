@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>db-migration</artifactId>
+    <name>RDBMS Migrations (PostgreSQL - Liquibase)</name>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>

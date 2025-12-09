@@ -33,3 +33,6 @@ bin/
 /db-migration/target/**/*.*
 /spi/target/**/*.*
 /test-spi/target/**/*.*
+/auditing/target/**/*.*
+/crypto/target/**/*.*
+/keycloak-spi/**/*.*
