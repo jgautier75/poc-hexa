@@ -12,6 +12,7 @@
         <module>app</module>
         <module>db-migration</module>
         <module>test-spi</module>
+        <module>keycloak-spi</module>
     </modules>
     <properties>
         <java.version>25</java.version>
