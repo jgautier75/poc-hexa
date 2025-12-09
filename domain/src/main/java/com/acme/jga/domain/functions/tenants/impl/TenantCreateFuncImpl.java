@@ -25,9 +25,9 @@ public class TenantCreateFuncImpl implements TenantCreateInput {
 
     @Override
     public TenantId create(Tenant tenant) throws FunctionalException {
-        boolean alreadyExists = tenantExistsFunc.existByCode(tenant.code());
+        boolean alreadyExists = tenantExistsFunc.existsByCode(tenant.code());
         if (alreadyExists) {
-            throw new FunctionalException(Scope.TENANT.name(),FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.already_exist", tenant.code()));
+            throw new FunctionalException(Scope.TENANT.name(),FunctionalErrors.ALREADY_EXISTS.name(), BundleFactory.getMessage("tenant.already_exist", tenant.code()));
         }
         CompositeId compositeId = tenantCreateOutput.save(tenant);
         return compositeId::externalId;

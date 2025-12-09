@@ -13,7 +13,7 @@ public class TenantExistsFuncImpl implements TenantExistsFunc {
     }
 
     @Override
-    public boolean existByCode(String code) {
+    public boolean existsByCode(String code) {
         return tenantExistsOutput.existsByCode(code);
     }
 
