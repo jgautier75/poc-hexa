@@ -13,8 +13,8 @@
     <name>SPI (Infrastructure) Layer</name>
 
     <properties>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${jdk.version}</maven.compiler.source>
+        <maven.compiler.target>${jdk.version}</maven.compiler.target>
         <project.build.sourceEncoding>${project-encoding}</project.build.sourceEncoding>
     </properties>
 
