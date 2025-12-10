@@ -1,6 +1,5 @@
 package com.acme.jga.spi.kafka.impl;
 
-
 import com.acme.jga.auditing.events.protobuf.Event;
 import com.acme.jga.spi.kafka.KafkaConsumerProvider;
 import com.acme.jga.spi.kafka.utils.KafkaConsumerConstants;
@@ -45,7 +44,7 @@ public class KafkaConsumerProviderImpl implements KafkaConsumerProvider {
      * Start kafka consumer.
      */
     public void startKafkaConsumer() {
-        Thread.ofVirtual().start(() -> {
+        new Thread(() -> {
             this.kafkaConsumer = new KafkaConsumer<>(consumerProperties());
             kafkaConsumer.subscribe(List.of(getEnvVariable(KafkaConsumerConstants.TOPIC_NAME)));
             while (true) {
@@ -53,7 +52,7 @@ public class KafkaConsumerProviderImpl implements KafkaConsumerProvider {
                         .poll(Duration.ofMillis(POLL_DURATION));
                 processRecords(consumerRecords);
             }
-        });
+        }).start();        
     }
 
     /**
@@ -66,18 +65,20 @@ public class KafkaConsumerProviderImpl implements KafkaConsumerProvider {
         List<String> eventTenants = new ArrayList<>();
         List<String> knownTenants = new ArrayList<>();
 
-        StreamSupport.stream(consumerRecords.records(getEnvVariable(KafkaConsumerConstants.TOPIC_NAME)).spliterator(), false).forEach(record -> {
-            try {
-                Event.AuditEventMessage auditEventMessage = Event.AuditEventMessage.newBuilder().build()
-                        .getParserForType().parseFrom(record.value().toByteArray());
-                if (isUserUpdateEvent(auditEventMessage)) {
-                    userEvents.add(auditEventMessage);
-                    eventTenants.add(auditEventMessage.getScope().getTenantCode());
-                }
-            } catch (InvalidProtocolBufferException e) {
-                LOGGER.error("Error parsing event", e);
-            }
-        });
+        StreamSupport
+                .stream(consumerRecords.records(getEnvVariable(KafkaConsumerConstants.TOPIC_NAME)).spliterator(), false)
+                .forEach(record -> {
+                    try {
+                        Event.AuditEventMessage auditEventMessage = Event.AuditEventMessage.newBuilder().build()
+                                .getParserForType().parseFrom(record.value().toByteArray());
+                        if (isUserUpdateEvent(auditEventMessage)) {
+                            userEvents.add(auditEventMessage);
+                            eventTenants.add(auditEventMessage.getScope().getTenantCode());
+                        }
+                    } catch (InvalidProtocolBufferException e) {
+                        LOGGER.error("Error parsing event", e);
+                    }
+                });
 
         eventTenants.forEach(tenantName -> {
             if (!knownTenants.contains(tenantName)) {
@@ -193,7 +194,8 @@ public class KafkaConsumerProviderImpl implements KafkaConsumerProvider {
     }
 
     private boolean isUserUpdateEvent(Event.AuditEventMessage auditEventMessage) {
-        return KafkaConsumerConstants.EVENT_USER == auditEventMessage.getTarget().getNumber() && KafkaConsumerConstants.EVENT_UPDATE.equals(auditEventMessage.getAction().name());
+        return KafkaConsumerConstants.EVENT_USER == auditEventMessage.getTarget().getNumber()
+                && KafkaConsumerConstants.EVENT_UPDATE.equals(auditEventMessage.getAction().name());
     }
 
 }
