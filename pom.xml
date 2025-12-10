@@ -17,7 +17,7 @@
         <module>crypto</module>
     </modules>
     <properties>
-        <java.version>25</java.version>
+        <jdk.version>25</jdk.version>
         <project-encoding>UTF-8</project-encoding>
         <lombok-version>1.18.42</lombok-version>
         <protobuf-version>4.33.1</protobuf-version>
@@ -36,8 +36,8 @@
                     <version>3.14.1</version>
                     <configuration>
                         <encoding>UTF-8</encoding>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
+                        <source>${jdk.version}</source>
+                        <target>${jdk.version}</target>
                         <forceLegacyJavacApi>true</forceLegacyJavacApi>
                         <annotationProcessorPaths>
                             <path>
@@ -84,6 +84,28 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>${jdk.version}</version>
+                            <vendor>graalvm</vendor>
+                        </jdk>
+                    </toolchains>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
     <dependencyManagement>
         <dependencies>

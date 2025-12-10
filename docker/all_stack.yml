@@ -1,4 +1,3 @@
-version: "3.1"
 services:
   poc-hexa-openbao:
     image: quay.io/openbao/openbao:${DOCKER_OPENBAO_VERSION}
@@ -6,7 +5,10 @@ services:
       BAO_DEV_ROOT_TOKEN_ID: ${OPENBAO_TOKEN}
       OPENBAO_SKIP_VERIFY: "true"
     volumes:
-      - ./poc-hexa-openbao/config.hcl:/openbao/config/config.hcl
+      - type: bind
+        source: ${PWD}/poc-hexa-openbao/config.hcl
+        target: /openbao/config/config.hcl
+      #- ./poc-hexa-openbao/config.hcl:/openbao/config/config.hcl
     ports:
       - 8200:8200
     labels:
@@ -23,13 +25,15 @@ services:
       CREDENTIALS: ${OPENBAO_CREDENTIALS}
       CIPHER_KEY: ${APP_CIPHER_KEY}
     volumes:
-      - ./poc-hexa-openbao/vault_se_init.sh:/opt/vault_se_init.sh:rwx,chmod=777
+      - type: bind
+        source: ${PWD}/init-openbao/vault_se_init.sh
+        target: /opt/vault_se_init.sh
     entrypoint: ["./opt/vault_se_init.sh"]
+    #entrypoint: ["tail", "-f", "/dev/null"]
     labels:
       - com.acme.jga.poc.hexa=poc-hexa-init-openbao
     networks:
       - poc-hexa-net
-    #entrypoint: ["tail", "-f", "/dev/null"]
   poc-hexa-app-storage:
     image: postgres:${DOCKER_POSTGRESQL}
     volumes:
@@ -156,14 +160,18 @@ services:
     environment:
       TOPIC: ${KAFKA_TOPIC_NAME}
       KAFKA_CLIENT: ${KAFKA_CLIENT_VERSION}
+    #volumes:
+      #- ./poc-hexa-kafka-init/init_topic.sh:/opt/init_topic.sh:rwx,chmod=777
     volumes:
-      - ./poc-hexa-kafka-init/init_topic.sh:/opt/init_topic.sh:rwx,chmod=777
+      - type: bind
+        source: ${PWD}/init-kafka/init_topic.sh
+        target: /opt/init_topic.sh
     entrypoint: [ "./opt/init_topic.sh" ]
+    #entrypoint: ["tail", "-f", "/dev/null"]
     labels:
       - com.acme.jga.poc.hexa=poc-hexa-init-kafka
     networks:
       - poc-hexa-net
-    #entrypoint: ["tail", "-f", "/dev/null"]
   poc-hexa-keycloak:
     image: quay.io/keycloak/keycloak:${DOCKER_KEYCLOAK_VERSION}
     # image: keycloak-with-spi:1.0.0
@@ -200,9 +208,11 @@ services:
       vault-path: ${OPENBAO_ROOT_SECRETS}
       vault-secrets: ${OPENBAO_CREDENTIALS}
     volumes:
-      - ./poc-hexa-realms:/opt/keycloak/data/import
-      - ./poc-hexa-providers:/opt/keycloak/providers
-      - ./poc-hexa-kc-init/setupFederation.sh:/opt/keycloak/bin/setupFederation.sh
+      - type: bind
+        source: ${PWD}/poc-hexa-kc-init/setupFederation.sh
+        target: /opt/keycloak/bin/setupFederation.sh
+      - ${PWD}/poc-hexa-realms:/opt/keycloak/data/import
+      - ${PWD}/poc-hexa-providers:/opt/keycloak/providers
       #- ./poc-libs/kafka-clients-3.9.0.jar:/opt/keycloak/lib/lib/main/kafka-clients-3.9.0.jar
     #command: ["--debug","start-dev","--import-realm", "--http-port", "7080", "--https-port", "7443","--log-level=DEBUG","-Djdk.httpclient.HttpClient.log=all"]
     command: [ "start-dev", "--import-realm", "--http-port", "7080", "--https-port", "7443" ]

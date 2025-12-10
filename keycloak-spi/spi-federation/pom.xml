@@ -13,6 +13,7 @@
     <name>Keycloak User Federation Spi</name>
 
     <properties>
+        <jdk.version>21</jdk.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>${project-encoding}</project.build.sourceEncoding>
@@ -37,7 +38,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
                 <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <forceLegacyJavacApi>true</forceLegacyJavacApi>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -45,6 +51,26 @@
                             <version>${lombok-version}</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>${jdk.version}</version>
+                            <vendor>temurin</vendor>
+                        </jdk>
+                    </toolchains>
                 </configuration>
             </plugin>
         </plugins>

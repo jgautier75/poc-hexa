@@ -7,11 +7,11 @@ MYIP=$(hostname -I | awk '{print $1}')
 #echo "Copying spi dependencies in poc-libs directory mounted on /opt/keycloak/lib/lib/main"
 #cp  ~/.m2/repository/org/apache/kafka/kafka-clients/4.1.1/kafka-clients-4.1.1.jar poc-libs/kafka-clients-4.1.1.jar
 
-#echo "Copying spi-user-storage in poc-providers"
-#cp ../spi-user-storage/target/spi-user-storage-1.0.0-SNAPSHOT.jar poc-providers/spi-user-federation.jar
+echo "Copying spi-federation in poc-providers"
+cp ../keycloak-spi/spi-federation/target/spi-federation-1.0.0-SNAPSHOT.jar poc-hexa-providers/spi-federation.jar
 
-#echo "Copying spi-user-storage in poc-providers"
-#cp ../spi-kafka/target/spi-kafka-1.0.0-SNAPSHOT.jar poc-providers/spi-kafka.jar
+echo "Copying spi-kafka in poc-providers"
+cp ../keycloak-spi/spi-kafka/target/spi-kafka-1.0.0-SNAPSHOT.jar poc-hexa-providers/spi-kafka.jar
 
 echo "Current IPV4 address: ${MYIP}"
 echo "Substitute ip address in docker-services.yml"
