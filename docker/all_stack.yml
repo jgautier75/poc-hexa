@@ -8,7 +8,6 @@ services:
       - type: bind
         source: ${PWD}/poc-hexa-openbao/config.hcl
         target: /openbao/config/config.hcl
-      #- ./poc-hexa-openbao/config.hcl:/openbao/config/config.hcl
     ports:
       - 8200:8200
     labels:
@@ -16,7 +15,7 @@ services:
     networks:
       - poc-hexa-net
   poc-hexa-init-openbao:
-    image: alpine:${DOCKER_ALPINE_VERSION}
+    image: redhat/ubi9-minimal:${DOCKER_UBI9_VERSION}
     depends_on:
       - poc-hexa-openbao
     environment:
@@ -154,20 +153,17 @@ services:
     networks:
       - poc-hexa-net
   poc-hexa-init-kafka:
-    image: alpine:${DOCKER_ALPINE_VERSION}
+    image: redhat/ubi9-minimal:${DOCKER_UBI9_VERSION}
     depends_on:
       - poc-hexa-kafka
     environment:
       TOPIC: ${KAFKA_TOPIC_NAME}
       KAFKA_CLIENT: ${KAFKA_CLIENT_VERSION}
-    #volumes:
-      #- ./poc-hexa-kafka-init/init_topic.sh:/opt/init_topic.sh:rwx,chmod=777
     volumes:
       - type: bind
         source: ${PWD}/init-kafka/init_topic.sh
         target: /opt/init_topic.sh
     entrypoint: [ "./opt/init_topic.sh" ]
-    #entrypoint: ["tail", "-f", "/dev/null"]
     labels:
       - com.acme.jga.poc.hexa=poc-hexa-init-kafka
     networks:
@@ -186,7 +182,7 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASS}
       KC_HEALTH_ENABLED: "true"
-      KC_LOG_LEVEL: info
+      KC_LOG_LEVEL: debug
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://poc-hexa-keycloak-storage/keycloak_db
       KC_DB_USERNAME: ${KEYCLOAK_USER}
@@ -194,7 +190,7 @@ services:
       KC_METRICS_ENABLED: "true"
       KEYCLOAK_REALM: ${KEYCLOAK_REALM}
       #KC_LOG: "file"
-      # DEBUG: 'true'
+      DEBUG: "true"
       # DEBUG_PORT: '*:8787'
       federation_endpoint: http://MYIPADDRESS:8080/poc-st/api/v1/spi/user
       federation_user: admin

@@ -1,11 +1,8 @@
 #!/usr/bin/env sh
 
-echo "Install bash"
-apk add bash
+echo "Install openjdk 21"
 
-echo "Install openjdk 25"
-apk add openjdk25
-export JAVA_HOME="/usr/lib/jvm/java-25-openjdk"
+microdnf install -y java-21-openjdk-headless && microdnf install -y wget && microdnf clean all
 
 cd /opt
 
@@ -26,7 +23,7 @@ if [ "$txt_status" == "OK" ]; then
   fname=$(echo "${ARCH%.*}");
   export PATH="$PATH:/opt/$fname/bin";
 
-  /opt/$fname/bin/kafka-topics.sh --bootstrap-server=pst-kafka:19092 --create --if-not-exists --topic ${TOPIC} --replication-factor 1 --partitions 2
+  /opt/$fname/bin/kafka-topics.sh --bootstrap-server=poc-hexa-kafka:19092 --create --if-not-exists --topic ${TOPIC} --replication-factor 1 --partitions 2
 
 else
   echo "Invalid url: [$KAFKA_CLIENT] with status [$status]"
