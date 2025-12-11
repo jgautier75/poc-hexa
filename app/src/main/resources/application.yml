@@ -1,6 +1,6 @@
 spring:
   application:
-    name: poc-st
+    name: poc-hexa
   config:
     import: vault://
   cloud:
@@ -84,7 +84,7 @@ management:
 
 server:
   servlet:
-    context-path: /poc-st/
+    context-path: /poc-hexa/
   port: 8080
 
 logging:
@@ -93,7 +93,7 @@ logging:
 
 app:
   config:
-    moduleName: poc-st
+    moduleName: poc-hexa
     errorPath: "./errors"
     otlp-endpoint: http://localhost:4317
     otlp-push-frequency: 5

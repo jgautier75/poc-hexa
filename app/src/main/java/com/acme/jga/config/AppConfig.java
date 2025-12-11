@@ -8,6 +8,7 @@ import org.springframework.context.annotation.FilterType;
 
 @Configuration
 @ComponentScan(
+        basePackages = {"com.acme.jga.spi"},
         basePackageClasses = {PocApplication.class},
         includeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {DomainService.class})})
 public class AppConfig {
