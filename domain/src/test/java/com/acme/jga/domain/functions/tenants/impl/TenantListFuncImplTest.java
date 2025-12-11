@@ -1,6 +1,8 @@
 package com.acme.jga.domain.functions.tenants.impl;
 
 import com.acme.jga.domain.functions.stubs.tenants.TenantListOutputStub;
+import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
 import org.junit.jupiter.api.Test;
@@ -11,8 +13,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class TenantListFuncImplTest {
-
-    private static final Tenant TENANT = new Tenant(() -> UUID.randomUUID().toString(), "tcode", "tlabel", TenantStatus.ACTIVE);
+    private static final String UID = java.util.UUID.randomUUID().toString();
+    private static final CompositeId TENANT_ID = new CompositeId(1L, UID);
+    private static final Tenant TENANT = new Tenant(TENANT_ID, "tcode", "tlabel", TenantStatus.ACTIVE);
     private static final List<Tenant> TENANTS = List.of(TENANT);
     private static final TenantListOutputStub TENANT_LIST_OUTPUT_STUB = new TenantListOutputStub(TENANTS);
     private static final TenantListFuncImpl TENANT_LIST_FUNC = new TenantListFuncImpl(TENANT_LIST_OUTPUT_STUB);

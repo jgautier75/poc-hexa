@@ -1,11 +1,9 @@
-package com.acme.jga.spi.dao.tenant.impl;
+package com.acme.jga.spi.dao.tenants.impl;
 
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.model.generic.IdKind;
-import com.acme.jga.spi.dao.tenant.api.TenantsDao;
-import com.acme.jga.spi.jdbc.extractors.TenantsDbExtractor;
-import com.acme.jga.spi.jdbc.model.RdbmsTenant;
-import com.acme.jga.spi.jdbc.model.RdbmsTenantCreate;
+import com.acme.jga.domain.model.tenant.Tenant;
+import com.acme.jga.spi.dao.tenants.api.TenantsDao;
+import com.acme.jga.spi.jdbc.extractors.TenantExtractor;
 import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
@@ -33,7 +31,7 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
     }
 
     @Override
-    public CompositeId save(RdbmsTenantCreate tenantCreate) {
+    public CompositeId save(Tenant tenantCreate) {
         String baseQuery = super.getQuery("tenant_create");
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String uuid = DaoConstants.generatedUUID();
@@ -44,7 +42,7 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
         mapSqlParameterSource.addValue(DaoConstants.P_STATUS, tenantCreate.status().getValue());
         super.getNamedParameterJdbcTemplate().update(baseQuery, mapSqlParameterSource, keyHolder);
         Long generatedId = super.extractGeneratedId(keyHolder, DaoConstants.FIELD_ID);
-        return new CompositeId(IdKind.BOTH, generatedId, uuid);
+        return new CompositeId(generatedId, uuid);
     }
 
     @Override
@@ -69,18 +67,18 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
 
 
     @Override
-    public RdbmsTenant findByCode(String code) {
+    public Tenant findByCode(String code) {
         String baseQuery = super.getQuery("tenant_sel_base");
         List<WhereClause> whereClauses = whereClauseForCode(code);
         Map<String, Object> params = super.buildParams(whereClauses);
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
         return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {
-            return TenantsDbExtractor.extractTenant(rs, true);
+            return TenantExtractor.extractTenant(rs, true);
         });
     }
 
     @Override
-    public RdbmsTenant findByExternalId(String externalId) {
+    public Tenant findByExternalId(String externalId) {
         String baseQuery = super.getQuery("tenant_sel_base");
         List<WhereClause> whereClauses = new ArrayList<>();
         whereClauses.add(WhereClause.builder()
@@ -91,81 +89,43 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
         Map<String, Object> params = super.buildParams(whereClauses);
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
         return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {
-            return TenantsDbExtractor.extractTenant(rs, true);
+            return TenantExtractor.extractTenant(rs, true);
         });
     }
 
     @Override
-    public List<RdbmsTenant> findAll() {
+    public List<Tenant> findAll() {
         String baseQuery = super.getQuery("tenant_sel_base");
         baseQuery += " order by label asc";
         return super.getNamedParameterJdbcTemplate().query(baseQuery, new RowMapper<>() {
             @Override
-            public RdbmsTenant mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return TenantsDbExtractor.extractTenant(rs, false);
+            public Tenant mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return TenantExtractor.extractTenant(rs, false);
             }
         });
     }
 
     @Override
-    public boolean update(RdbmsTenant tenant) {
+    public boolean update(Tenant tenant) {
         String baseQuery = super.getQuery("tenant_update");
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         List<WhereClause> whereClauses = new ArrayList<>();
-        if (tenant.compositeId().idKind() == IdKind.BOTH || tenant.compositeId().idKind() == IdKind.NUMBER_ONLY) {
-            whereClauses.add(WhereClause.builder()
-                    .expression(buildSQLEqualsExpression(DaoConstants.FIELD_ID, DaoConstants.P_ID))
-                    .operator(WhereOperator.AND)
-                    .paramName(DaoConstants.P_ID)
-                    .paramValue(tenant.compositeId().externalId()).build());
-            mapSqlParameterSource.addValue(DaoConstants.P_ID, tenant.compositeId().internalId());
-        } else {
-            whereClauses.add(WhereClause.builder()
-                    .expression(buildSQLEqualsExpression(DaoConstants.FIELD_UID, DaoConstants.P_UID))
-                    .operator(WhereOperator.AND)
-                    .paramName(DaoConstants.P_UID)
-                    .paramValue(tenant.compositeId().externalId()).build());
-            mapSqlParameterSource.addValue(DaoConstants.P_UID, tenant.compositeId().externalId());
-        }
+        addWhereClauseForId(whereClauses, tenant.id());
+        Map<String, Object> params = super.buildParams(whereClauses);
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
-        mapSqlParameterSource.addValue(DaoConstants.P_CODE, tenant.code());
-        mapSqlParameterSource.addValue(DaoConstants.P_LABEL, tenant.label());
-        mapSqlParameterSource.addValue(DaoConstants.P_STATUS, tenant.tenantStatus().getValue());
-        return super.getNamedParameterJdbcTemplate().update(fullQuery, mapSqlParameterSource) > 0;
+        params.put(DaoConstants.P_CODE, tenant.code());
+        params.put(DaoConstants.P_LABEL, tenant.label());
+        params.put(DaoConstants.P_STATUS, tenant.status().getValue());
+        return super.getNamedParameterJdbcTemplate().update(fullQuery, params) > 0;
     }
 
     @Override
     public boolean delete(CompositeId id) {
         String baseQuery = super.getQuery("tenant_delete_root");
         List<WhereClause> whereClauses = new ArrayList<>();
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        if (id.idKind() == IdKind.BOTH || id.idKind() == IdKind.NUMBER_ONLY) {
-            whereClauses.add(WhereClause.builder()
-                    .expression(buildSQLEqualsExpression(DaoConstants.FIELD_ID, DaoConstants.P_ID))
-                    .operator(WhereOperator.AND)
-                    .paramName(DaoConstants.P_ID)
-                    .paramValue(id.externalId()).build());
-            mapSqlParameterSource.addValue(DaoConstants.P_ID, id.internalId());
-        } else {
-            whereClauses.add(WhereClause.builder()
-                    .expression(buildSQLEqualsExpression(DaoConstants.FIELD_UID, DaoConstants.P_UID))
-                    .operator(WhereOperator.AND)
-                    .paramName(DaoConstants.P_UID)
-                    .paramValue(id.externalId()).build());
-            mapSqlParameterSource.addValue(DaoConstants.P_UID, id.externalId());
-        }
+        addWhereClauseForId(whereClauses, id);
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
-        return super.getNamedParameterJdbcTemplate().update(fullQuery, mapSqlParameterSource) > 1;
-    }
-
-    private List<WhereClause> whereClauseForCode(String code) {
-        List<WhereClause> whereClauses = new ArrayList<>();
-        whereClauses.add(WhereClause.builder()
-                .expression(buildSQLInExpression(DaoConstants.FIELD_CODE, DaoConstants.P_CODE))
-                .operator(WhereOperator.AND)
-                .paramName(DaoConstants.P_CODE)
-                .paramValue(code).build());
-        return whereClauses;
+        Map<String, Object> params = super.buildParams(whereClauses);
+        return super.getNamedParameterJdbcTemplate().update(fullQuery, params) > 1;
     }
 
 }

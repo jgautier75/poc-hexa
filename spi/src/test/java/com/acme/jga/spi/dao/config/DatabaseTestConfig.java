@@ -1,7 +1,8 @@
 package com.acme.jga.spi.dao.config;
 
-import com.acme.jga.spi.dao.tenant.api.TenantsDao;
-import com.acme.jga.spi.dao.tenant.impl.TenantsDaoImpl;
+import com.acme.jga.spi.dao.organizations.impl.OrganizationsDaoImpl;
+import com.acme.jga.spi.dao.tenants.api.TenantsDao;
+import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,11 @@ public class DatabaseTestConfig {
     @Bean
     public TenantsDao tenantsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         return new TenantsDaoImpl(namedParameterJdbcTemplate);
+    }
+
+    @Bean
+    public OrganizationsDaoImpl organizationsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new OrganizationsDaoImpl(namedParameterJdbcTemplate);
     }
 
 }

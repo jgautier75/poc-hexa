@@ -8,8 +8,8 @@ import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.tenants.TenantDeleteInput;
 import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.generic.ExternalId;
 import com.acme.jga.domain.model.generic.IdKind;
-import com.acme.jga.domain.model.tenant.TenantId;
 import com.acme.jga.domain.output.functions.tenants.TenantDeleteOuput;
 
 @DomainService
@@ -23,12 +23,12 @@ public class TenantDeleteFuncImpl implements TenantDeleteInput {
     }
 
     @Override
-    public boolean deleteTenant(TenantId id) throws FunctionalException {
+    public boolean deleteTenant(ExternalId id) throws FunctionalException {
         boolean exists = this.tenantExistsFunc.existsByExternalId(id.get());
         if (!exists) {
             throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", id.get()));
         }
-        CompositeId cid = new CompositeId(IdKind.STRING_ONLY, null, id.get());
+        CompositeId cid = new CompositeId(null, id.get());
         return this.tenantDeleteOuput.deleteTenant(cid);
     }
 }

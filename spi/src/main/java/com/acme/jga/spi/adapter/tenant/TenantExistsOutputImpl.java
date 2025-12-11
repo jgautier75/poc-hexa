@@ -1,7 +1,7 @@
 package com.acme.jga.spi.adapter.tenant;
 
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
-import com.acme.jga.spi.dao.tenant.api.TenantsDao;
+import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import org.springframework.stereotype.Service;
 
 @Service

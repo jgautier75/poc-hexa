@@ -20,6 +20,6 @@ public class TenantExistsOutputStub implements TenantExistsOutput {
 
     @Override
     public boolean existsByExternalId(String externalId) {
-        return tenants.stream().anyMatch(t -> t.tenantId().get().equals(externalId));
+        return tenants.stream().anyMatch(t -> t.id().get().equals(externalId));
     }
 }

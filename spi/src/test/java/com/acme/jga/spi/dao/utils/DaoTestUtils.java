@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DaoTestUtils {
-
     public static final String POSTGRESQL_VERSION = "postgres:18.1";
 
     public static void performLiquibaseUpdate(String jdbcUrl, String userName, String userPassword) throws Exception {

@@ -11,6 +11,6 @@ public class TenantCreateOutputStub implements TenantCreateOutput {
 
     @Override
     public CompositeId save(Tenant tenant) {
-        return new CompositeId(IdKind.BOTH, 1l, UUID.randomUUID().toString());
+        return new CompositeId(1l, UUID.randomUUID().toString());
     }
 }

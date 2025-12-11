@@ -1,5 +1,7 @@
 package com.acme.jga.spi.jdbc.utils;
 
+import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.sorting.OrderByClause;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
@@ -253,6 +255,38 @@ public abstract class AbstractJdbcDaoSupport {
      */
     protected String buildSQLInExpression(String columnName, String paramName) {
         return columnName + " in (:" + paramName + ")";
+    }
+
+    /**
+     * Add Id (internal or external) in where clause.
+     *
+     * @param id Id
+     * @return Where clause list
+     */
+    protected void addWhereClauseForId(List<WhereClause> whereClauses, CompositeId id) {
+        if (id.kind() == IdKind.BOTH || id.kind() == IdKind.INTERNAL) {
+            whereClauses.add(WhereClause.builder()
+                    .expression(buildSQLEqualsExpression(DaoConstants.FIELD_ID, DaoConstants.P_ID))
+                    .operator(WhereOperator.AND)
+                    .paramName(DaoConstants.P_ID)
+                    .paramValue(id.internalId()).build());
+        } else {
+            whereClauses.add(WhereClause.builder()
+                    .expression(buildSQLEqualsExpression(DaoConstants.FIELD_UID, DaoConstants.P_UID))
+                    .operator(WhereOperator.AND)
+                    .paramName(DaoConstants.P_UID)
+                    .paramValue(id.externalId()).build());
+        }
+    }
+
+    protected List<WhereClause> whereClauseForCode(String code) {
+        List<WhereClause> whereClauses = new ArrayList<>();
+        whereClauses.add(WhereClause.builder()
+                .expression(buildSQLInExpression(DaoConstants.FIELD_CODE, DaoConstants.P_CODE))
+                .operator(WhereOperator.AND)
+                .paramName(DaoConstants.P_CODE)
+                .paramValue(code).build());
+        return whereClauses;
     }
 
 }

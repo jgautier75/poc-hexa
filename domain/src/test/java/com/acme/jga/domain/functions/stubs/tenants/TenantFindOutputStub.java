@@ -1,7 +1,7 @@
 package com.acme.jga.domain.functions.stubs.tenants;
 
+import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.model.tenant.TenantId;
 import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class TenantFindOutputStub implements TenantFindOutput {
     }
 
     @Override
-    public Tenant findByExternalId(TenantId tenantId) {
-        return tenants.stream().filter(t -> t.get().equals(tenantId.get())).findFirst().orElse(null);
+    public Tenant findByExternalId(CompositeId tenantId) {
+        return tenants.stream().filter(t -> t.id().get().equals(tenantId.get())).findFirst().orElse(null);
     }
 }

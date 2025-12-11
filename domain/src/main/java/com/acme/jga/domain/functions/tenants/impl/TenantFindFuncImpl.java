@@ -7,8 +7,8 @@ import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
+import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.model.tenant.TenantId;
 import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
 
 @DomainService
@@ -35,7 +35,7 @@ public class TenantFindFuncImpl implements TenantFindInput {
     }
 
     @Override
-    public Tenant findById(TenantId tenantId) throws FunctionalException {
+    public Tenant findById(CompositeId tenantId) throws FunctionalException {
 
         // Ensure tenant exists
         boolean exists = tenantExistsFunc.existsByExternalId(tenantId.get());

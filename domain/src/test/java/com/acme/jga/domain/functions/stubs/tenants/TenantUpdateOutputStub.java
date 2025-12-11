@@ -16,6 +16,6 @@ public class TenantUpdateOutputStub implements TenantUpdateOutput {
 
     @Override
     public boolean update(Tenant tenant) throws FunctionalException {
-        return tenants.stream().anyMatch(t -> t.tenantId().get().equals(tenant.tenantId().get()));
+        return tenants.stream().anyMatch(t -> t.id().get().equals(tenant.id().get()));
     }
 }

@@ -2,8 +2,8 @@ package com.acme.jga.rest.services.tenants.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.input.functions.tenants.*;
+import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.model.tenant.TenantId;
 import com.acme.jga.domain.shared.StreamUtil;
 import com.acme.jga.rest.dtos.v1.tenants.TenantDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.TenantDto;
@@ -33,26 +33,26 @@ public class AppTenantsServiceImpl implements AppTenantsService {
 
     @Override
     public UidDto createTenant(TenantDto tenantDto) throws FunctionalException {
-        TenantId tenantId = tenantCreateInput.create(new Tenant(null, tenantDto.getCode(), tenantDto.getLabel(), tenantDto.getStatus()));
+        CompositeId tenantId = tenantCreateInput.create(new Tenant(null, tenantDto.getCode(), tenantDto.getLabel(), tenantDto.getStatus()));
         return new UidDto(tenantId.get());
     }
 
     @Override
     public TenantDisplayDto findByUid(String uid) throws FunctionalException {
-        Tenant tenant = tenantFindInput.findById(() -> uid);
-        return new TenantDisplayDto(tenant.tenantId().get(), tenant.code(), tenant.label(), tenant.tenantStatus());
+        Tenant tenant = tenantFindInput.findById(new CompositeId(null, uid));
+        return new TenantDisplayDto(tenant.id().externalId(), tenant.code(), tenant.label(), tenant.status());
     }
 
     @Override
     public TenantListDisplayDto findAll() throws FunctionalException {
         List<Tenant> tenants = tenantListInput.list();
-        List<TenantDisplayDto> displayDtoList = StreamUtil.ofNullableList(tenants).map(t -> new TenantDisplayDto(t.tenantId().get(), t.code(), t.label(), t.tenantStatus())).toList();
+        List<TenantDisplayDto> displayDtoList = StreamUtil.ofNullableList(tenants).map(t -> new TenantDisplayDto(t.id().externalId(), t.code(), t.label(), t.status())).toList();
         return new TenantListDisplayDto(displayDtoList);
     }
 
     @Override
     public boolean updateTenant(String uid, TenantDto tenantDto) throws FunctionalException {
-        Tenant tenant = new Tenant(() -> uid, tenantDto.getCode(), tenantDto.getLabel(), tenantDto.getStatus());
+        Tenant tenant = new Tenant(new CompositeId(null, uid), tenantDto.getCode(), tenantDto.getLabel(), tenantDto.getStatus());
         return tenantUpdateInput.update(tenant);
     }
 
