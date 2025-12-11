@@ -10,12 +10,15 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +105,39 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
         Map<String, Object> params = super.buildParams(whereClauses);
         return super.executeExists(fullQuery, params);
+    }
+
+    @Override
+    public List<Organization> findAll(CompositeId tenantId) {
+        String baseQuery = super.getQuery("org_sel_base");
+        List<WhereClause> whereClauses = new ArrayList<>();
+        super.addWhereClauseForId(whereClauses, tenantId);
+        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
+        fullQuery += " order by label asc";
+        Map<String, Object> params = super.buildParams(whereClauses);
+        return super.getNamedParameterJdbcTemplate().query(fullQuery, params, new RowMapper<>() {
+            @Override
+            public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return OrganizationExtractor.extractOrganization(rs, false, tenantId);
+            }
+        });
+    }
+
+    @Override
+    public Organization findByCode(String code) {
+        String baseQuery = super.getQuery("org_sel_base");
+        List<WhereClause> whereClauses = new ArrayList<>();
+        whereClauses.add(WhereClause.builder()
+                .expression(buildSQLEqualsExpression(DaoConstants.FIELD_CODE, DaoConstants.P_CODE))
+                .paramName(DaoConstants.P_CODE)
+                .operator(WhereOperator.AND)
+                .paramValue(code)
+                .build());
+        Map<String, Object> params = super.buildParams(whereClauses);
+        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
+        return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {
+            return OrganizationExtractor.extractOrganization(rs, true, null);
+        });
     }
 
 }

@@ -23,6 +23,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = {DatabaseTestConfig.class})
@@ -72,6 +74,9 @@ class OrganizationsDaoImplTest {
 
         boolean exists = organizationsDao.existsByCode(ORG_CODE);
         assertTrue(exists, "Organization exists by code");
+
+        List<Organization> orgs = organizationsDao.findAll(tenantId);
+        assertEquals(1, orgs.size(), "Organizations found");
 
         String updatedName = "My Org Label";
         String updatedCode = "myorgup";

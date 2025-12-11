@@ -4,6 +4,8 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 
+import java.util.List;
+
 public interface OrganizationsDao {
 
     CompositeId save(Organization org);
@@ -15,5 +17,9 @@ public interface OrganizationsDao {
     Integer delete(CompositeId tenantId, CompositeId orgId);
 
     boolean existsByCode(String code);
+
+    List<Organization> findAll(CompositeId tenantId);
+
+    Organization findByCode(String code);
 
 }
