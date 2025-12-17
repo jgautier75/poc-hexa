@@ -1,0 +1,20 @@
+meta {
+  name: HEALTH
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{httpHost}}/{{appContext}}/actuator/health
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{basicAuthUser}}
+  password: {{basicAuthPassword}}
+}
+
+settings {
+  encodeUrl: true
+}

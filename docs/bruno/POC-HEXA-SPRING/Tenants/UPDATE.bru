@@ -1,0 +1,27 @@
+meta {
+  name: UPDATE
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "code": "myrealm",
+    "label": "My Realm",
+    "status": "ACTIVE"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

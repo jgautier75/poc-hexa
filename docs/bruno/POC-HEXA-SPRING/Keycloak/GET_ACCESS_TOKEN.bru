@@ -1,0 +1,28 @@
+meta {
+  name: GET_ACCESS_TOKEN
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{keycloakHost}}/realms/{{keycloakRealm}}/protocol/openid-connect/token
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  username: {{keycloakUser}}
+  password: {{keycloakPassword}}
+  grant_type: password
+  client_id: {{keycloakClient}}
+  scope: openid
+}
+
+script:post-response {
+  bru.setEnvVar("accessToken",res.body.access_token);
+  bru.setEnvVar("refreshToken",res.body.refresh_token);
+}
+
+settings {
+  encodeUrl: true
+}
