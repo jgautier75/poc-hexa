@@ -1,4 +1,4 @@
-package com.acme.jga.spi.adapter.output;
+package com.acme.jga.spi.adapter.organization;
 
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.output.functions.organizations.OrganizationDeleteOutput;

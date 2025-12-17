@@ -4,7 +4,6 @@ import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.functions.stubs.tenants.TenantDeleteOuputStub;
 import com.acme.jga.domain.functions.stubs.tenants.TenantExistsFuncStub;
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
 import org.junit.jupiter.api.Test;
