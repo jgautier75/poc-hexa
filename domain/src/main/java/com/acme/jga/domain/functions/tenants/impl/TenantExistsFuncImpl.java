@@ -1,11 +1,11 @@
 package com.acme.jga.domain.functions.tenants.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
-import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
+import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
 
 @DomainService
-public class TenantExistsFuncImpl implements TenantExistsFunc {
+public class TenantExistsFuncImpl implements TenantExistsInput {
     private final TenantExistsOutput tenantExistsOutput;
 
     public TenantExistsFuncImpl(TenantExistsOutput tenantExistsOutput) {

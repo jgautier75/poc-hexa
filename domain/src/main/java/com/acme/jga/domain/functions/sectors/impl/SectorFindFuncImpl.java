@@ -1,6 +1,6 @@
 package com.acme.jga.domain.functions.sectors.impl;
 
-import com.acme.jga.domain.functions.sectors.api.SectorFindOuput;
+import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
 

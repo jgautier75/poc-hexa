@@ -1,7 +1,7 @@
 package com.acme.jga.domain.functions.sectors.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.functions.sectors.api.SectorFindOuput;
+import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
 import com.acme.jga.domain.functions.stubs.organizations.OrganizationFindInputStub;
 import com.acme.jga.domain.functions.stubs.sectors.SectorFindOutputStub;
 import com.acme.jga.domain.functions.stubs.tenants.TenantFindInputStub;

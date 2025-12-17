@@ -1,6 +1,6 @@
 package com.acme.jga.spi.adapter.sector;
 
-import com.acme.jga.domain.functions.sectors.api.SectorFindOuput;
+import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.spi.dao.sectors.api.SectorsDao;

@@ -2,8 +2,8 @@ package com.acme.jga.domain.functions.sectors.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.functions.sectors.api.SectorFindOuput;
-import com.acme.jga.domain.functions.sectors.api.SectorsListInput;
+import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
+import com.acme.jga.domain.output.functions.sectors.SectorsListInput;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;

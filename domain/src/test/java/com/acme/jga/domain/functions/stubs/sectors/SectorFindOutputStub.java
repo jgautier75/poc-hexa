@@ -1,6 +1,6 @@
 package com.acme.jga.domain.functions.stubs.sectors;
 
-import com.acme.jga.domain.functions.sectors.api.SectorFindOuput;
+import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.sector.Sector;

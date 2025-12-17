@@ -4,22 +4,22 @@ import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
-import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
+import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 
 import java.util.List;
 
 @DomainService
 public class OrganizationFindFuncImpl implements OrganizationFindInput {
 
-    private final TenantExistsFunc tenantExistsFunc;
+    private final TenantExistsInput tenantExistsFunc;
     private final OrganizationFindOutput organizationFindOutput;
 
-    public OrganizationFindFuncImpl(TenantExistsFunc tenantExistsFunc, OrganizationFindOutput organizationFindOutput) {
+    public OrganizationFindFuncImpl(TenantExistsInput tenantExistsFunc, OrganizationFindOutput organizationFindOutput) {
         this.tenantExistsFunc = tenantExistsFunc;
         this.organizationFindOutput = organizationFindOutput;
     }

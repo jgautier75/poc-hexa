@@ -4,21 +4,21 @@ import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
-import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationCreateInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.output.functions.organizations.OrganizationCreateOutput;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
+import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 
 @DomainService
 public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
-    private final TenantExistsFunc tenantExistsFunc;
+    private final TenantExistsInput tenantExistsFunc;
     private final OrganizationFindOutput organizationFindOutput;
     private final OrganizationCreateOutput organizationCreateOutput;
 
-    public OrganizationCreateFuncImpl(TenantExistsFunc tenantExistsFunc, OrganizationFindOutput organizationFindOutput, OrganizationCreateOutput organizationCreateOutput) {
+    public OrganizationCreateFuncImpl(TenantExistsInput tenantExistsFunc, OrganizationFindOutput organizationFindOutput, OrganizationCreateOutput organizationCreateOutput) {
         this.tenantExistsFunc = tenantExistsFunc;
         this.organizationFindOutput = organizationFindOutput;
         this.organizationCreateOutput = organizationCreateOutput;

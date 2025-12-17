@@ -4,20 +4,19 @@ import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
-import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.tenants.TenantDeleteInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.ExternalId;
-import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.output.functions.tenants.TenantDeleteOuput;
+import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 
 @DomainService
 public class TenantDeleteFuncImpl implements TenantDeleteInput {
-    private final TenantExistsFunc tenantExistsFunc;
+    private final TenantExistsInput tenantExistsFunc;
     private final TenantDeleteOuput tenantDeleteOuput;
 
-    public TenantDeleteFuncImpl(TenantExistsFunc tenantExistsFunc, TenantDeleteOuput tenantDeleteOuput) {
+    public TenantDeleteFuncImpl(TenantExistsInput tenantExistsFunc, TenantDeleteOuput tenantDeleteOuput) {
         this.tenantExistsFunc = tenantExistsFunc;
         this.tenantDeleteOuput = tenantDeleteOuput;
     }

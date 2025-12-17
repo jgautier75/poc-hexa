@@ -1,11 +1,11 @@
 package com.acme.jga.domain.functions.stubs.tenants;
 
-import com.acme.jga.domain.functions.tenants.api.TenantExistsFunc;
 import com.acme.jga.domain.model.tenant.Tenant;
+import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 
 import java.util.List;
 
-public class TenantExistsFuncStub implements TenantExistsFunc {
+public class TenantExistsFuncStub implements TenantExistsInput {
 
     private final List<Tenant> tenants;
 

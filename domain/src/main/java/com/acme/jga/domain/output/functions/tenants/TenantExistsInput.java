@@ -1,7 +1,6 @@
-package com.acme.jga.domain.functions.tenants.api;
+package com.acme.jga.domain.output.functions.tenants;
 
-public interface TenantExistsFunc {
-
+public interface TenantExistsInput {
     boolean existsByCode(String code);
 
     boolean existsByExternalId(String externalId);
