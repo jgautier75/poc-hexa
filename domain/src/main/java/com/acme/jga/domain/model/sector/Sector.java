@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Sector {
-
     private CompositeId id;
     private CompositeId tenantId;
     private CompositeId organizationId;

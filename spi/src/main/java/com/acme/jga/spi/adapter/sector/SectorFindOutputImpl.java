@@ -21,4 +21,9 @@ public class SectorFindOutputImpl implements SectorFindOuput {
     public List<Sector> findAll(CompositeId tenantId, CompositeId organizationId) {
         return sectorsDao.findAll(tenantId, organizationId);
     }
+
+    @Override
+    public Sector findById(CompositeId tenantId, CompositeId organizationId, CompositeId sectorId) {
+        return sectorsDao.findById(tenantId, organizationId, sectorId);
+    }
 }

@@ -83,7 +83,7 @@ public class UserSpiProvider implements UserLookupProvider, UserStorageProvider,
     private void initJackson() {
         LOGGER.infof("Initialize UserStorage Spi: [%s]=[%s]", FederationConstants.ENDPOINT, getEnvVariable(FederationConstants.ENDPOINT));
         this.objectMapper = new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));

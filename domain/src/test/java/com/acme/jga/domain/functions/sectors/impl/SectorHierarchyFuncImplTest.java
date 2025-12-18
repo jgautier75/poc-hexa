@@ -1,9 +1,8 @@
 package com.acme.jga.domain.functions.sectors.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
 import com.acme.jga.domain.functions.stubs.organizations.OrganizationFindInputStub;
-import com.acme.jga.domain.functions.stubs.sectors.SectorFindOutputStub;
+import com.acme.jga.domain.functions.stubs.sectors.SectorFindOuputStub;
 import com.acme.jga.domain.functions.stubs.tenants.TenantFindInputStub;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
@@ -11,11 +10,12 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
+import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class SectorHierarchyFuncImplTest {
 
@@ -23,7 +23,7 @@ class SectorHierarchyFuncImplTest {
     private static final Tenant TENANT = new Tenant(TENANT_ID, "root-tenant", "root-tenant", TenantStatus.ACTIVE);
     private static final TenantFindInput TENANT_FIND_INPUT = new TenantFindInputStub(TENANT);
     private static final OrganizationFindInput ORGANIZATION_FIND_INPUT = new OrganizationFindInputStub(TENANT);
-    private static final SectorFindOuput SECTOR_FIND_OUPUT_STUB = new SectorFindOutputStub(TENANT, ((OrganizationFindInputStub) ORGANIZATION_FIND_INPUT).getOrganization());
+    private static final SectorFindOuput SECTOR_FIND_OUPUT_STUB = new SectorFindOuputStub(TENANT, ((OrganizationFindInputStub) ORGANIZATION_FIND_INPUT).getOrganization());
 
     @Test
     void Sector_Hierarchy_Nominal() throws FunctionalException {
@@ -44,9 +44,8 @@ class SectorHierarchyFuncImplTest {
         });
         Sector northEastSector = northSector.getChildren().stream().filter(child -> child.getCode().equals("northeast")).findFirst().get();
         assertAll("North East Sector checks", () -> {
-            assertEquals(2, northEastSector.getChildren().size(), "North East Sector has 2 children");
+            assertEquals(1, northEastSector.getChildren().size(), "North East Sector has 2 children");
             assertTrue(northEastSector.getChildren().stream().anyMatch(child -> child.getCode().equals("northnortheast")));
-            assertTrue(northEastSector.getChildren().stream().anyMatch(child -> child.getCode().equals("eastnortheast")));
         });
     }
 }

@@ -27,17 +27,14 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
 
     @Override
     public CompositeId create(Organization organization) throws FunctionalException {
-
         boolean tenantExists = tenantExistsFunc.existsByExternalId(organization.tenantId().externalId());
         if (!tenantExists) {
             throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", organization.tenantId().externalId()));
         }
-
         boolean orgCodeExists = organizationFindOutput.existsByCode(organization.code());
-        if (!orgCodeExists) {
+        if (orgCodeExists) {
             throw new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.ALREADY_EXISTS.name(), BundleFactory.getMessage("organization.already_exist", organization.code()));
         }
-
         return organizationCreateOutput.save(organization);
     }
 }
