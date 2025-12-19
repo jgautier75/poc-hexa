@@ -3,6 +3,8 @@ package com.acme.jga.spi.dao.organizations.impl;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
+import com.acme.jga.domain.model.sorting.OrderByClause;
+import com.acme.jga.domain.model.sorting.OrderDirection;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.jdbc.extractors.OrganizationExtractor;
@@ -54,7 +56,11 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
         String baseQuery = super.getQuery("org_sel_base");
         List<WhereClause> whereClauses = new ArrayList<>();
         addWhereClauseForId(whereClauses, id);
-        addWhereClauseForId(whereClauses, tenantId);
+        whereClauses.add(WhereClause.builder()
+                .expression(buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
+                .operator(WhereOperator.AND)
+                .paramName(DaoConstants.P_TENANT_ID)
+                .paramValue(tenantId.internalId()).build());
         Map<String, Object> params = super.buildParams(whereClauses);
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
         return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {
@@ -111,9 +117,13 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
     public List<Organization> findAll(CompositeId tenantId) {
         String baseQuery = super.getQuery("org_sel_base");
         List<WhereClause> whereClauses = new ArrayList<>();
-        super.addWhereClauseForId(whereClauses, tenantId);
-        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
-        fullQuery += " order by label asc";
+        whereClauses.add(WhereClause.builder()
+                .expression(buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
+                .paramName(DaoConstants.P_TENANT_ID)
+                .operator(WhereOperator.AND)
+                .paramValue(tenantId.internalId())
+                .build());
+        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, List.of(OrderByClause.builder().expression("label").orderDirection(OrderDirection.ASC).build()), (String[]) null);
         Map<String, Object> params = super.buildParams(whereClauses);
         return super.getNamedParameterJdbcTemplate().query(fullQuery, params, new RowMapper<>() {
             @Override
