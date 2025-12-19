@@ -1,0 +1,19 @@
+meta {
+  name: GET
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations/ff866a02-5d23-4c30-815e-ddad655b83fe
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+settings {
+  encodeUrl: true
+}
