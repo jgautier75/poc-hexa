@@ -9,6 +9,8 @@ public interface TenantsDao {
 
     CompositeId save(Tenant tenantCreate);
 
+    boolean existsById(CompositeId id);
+
     boolean existsByCode(String code);
 
     boolean existsByExternalId(String externalId);
@@ -16,6 +18,8 @@ public interface TenantsDao {
     Tenant findByCode(String code);
 
     Tenant findByExternalId(String externalId);
+
+    Tenant findById(CompositeId id);
 
     List<Tenant> findAll();
 

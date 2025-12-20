@@ -46,6 +46,18 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
     }
 
     @Override
+    public boolean existsById(CompositeId id) {
+        String baseQuery = super.getQuery("tenant_exists_base");
+        List<WhereClause> whereClauses = new ArrayList<>();
+        super.addWhereClauseForId(whereClauses, id);
+        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null);
+        Map<String, Object> params = super.buildParams(whereClauses);
+        return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {
+            return super.executeExists(baseQuery, params);
+        });
+    }
+
+    @Override
     public boolean existsByCode(String code) {
         String baseQuery = super.getQuery("tenant_exists_by_code");
         Map<String, Object> params = new HashMap<>();
@@ -86,6 +98,18 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
                 .operator(WhereOperator.AND)
                 .paramName(DaoConstants.P_UID)
                 .paramValue(externalId).build());
+        Map<String, Object> params = super.buildParams(whereClauses);
+        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
+        return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {
+            return TenantExtractor.extractTenant(rs, true);
+        });
+    }
+
+    @Override
+    public Tenant findById(CompositeId id) {
+        String baseQuery = super.getQuery("tenant_sel_base");
+        List<WhereClause> whereClauses = new ArrayList<>();
+        super.addWhereClauseForId(whereClauses, id);
         Map<String, Object> params = super.buildParams(whereClauses);
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
         return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {

@@ -1,5 +1,6 @@
 package com.acme.jga.spi.adapter.tenant;
 
+import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,10 @@ public class TenantExistsOutputImpl implements TenantExistsOutput {
     @Override
     public boolean existsByExternalId(String externalId) {
         return this.tenantsDao.existsByExternalId(externalId);
+    }
+
+    @Override
+    public boolean existsById(CompositeId compositeId) {
+        return this.tenantsDao.existsById(compositeId);
     }
 }

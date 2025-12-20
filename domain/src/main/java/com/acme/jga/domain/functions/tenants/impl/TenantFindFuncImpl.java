@@ -38,12 +38,12 @@ public class TenantFindFuncImpl implements TenantFindInput {
     public Tenant findById(CompositeId tenantId) throws FunctionalException {
 
         // Ensure tenant exists
-        boolean exists = tenantExistsFunc.existsByExternalId(tenantId.get());
+        boolean exists = tenantExistsFunc.existsById(tenantId);
         if (!exists) {
             throwException(tenantId.get());
         }
 
-        return tenantFindOutput.findByExternalId(tenantId);
+        return tenantFindOutput.findById(tenantId);
     }
 
     private void throwException(String args) throws FunctionalException {

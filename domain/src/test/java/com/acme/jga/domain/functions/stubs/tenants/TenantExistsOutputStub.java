@@ -1,5 +1,7 @@
 package com.acme.jga.domain.functions.stubs.tenants;
 
+import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
 
@@ -20,6 +22,17 @@ public class TenantExistsOutputStub implements TenantExistsOutput {
 
     @Override
     public boolean existsByExternalId(String externalId) {
-        return tenants.stream().anyMatch(t -> t.id().get().equals(externalId));
+        return tenants.stream().anyMatch(t -> t.id().externalId().equals(externalId));
+    }
+
+    @Override
+    public boolean existsById(CompositeId compositeId) {
+        if (compositeId.kind() == IdKind.BOTH && compositeId.internalId() != null) {
+            return tenants.stream().anyMatch(t -> t.id().internalId().longValue() == compositeId.internalId().longValue());
+        } else if (compositeId.externalId() != null) {
+            return tenants.stream().anyMatch(t -> t.id().externalId().equals(compositeId.externalId()));
+        } else {
+            return false;
+        }
     }
 }

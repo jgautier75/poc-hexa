@@ -8,7 +8,7 @@ import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
 
 import java.util.List;
 
-@DomainService()
+@DomainService
 public class SectorFindFuncImpl implements SectorFindInput {
     private final SectorFindOuput sectorFindOuput;
 

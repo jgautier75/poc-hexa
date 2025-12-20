@@ -19,8 +19,7 @@ public class Sector {
     private String code;
     private CompositeId parent;
     private boolean root;
-
-    private List<Sector> children = new ArrayList<>();
+    private List<Sector> children;
 
     public void addChild(Sector sector) {
         if (children == null) {

@@ -27,4 +27,10 @@ public class TenantFindOutputImpl implements TenantFindOutput {
         Tenant rdbmsTenant = this.tenantsDao.findByExternalId(tenantId.get());
         return Optional.ofNullable(rdbmsTenant).map(rt -> new Tenant(rdbmsTenant.id(), rdbmsTenant.code(), rdbmsTenant.label(), rdbmsTenant.status())).orElse(null);
     }
+
+    @Override
+    public Tenant findById(CompositeId tenantId) {
+        Tenant rdbmsTenant = this.tenantsDao.findByExternalId(tenantId.get());
+        return null;
+    }
 }

@@ -39,7 +39,7 @@ public class OrganizationFindFuncImpl implements OrganizationFindInput {
 
     @Override
     public Organization findById(CompositeId tenantId, CompositeId organizationId) throws FunctionalException {
-        boolean tenantExists = tenantExistsFunc.existsByExternalId(tenantId.externalId());
+        boolean tenantExists = tenantExistsFunc.existsById(tenantId);
         if (!tenantExists) {
             throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", tenantId.externalId()));
         }

@@ -1,4 +1,4 @@
-package com.acme.jga.domain.output.functions.sectors;
+package com.acme.jga.domain.input.functions.sectors;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;

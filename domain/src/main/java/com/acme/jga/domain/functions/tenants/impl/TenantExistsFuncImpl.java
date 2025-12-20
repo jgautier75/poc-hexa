@@ -1,6 +1,7 @@
 package com.acme.jga.domain.functions.tenants.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
+import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
 
@@ -20,5 +21,10 @@ public class TenantExistsFuncImpl implements TenantExistsInput {
     @Override
     public boolean existsByExternalId(String externalId) {
         return tenantExistsOutput.existsByExternalId(externalId);
+    }
+
+    @Override
+    public boolean existsById(CompositeId compositeId) {
+        return tenantExistsOutput.existsById(compositeId);
     }
 }
