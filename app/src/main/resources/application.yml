@@ -21,13 +21,6 @@ spring:
       enabled: true
   main:
     banner-mode: console
-  liquibase:
-    enabled: false
-  devtools:
-    restart:
-      enabled: false
-    livereload:
-      enabled: false
   messages:
     basename: i18n/messages
     encoding: UTF-8

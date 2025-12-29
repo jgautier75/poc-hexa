@@ -6,7 +6,6 @@ import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
-import io.micrometer.observation.Observation;
 import io.opentelemetry.api.trace.Span;
 
 import java.util.ArrayList;
