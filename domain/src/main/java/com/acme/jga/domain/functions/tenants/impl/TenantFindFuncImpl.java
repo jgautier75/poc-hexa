@@ -10,6 +10,7 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
+import io.micrometer.observation.annotation.Observed;
 
 @DomainService
 public class TenantFindFuncImpl implements TenantFindInput {
@@ -35,6 +36,7 @@ public class TenantFindFuncImpl implements TenantFindInput {
     }
 
     @Override
+    @Observed(name = "DOMAIN_TENANT_FIND_BY_ID")
     public Tenant findById(CompositeId tenantId) throws FunctionalException {
 
         // Ensure tenant exists

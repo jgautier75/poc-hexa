@@ -4,12 +4,13 @@ import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
+import io.micrometer.observation.Observation;
 
 public interface AppOrganizationsService {
 
     UidDto createOrganization(String tenantUid, OrganizationDto organizationDto) throws FunctionalException;
 
-    OrganizationListDisplayDto listOrganizations(String tenantUid) throws FunctionalException;
+    OrganizationListDisplayDto listOrganizations(String tenantUid, Observation parentObservation) throws FunctionalException;
 
     OrganizationDto findOrganization(String tenantUid, String organizationUid) throws FunctionalException;
 

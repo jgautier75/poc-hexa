@@ -13,4 +13,8 @@ public class FunctionalException extends Exception {
     public String getCode() {
         return code;
     }
+
+    public String getScope(){
+        return this.scope;
+    }
 }

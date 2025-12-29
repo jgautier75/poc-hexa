@@ -2,6 +2,7 @@ package com.acme.jga.domain.output.functions.organizations;
 
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
+import io.micrometer.observation.Observation;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface OrganizationFindOutput {
 
     boolean existsByCode(String code);
 
-    List<Organization> findAll(CompositeId tenantId);
+    List<Organization> findAll(CompositeId tenantId, Observation parentObservation);
 
     Organization findByCode(String code);
 }

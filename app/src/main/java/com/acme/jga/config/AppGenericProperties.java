@@ -15,7 +15,5 @@ import org.springframework.stereotype.Component;
 public class AppGenericProperties {
     private String moduleName;
     private String errorPath;
-    private String otlpEndpoint;
-    private Long otlpPushFrequency;
     private String vaultPath;
 }

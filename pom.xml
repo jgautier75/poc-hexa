@@ -19,12 +19,13 @@
         <jdk.version>25</jdk.version>
         <project-encoding>UTF-8</project-encoding>
         <lombok-version>1.18.42</lombok-version>
-        <protobuf-version>4.33.1</protobuf-version>
+        <protobuf-version>4.33.2</protobuf-version>
+        <otel-version>1.57.0</otel-version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1</version>
     </parent>
     <build>
         <pluginManagement>
@@ -116,5 +117,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
 </project>

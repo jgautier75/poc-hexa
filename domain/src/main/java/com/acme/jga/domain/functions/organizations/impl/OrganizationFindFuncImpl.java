@@ -12,6 +12,9 @@ import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.annotation.Observed;
 
 import java.util.List;
 
@@ -20,21 +23,31 @@ public class OrganizationFindFuncImpl implements OrganizationFindInput {
     private final TenantExistsInput tenantExistsFunc;
     private final OrganizationFindOutput organizationFindOutput;
     private final TenantFindInput tenantFindInput;
+    private final ObservationRegistry observationRegistry;
 
-    public OrganizationFindFuncImpl(TenantExistsInput tenantExistsFunc, OrganizationFindOutput organizationFindOutput, TenantFindInput tenantFindInput) {
+    public OrganizationFindFuncImpl(TenantExistsInput tenantExistsFunc, OrganizationFindOutput organizationFindOutput, TenantFindInput tenantFindInput, ObservationRegistry observationRegistry) {
         this.tenantExistsFunc = tenantExistsFunc;
         this.organizationFindOutput = organizationFindOutput;
         this.tenantFindInput = tenantFindInput;
+        this.observationRegistry = observationRegistry;
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId) throws FunctionalException {
-        boolean tenantExists = tenantExistsFunc.existsByExternalId(tenantId.externalId());
-        if (!tenantExists) {
-            throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", tenantId.externalId()));
+    public List<Organization> findAll(CompositeId tenantId, Observation parentObservation) throws FunctionalException {
+        Observation domainObservation = Observation.createNotStarted("ORGS_DOMAIN_LIST", observationRegistry);
+        domainObservation.parentObservation(parentObservation);
+        domainObservation.start();
+
+        try {
+            boolean tenantExists = tenantExistsFunc.existsByExternalId(tenantId.externalId());
+            if (!tenantExists) {
+                throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", tenantId.externalId()));
+            }
+            Tenant tenant = tenantFindInput.findById(tenantId);
+            return organizationFindOutput.findAll(tenant.id(), domainObservation);
+        } finally {
+            domainObservation.start();
         }
-        Tenant tenant = tenantFindInput.findById(tenantId);
-        return organizationFindOutput.findAll(tenant.id());
     }
 
     @Override

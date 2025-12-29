@@ -15,7 +15,7 @@ spring:
       kv:
         enabled: true
         backend: secret
-        default-context: poc-spring-telemetry
+        default-context: poc-hexa
   threads:
     virtual:
       enabled: true
@@ -77,11 +77,23 @@ management:
       enabled: true
     defaults:
       enabled: true
-  tracing:
-    sampling:
+  #tracing:
+      #sampling:
       # Trace 100% of requests
-      probability: 1.0
-
+      #probability: 1.0
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+          transport: http
+        schedule-delay: 5s
+        timeout: 30s
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+          transport: http
 server:
   servlet:
     context-path: /poc-hexa/
@@ -95,8 +107,6 @@ app:
   config:
     moduleName: poc-hexa
     errorPath: "./errors"
-    otlp-endpoint: http://localhost:4317
-    otlp-push-frequency: 5
     vault-path: dev-secrets/creds
   debugging:
     forceDebugMode: "false"

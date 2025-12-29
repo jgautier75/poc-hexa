@@ -3,12 +3,13 @@ package com.acme.jga.domain.input.functions.organizations;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
+import io.micrometer.observation.Observation;
 
 import java.util.List;
 
 public interface OrganizationFindInput {
 
-    List<Organization> findAll(CompositeId tenantId) throws FunctionalException;
+    List<Organization> findAll(CompositeId tenantId, Observation parentObservation) throws FunctionalException;
 
     Organization findById(CompositeId tenantId, CompositeId organizationId) throws FunctionalException;
 

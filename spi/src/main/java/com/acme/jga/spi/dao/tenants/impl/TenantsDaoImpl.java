@@ -8,6 +8,7 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -90,6 +91,7 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
     }
 
     @Override
+    @Observed(name = "DAO_TENANT_FIND_BY_ID")
     public Tenant findByExternalId(String externalId) {
         String baseQuery = super.getQuery("tenant_sel_base");
         List<WhereClause> whereClauses = new ArrayList<>();

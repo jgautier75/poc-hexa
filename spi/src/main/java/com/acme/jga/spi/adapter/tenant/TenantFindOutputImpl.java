@@ -4,6 +4,7 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,8 +30,8 @@ public class TenantFindOutputImpl implements TenantFindOutput {
     }
 
     @Override
+    @Observed(name = "SPI_TENANT_FIND_BY_ID")
     public Tenant findById(CompositeId tenantId) {
-        Tenant rdbmsTenant = this.tenantsDao.findByExternalId(tenantId.get());
-        return null;
+        return this.tenantsDao.findByExternalId(tenantId.get());
     }
 }

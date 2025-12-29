@@ -12,6 +12,9 @@ import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,15 +26,17 @@ public class AppOrganizationsServiceImpl implements AppOrganizationsService {
     private final OrganizationFindInput organizationFindInput;
     private final OrganizationUpdateInput organizationUpdateInput;
     private final OrganizationDeleteInput organizationDeleteInput;
+    private final ObservationRegistry observationRegistry;
 
     public AppOrganizationsServiceImpl(TenantFindInput tenantFindInput, OrganizationCreateInput organizationCreateInput,
                                        OrganizationFindInput organizationFindInput, OrganizationUpdateInput organizationUpdateInput,
-                                       OrganizationDeleteInput organizationDeleteInput) {
+                                       OrganizationDeleteInput organizationDeleteInput, ObservationRegistry observationRegistry) {
         this.tenantFindInput = tenantFindInput;
         this.organizationCreateInput = organizationCreateInput;
         this.organizationFindInput = organizationFindInput;
         this.organizationUpdateInput = organizationUpdateInput;
         this.organizationDeleteInput = organizationDeleteInput;
+        this.observationRegistry = observationRegistry;
     }
 
     @Override
@@ -43,10 +48,17 @@ public class AppOrganizationsServiceImpl implements AppOrganizationsService {
     }
 
     @Override
-    public OrganizationListDisplayDto listOrganizations(String tenantUid) throws FunctionalException {
-        List<Organization> orgs = this.organizationFindInput.findAll(new CompositeId(null, tenantUid));
-        List<OrganizationDto> dtosOrgs = orgs.stream().map(org -> new OrganizationDto(org.id().externalId(), org.code(), org.label(), org.kind(), org.country(), org.status())).toList();
-        return new OrganizationListDisplayDto(dtosOrgs);
+    public OrganizationListDisplayDto listOrganizations(String tenantUid, Observation parentObservation) throws FunctionalException {
+        Observation svcObservation = Observation.createNotStarted("ORGS_SVC_LIST", observationRegistry);
+        svcObservation.parentObservation(parentObservation);
+        svcObservation.start();
+        try {
+            List<Organization> orgs = this.organizationFindInput.findAll(new CompositeId(null, tenantUid), svcObservation);
+            List<OrganizationDto> dtosOrgs = orgs.stream().map(org -> new OrganizationDto(org.id().externalId(), org.code(), org.label(), org.kind(), org.country(), org.status())).toList();
+            return new OrganizationListDisplayDto(dtosOrgs);
+        } finally {
+            svcObservation.stop();
+        }
     }
 
     @Override

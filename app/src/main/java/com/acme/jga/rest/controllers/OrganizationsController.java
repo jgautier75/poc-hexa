@@ -6,6 +6,8 @@ import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
 import com.acme.jga.rest.utils.WebApiVersions;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class OrganizationsController {
     private static final String INSTRUMENTATION_NAME = OrganizationsController.class.getCanonicalName();
     private final AppOrganizationsService appOrganizationsService;
+    private final ObservationRegistry observationRegistry;
 
-    public OrganizationsController(AppOrganizationsService appOrganizationsService) {
+    public OrganizationsController(AppOrganizationsService appOrganizationsService, ObservationRegistry observationRegistry) {
         this.appOrganizationsService = appOrganizationsService;
+        this.observationRegistry = observationRegistry;
     }
 
     @PostMapping(value = WebApiVersions.OrganizationsResourceVersion.ROOT)
@@ -31,17 +35,19 @@ public class OrganizationsController {
                                                                        @RequestParam(value = "filter", required = false) String searchFilter,
                                                                        @RequestParam(value = "index", required = false, defaultValue = "1") Integer pageIndex,
                                                                        @RequestParam(value = "size", required = false, defaultValue = "10") Integer pageSize,
-                                                                       @RequestParam(value = "orderBy", required = false, defaultValue = "label") String orderBy)
-            throws FunctionalException {
-        OrganizationListDisplayDto organizationListDisplayDto = appOrganizationsService.listOrganizations(tenantUid);
-        return new ResponseEntity<>(organizationListDisplayDto, HttpStatus.OK);
+                                                                       @RequestParam(value = "orderBy", required = false, defaultValue = "label") String orderBy) throws FunctionalException {
+        Observation apiObservation = Observation.start("ORGS_API_LIST", observationRegistry);
+        try {
+            OrganizationListDisplayDto organizationListDisplayDto = appOrganizationsService.listOrganizations(tenantUid, apiObservation);
+            return new ResponseEntity<>(organizationListDisplayDto, HttpStatus.OK);
+        } finally {
+            apiObservation.stop();
+        }
     }
 
     @GetMapping(value = WebApiVersions.OrganizationsResourceVersion.WITH_UID)
-    public ResponseEntity<OrganizationDto> findOrgDetails(@PathVariable("tenantUid") String tenantUid,
-                                                          @PathVariable("orgUid") String orgUid,
-                                                          @RequestParam(name = "fetchSectors", defaultValue = "true") boolean fecthSectors)
-            throws FunctionalException {
+    public ResponseEntity<OrganizationDto> findOrgDetails(@PathVariable("tenantUid") String tenantUid, @PathVariable("orgUid") String orgUid,
+                                                          @RequestParam(name = "fetchSectors", defaultValue = "true") boolean fecthSectors) throws FunctionalException {
         OrganizationDto organization = appOrganizationsService.findOrganization(tenantUid, orgUid);
         return new ResponseEntity<>(organization, HttpStatus.OK);
     }
@@ -49,16 +55,14 @@ public class OrganizationsController {
     @PostMapping(value = WebApiVersions.OrganizationsResourceVersion.WITH_UID)
     public ResponseEntity<Void> updateOrganization(@PathVariable("tenantUid") String tenantUid,
                                                    @PathVariable("orgUid") String orgUid,
-                                                   @RequestBody OrganizationDto organizationDto)
-            throws FunctionalException {
+                                                   @RequestBody OrganizationDto organizationDto) throws FunctionalException {
         appOrganizationsService.updateOrganization(tenantUid, orgUid, organizationDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(value = WebApiVersions.OrganizationsResourceVersion.WITH_UID)
     public ResponseEntity<Void> deleteOrganization(@PathVariable("tenantUid") String tenantUid,
-                                                   @PathVariable("orgUid") String orgUid)
-            throws FunctionalException {
+                                                   @PathVariable("orgUid") String orgUid) throws FunctionalException {
         appOrganizationsService.deleteOrganization(tenantUid, orgUid);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

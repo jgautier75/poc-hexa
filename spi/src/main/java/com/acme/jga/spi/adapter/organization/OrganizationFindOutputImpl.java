@@ -4,6 +4,8 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +13,11 @@ import java.util.List;
 @Service
 public class OrganizationFindOutputImpl implements OrganizationFindOutput {
     private final OrganizationsDao organizationsDao;
+    private final ObservationRegistry observationRegistry;
 
-    public OrganizationFindOutputImpl(OrganizationsDao organizationsDao) {
+    public OrganizationFindOutputImpl(OrganizationsDao organizationsDao, ObservationRegistry observationRegistry) {
         this.organizationsDao = organizationsDao;
+        this.observationRegistry = observationRegistry;
     }
 
     @Override
@@ -27,8 +31,15 @@ public class OrganizationFindOutputImpl implements OrganizationFindOutput {
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId) {
-        return this.organizationsDao.findAll(tenantId);
+    public List<Organization> findAll(CompositeId tenantId, Observation parentObservation) {
+        Observation spiObservation = Observation.createNotStarted("ORGS_SPI_LIST", observationRegistry);
+        spiObservation.parentObservation(parentObservation);
+        spiObservation.start();
+        try {
+            return this.organizationsDao.findAll(tenantId);
+        } finally {
+            spiObservation.stop();
+        }
     }
 
     @Override
