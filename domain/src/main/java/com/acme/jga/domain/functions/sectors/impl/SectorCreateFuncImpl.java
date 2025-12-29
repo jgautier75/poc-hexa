@@ -30,7 +30,7 @@ public class SectorCreateFuncImpl implements com.acme.jga.domain.input.functions
 
     @Override
     public CompositeId create(Sector sector) throws FunctionalException {
-        Tenant tenant = tenantFindInput.findById(sector.getTenantId());
+        Tenant tenant = tenantFindInput.findById(sector.getTenantId(), null);
         Organization organization = organizationFindInput.findById(tenant.id(), sector.getOrganizationId());
         Sector parentSector = sectorFindInput.findById(tenant.id(), organization.id(), sector.getParent());
         if (parentSector == null) {

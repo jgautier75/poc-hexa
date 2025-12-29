@@ -3,6 +3,7 @@ package com.acme.jga.domain.functions.stubs.tenants;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
+import io.opentelemetry.api.trace.Span;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class TenantFindOutputStub implements TenantFindOutput {
     }
 
     @Override
-    public Tenant findById(CompositeId tenantId) {
+    public Tenant findById(CompositeId tenantId, Span parentSpan) {
         if (tenantId != null && tenantId.internalId() != null) {
             return tenants.stream().filter(t -> t.id().internalId().longValue() == tenantId.internalId().longValue()).findFirst().orElse(null);
         } else if (tenantId != null && tenantId.externalId() != null) {

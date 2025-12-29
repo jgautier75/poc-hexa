@@ -16,4 +16,6 @@ public class AppGenericProperties {
     private String moduleName;
     private String errorPath;
     private String vaultPath;
+    private String otlpEndpoint;
+    private Long otlpPushFrequency;
 }

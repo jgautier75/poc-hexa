@@ -4,6 +4,7 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
+import io.opentelemetry.api.trace.Span;
 
 import java.util.List;
 
@@ -21,12 +22,12 @@ public class TenantExistsOutputStub implements TenantExistsOutput {
     }
 
     @Override
-    public boolean existsByExternalId(String externalId) {
+    public boolean existsByExternalId(String externalId, Span parentSpan) {
         return tenants.stream().anyMatch(t -> t.id().externalId().equals(externalId));
     }
 
     @Override
-    public boolean existsById(CompositeId compositeId) {
+    public boolean existsById(CompositeId compositeId, Span parentSpan) {
         if (compositeId.kind() == IdKind.BOTH && compositeId.internalId() != null) {
             return tenants.stream().anyMatch(t -> t.id().internalId().longValue() == compositeId.internalId().longValue());
         } else if (compositeId.externalId() != null) {

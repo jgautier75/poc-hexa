@@ -1,10 +1,13 @@
 package com.acme.jga.domain.functions.tenants.impl;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.functions.stubs.tenants.TenantExistsOutputStub;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.api.trace.TracerProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,7 +21,7 @@ class TenantExistsFuncImplTest {
     private static final Tenant TENANT = new Tenant(TENANT_ID, "tcode", "tlabel", TenantStatus.ACTIVE);
     private static final List<Tenant> TENANTS = List.of(TENANT);
     private static final TenantExistsOutputStub TENANT_EXISTS_OUTPUT_STUB = new TenantExistsOutputStub(TENANTS);
-    private static final TenantExistsFuncImpl TENANT_EXISTS_FUNC = new TenantExistsFuncImpl(TENANT_EXISTS_OUTPUT_STUB);
+    private static final TenantExistsFuncImpl TENANT_EXISTS_FUNC = new TenantExistsFuncImpl(TENANT_EXISTS_OUTPUT_STUB, TracerProvider.noop());
 
     @Test
     void Tenant_Exists_By_Code_Nominal() {
@@ -27,8 +30,8 @@ class TenantExistsFuncImplTest {
     }
 
     @Test
-    void Tenant_Exists_By_External_Id_Nominal() {
-        boolean exists = TENANT_EXISTS_FUNC.existsByExternalId(TENANT.id().get());
+    void Tenant_Exists_By_External_Id_Nominal() throws FunctionalException {
+        boolean exists = TENANT_EXISTS_FUNC.existsByExternalId(TENANT.id().get(), null);
         assertTrue(exists, "Tenant exists");
     }
 }

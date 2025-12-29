@@ -5,12 +5,14 @@ import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import io.micrometer.observation.Observation;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.context.Context;
 
 public interface AppOrganizationsService {
 
     UidDto createOrganization(String tenantUid, OrganizationDto organizationDto) throws FunctionalException;
 
-    OrganizationListDisplayDto listOrganizations(String tenantUid, Observation parentObservation) throws FunctionalException;
+    OrganizationListDisplayDto listOrganizations(String tenantUid, Span parentSpan) throws FunctionalException;
 
     OrganizationDto findOrganization(String tenantUid, String organizationUid) throws FunctionalException;
 

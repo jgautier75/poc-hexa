@@ -27,7 +27,7 @@ public class OrganizationUpdateFuncImpl implements OrganizationUpdateInput {
 
     @Override
     public void update(Organization organization) throws FunctionalException {
-        boolean tenantExists = this.tenantExistsOutput.existsByExternalId(organization.tenantId().externalId());
+        boolean tenantExists = this.tenantExistsOutput.existsByExternalId(organization.tenantId().externalId(), null);
         if (!tenantExists) {
             throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", organization.tenantId().externalId()));
         }

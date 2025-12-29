@@ -1,23 +1,28 @@
 package com.acme.jga.spi.adapter.organization;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
+import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.TracerProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class OrganizationFindOutputImpl implements OrganizationFindOutput {
+public class OrganizationFindOutputImpl extends OpenTelemetryWrapper implements OrganizationFindOutput {
+    private static final String INSTRUMENTATION_NAME = OrganizationFindOutputImpl.class.getCanonicalName();
     private final OrganizationsDao organizationsDao;
-    private final ObservationRegistry observationRegistry;
 
-    public OrganizationFindOutputImpl(OrganizationsDao organizationsDao, ObservationRegistry observationRegistry) {
+    public OrganizationFindOutputImpl(OrganizationsDao organizationsDao, TracerProvider tracerProvider) {
+        super(tracerProvider);
         this.organizationsDao = organizationsDao;
-        this.observationRegistry = observationRegistry;
     }
 
     @Override
@@ -31,15 +36,10 @@ public class OrganizationFindOutputImpl implements OrganizationFindOutput {
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId, Observation parentObservation) {
-        Observation spiObservation = Observation.createNotStarted("ORGS_SPI_LIST", observationRegistry);
-        spiObservation.parentObservation(parentObservation);
-        spiObservation.start();
-        try {
-            return this.organizationsDao.findAll(tenantId);
-        } finally {
-            spiObservation.stop();
-        }
+    public List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException {
+        return super.executeWithSpan(INSTRUMENTATION_NAME, "ORGS_SPI_LIST", Map.of("tenant_id", tenantId.toString()), parentSpan, (span) -> {
+            return this.organizationsDao.findAll(tenantId, span);
+        });
     }
 
     @Override

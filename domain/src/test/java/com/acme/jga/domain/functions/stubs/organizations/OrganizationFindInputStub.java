@@ -8,7 +8,7 @@ import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.domain.model.tenant.Tenant;
-import io.micrometer.observation.Observation;
+import io.opentelemetry.api.trace.Span;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class OrganizationFindInputStub implements OrganizationFindInput {
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId, Observation parentObservation) throws FunctionalException {
+    public List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException {
         return organizations;
     }
 

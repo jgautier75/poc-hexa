@@ -77,23 +77,6 @@ management:
       enabled: true
     defaults:
       enabled: true
-  #tracing:
-      #sampling:
-      # Trace 100% of requests
-      #probability: 1.0
-  opentelemetry:
-    tracing:
-      export:
-        otlp:
-          endpoint: http://localhost:4318/v1/traces
-          transport: http
-        schedule-delay: 5s
-        timeout: 30s
-    logging:
-      export:
-        otlp:
-          endpoint: http://localhost:4318/v1/logs
-          transport: http
 server:
   servlet:
     context-path: /poc-hexa/
@@ -108,6 +91,8 @@ app:
     moduleName: poc-hexa
     errorPath: "./errors"
     vault-path: dev-secrets/creds
+    otlp-endpoint: http://localhost:4317
+    otlp-push-frequency: 5
   debugging:
     forceDebugMode: "false"
     headerName: "X-APP-DEBUG"

@@ -7,6 +7,7 @@ import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
 import io.micrometer.observation.Observation;
+import io.opentelemetry.api.trace.Span;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class OrganizationFindOutputStub implements OrganizationFindOutput {
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId, Observation parentObservation) {
+    public List<Organization> findAll(CompositeId tenantId, Span parentSpan) {
         return organizations;
     }
 

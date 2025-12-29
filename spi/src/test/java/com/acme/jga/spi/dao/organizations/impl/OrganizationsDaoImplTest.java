@@ -1,5 +1,6 @@
 package com.acme.jga.spi.dao.organizations.impl;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationKind;
@@ -60,7 +61,7 @@ class OrganizationsDaoImplTest {
     }
 
     @Test
-    public void Organization_Operations_Nominal() {
+    public void Organization_Operations_Nominal() throws FunctionalException {
         Tenant tenant = new Tenant(null, "mytenant", "My Tenant", TenantStatus.ACTIVE);
         CompositeId tenantId = tenantsDao.save(tenant);
         assertNotNull(tenantId, "Tenant created");
@@ -75,7 +76,7 @@ class OrganizationsDaoImplTest {
         boolean exists = organizationsDao.existsByCode(ORG_CODE);
         assertTrue(exists, "Organization exists by code");
 
-        List<Organization> orgs = organizationsDao.findAll(tenantId);
+        List<Organization> orgs = organizationsDao.findAll(tenantId, null);
         assertEquals(1, orgs.size(), "Organizations found");
 
         String updatedName = "My Org Label";

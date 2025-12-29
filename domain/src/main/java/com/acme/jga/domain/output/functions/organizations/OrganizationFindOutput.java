@@ -1,8 +1,10 @@
 package com.acme.jga.domain.output.functions.organizations;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import io.micrometer.observation.Observation;
+import io.opentelemetry.api.trace.Span;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ public interface OrganizationFindOutput {
 
     boolean existsByCode(String code);
 
-    List<Organization> findAll(CompositeId tenantId, Observation parentObservation);
+    List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException;
 
     Organization findByCode(String code);
 }

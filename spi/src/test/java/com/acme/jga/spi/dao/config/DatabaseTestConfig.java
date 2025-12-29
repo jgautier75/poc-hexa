@@ -4,6 +4,7 @@ import com.acme.jga.spi.dao.organizations.impl.OrganizationsDaoImpl;
 import com.acme.jga.spi.dao.sectors.impl.SectorsDaoImpl;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
+import io.opentelemetry.api.trace.TracerProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,18 +34,23 @@ public class DatabaseTestConfig {
     }
 
     @Bean
-    public TenantsDao tenantsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        return new TenantsDaoImpl(namedParameterJdbcTemplate);
+    public TenantsDao tenantsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate, @Autowired TracerProvider tracerProvider) {
+        return new TenantsDaoImpl(tracerProvider, namedParameterJdbcTemplate);
     }
 
     @Bean
-    public OrganizationsDaoImpl organizationsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        return new OrganizationsDaoImpl(namedParameterJdbcTemplate);
+    public OrganizationsDaoImpl organizationsDao(@Autowired TracerProvider tracerProvider, @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new OrganizationsDaoImpl(tracerProvider, namedParameterJdbcTemplate);
     }
 
     @Bean
-    public SectorsDaoImpl sectorsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        return new SectorsDaoImpl(namedParameterJdbcTemplate);
+    public SectorsDaoImpl sectorsDao(@Autowired TracerProvider tracerProvider, @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new SectorsDaoImpl(tracerProvider, namedParameterJdbcTemplate);
+    }
+
+    @Bean
+    public TracerProvider tracerProvider() {
+        return TracerProvider.noop();
     }
 
 }

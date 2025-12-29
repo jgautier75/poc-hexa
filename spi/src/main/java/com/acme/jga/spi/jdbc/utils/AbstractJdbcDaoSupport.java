@@ -3,6 +3,8 @@ package com.acme.jga.spi.jdbc.utils;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.sorting.OrderByClause;
+import com.acme.jga.domain.otel.OpenTelemetryWrapper;
+import io.opentelemetry.api.trace.TracerProvider;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.*;
 
-public abstract class AbstractJdbcDaoSupport {
+public class AbstractJdbcDaoSupport extends OpenTelemetryWrapper {
 
     private Logger LOG = LoggerFactory.getLogger(AbstractJdbcDaoSupport.class);
 
@@ -31,11 +33,8 @@ public abstract class AbstractJdbcDaoSupport {
 
     protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    protected AbstractJdbcDaoSupport() {
-        // Empty constructor for injection
-    }
-
-    protected AbstractJdbcDaoSupport(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    protected AbstractJdbcDaoSupport(TracerProvider tracerProvider, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        super(tracerProvider);
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
@@ -177,7 +176,7 @@ public abstract class AbstractJdbcDaoSupport {
             if (whereClause.getParamName() != null && whereClause.getParamValue() != null) {
                 params.put(whereClause.getParamName(), whereClause.getParamValue());
             }
-            if (whereClause.getParamNames()!=null && whereClause.getParamValues()!=null) {
+            if (whereClause.getParamNames() != null && whereClause.getParamValues() != null) {
                 int inc = 0;
                 for (var pName : whereClause.getParamNames()) {
                     params.put(pName, whereClause.getParamValues().get(inc));

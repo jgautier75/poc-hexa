@@ -1,26 +1,27 @@
 package com.acme.jga.rest.controllers;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
+import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
 import com.acme.jga.rest.utils.WebApiVersions;
-import io.micrometer.observation.Observation;
-import io.micrometer.observation.ObservationRegistry;
+import io.opentelemetry.api.trace.TracerProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-public class OrganizationsController {
+public class OrganizationsController extends OpenTelemetryWrapper {
     private static final String INSTRUMENTATION_NAME = OrganizationsController.class.getCanonicalName();
     private final AppOrganizationsService appOrganizationsService;
-    private final ObservationRegistry observationRegistry;
 
-    public OrganizationsController(AppOrganizationsService appOrganizationsService, ObservationRegistry observationRegistry) {
+    public OrganizationsController(AppOrganizationsService appOrganizationsService, TracerProvider tracerProvider) {
+        super(tracerProvider);
         this.appOrganizationsService = appOrganizationsService;
-        this.observationRegistry = observationRegistry;
     }
 
     @PostMapping(value = WebApiVersions.OrganizationsResourceVersion.ROOT)
@@ -36,13 +37,13 @@ public class OrganizationsController {
                                                                        @RequestParam(value = "index", required = false, defaultValue = "1") Integer pageIndex,
                                                                        @RequestParam(value = "size", required = false, defaultValue = "10") Integer pageSize,
                                                                        @RequestParam(value = "orderBy", required = false, defaultValue = "label") String orderBy) throws FunctionalException {
-        Observation apiObservation = Observation.start("ORGS_API_LIST", observationRegistry);
-        try {
-            OrganizationListDisplayDto organizationListDisplayDto = appOrganizationsService.listOrganizations(tenantUid, apiObservation);
-            return new ResponseEntity<>(organizationListDisplayDto, HttpStatus.OK);
-        } finally {
-            apiObservation.stop();
-        }
+        OrganizationListDisplayDto organizationListDisplayDto = super.executeWithSpan(INSTRUMENTATION_NAME,
+                "ORGS_API_LIST",
+                Map.of("tenant_uid", tenantUid, "filter", nvl(searchFilter)),
+                null,
+                (span) -> appOrganizationsService.listOrganizations(tenantUid, span)
+        );
+        return new ResponseEntity<>(organizationListDisplayDto, HttpStatus.OK);
     }
 
     @GetMapping(value = WebApiVersions.OrganizationsResourceVersion.WITH_UID)

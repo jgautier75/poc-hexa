@@ -8,35 +8,37 @@ import com.acme.jga.domain.input.functions.organizations.OrganizationUpdateInput
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
+import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
-import io.micrometer.observation.Observation;
-import io.micrometer.observation.ObservationRegistry;
-import io.micrometer.observation.annotation.Observed;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.TracerProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class AppOrganizationsServiceImpl implements AppOrganizationsService {
+public class AppOrganizationsServiceImpl extends OpenTelemetryWrapper implements AppOrganizationsService {
+    private static final String INSTRUMENTATION_NAME = AppOrganizationsServiceImpl.class.getCanonicalName();
     private final TenantFindInput tenantFindInput;
     private final OrganizationCreateInput organizationCreateInput;
     private final OrganizationFindInput organizationFindInput;
     private final OrganizationUpdateInput organizationUpdateInput;
     private final OrganizationDeleteInput organizationDeleteInput;
-    private final ObservationRegistry observationRegistry;
 
     public AppOrganizationsServiceImpl(TenantFindInput tenantFindInput, OrganizationCreateInput organizationCreateInput,
                                        OrganizationFindInput organizationFindInput, OrganizationUpdateInput organizationUpdateInput,
-                                       OrganizationDeleteInput organizationDeleteInput, ObservationRegistry observationRegistry) {
+                                       OrganizationDeleteInput organizationDeleteInput,
+                                       TracerProvider tracerProvider) {
+        super(tracerProvider);
         this.tenantFindInput = tenantFindInput;
         this.organizationCreateInput = organizationCreateInput;
         this.organizationFindInput = organizationFindInput;
         this.organizationUpdateInput = organizationUpdateInput;
         this.organizationDeleteInput = organizationDeleteInput;
-        this.observationRegistry = observationRegistry;
     }
 
     @Override
@@ -48,17 +50,12 @@ public class AppOrganizationsServiceImpl implements AppOrganizationsService {
     }
 
     @Override
-    public OrganizationListDisplayDto listOrganizations(String tenantUid, Observation parentObservation) throws FunctionalException {
-        Observation svcObservation = Observation.createNotStarted("ORGS_SVC_LIST", observationRegistry);
-        svcObservation.parentObservation(parentObservation);
-        svcObservation.start();
-        try {
-            List<Organization> orgs = this.organizationFindInput.findAll(new CompositeId(null, tenantUid), svcObservation);
-            List<OrganizationDto> dtosOrgs = orgs.stream().map(org -> new OrganizationDto(org.id().externalId(), org.code(), org.label(), org.kind(), org.country(), org.status())).toList();
-            return new OrganizationListDisplayDto(dtosOrgs);
-        } finally {
-            svcObservation.stop();
-        }
+    public OrganizationListDisplayDto listOrganizations(String tenantUid, Span parentSpan) throws FunctionalException {
+        List<OrganizationDto> dtosOrgs = super.executeWithSpan(INSTRUMENTATION_NAME, "ORGS_SVC_LIST", Map.of("tenant_uid", tenantUid), parentSpan, (span) -> {
+            List<Organization> orgs = this.organizationFindInput.findAll(new CompositeId(null, tenantUid), span);
+            return orgs.stream().map(org -> new OrganizationDto(org.id().externalId(), org.code(), org.label(), org.kind(), org.country(), org.status())).toList();
+        });
+        return new OrganizationListDisplayDto(dtosOrgs);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
 
     @Override
     public CompositeId create(Organization organization) throws FunctionalException {
-        boolean tenantExists = tenantExistsFunc.existsByExternalId(organization.tenantId().externalId());
+        boolean tenantExists = tenantExistsFunc.existsByExternalId(organization.tenantId().externalId(), null);
         if (!tenantExists) {
             throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", organization.tenantId().externalId()));
         }
@@ -46,7 +46,7 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
             throw new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.ALREADY_EXISTS.name(), BundleFactory.getMessage("organization.already_exist", organization.code()));
         }
 
-        Tenant tenant = tenantFindInput.findById(organization.tenantId());
+        Tenant tenant = tenantFindInput.findById(organization.tenantId(), null);
 
         Organization org = new Organization(null, tenant.id(), organization.label(), organization.code(), organization.kind(), organization.country(), organization.status());
         CompositeId orgCompositeId = organizationCreateOutput.save(org);

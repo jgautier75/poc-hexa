@@ -39,6 +39,10 @@
             <artifactId>micrometer-observation</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

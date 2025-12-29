@@ -1,5 +1,6 @@
 package com.acme.jga.spi.dao.organizations.impl;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
@@ -12,6 +13,8 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.TracerProvider;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,9 +30,10 @@ import java.util.Map;
 
 @Repository
 public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements OrganizationsDao {
+    private static final String INSTRUMENTATION_NAME = OrganizationsDaoImpl.class.getCanonicalName();
 
-    public OrganizationsDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        super(namedParameterJdbcTemplate);
+    public OrganizationsDaoImpl(TracerProvider tracerProvider, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        super(tracerProvider, namedParameterJdbcTemplate);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"organizations.properties"});
     }
 
@@ -114,23 +118,35 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId) {
-        String baseQuery = super.getQuery("org_sel_base");
-        List<WhereClause> whereClauses = new ArrayList<>();
-        whereClauses.add(WhereClause.builder()
-                .expression(buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
-                .paramName(DaoConstants.P_TENANT_ID)
-                .operator(WhereOperator.AND)
-                .paramValue(tenantId.internalId())
-                .build());
-        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, List.of(OrderByClause.builder().expression("label").orderDirection(OrderDirection.ASC).build()), (String[]) null);
-        Map<String, Object> params = super.buildParams(whereClauses);
-        return super.getNamedParameterJdbcTemplate().query(fullQuery, params, new RowMapper<>() {
-            @Override
-            public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return OrganizationExtractor.extractOrganization(rs, false, tenantId);
-            }
-        });
+    public List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException {
+        return super.executeWithSpan(INSTRUMENTATION_NAME, "ORGS_DAO_LIST",
+                Map.of("composite_id", tenantId.toString()),
+                parentSpan,
+                (span) -> {
+                    String baseQuery = super.getQuery("org_sel_base");
+                    List<WhereClause> whereClauses = new ArrayList<>();
+                    whereClauses.add(WhereClause.builder()
+                            .expression(buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
+                            .paramName(DaoConstants.P_TENANT_ID)
+                            .operator(WhereOperator.AND)
+                            .paramValue(tenantId.internalId())
+                            .build());
+                    String fullQuery = super.buildFullQuery(
+                            baseQuery,
+                            whereClauses,
+                            List.of(OrderByClause.builder()
+                                    .expression("label")
+                                    .orderDirection(OrderDirection.ASC)
+                                    .build()),
+                            (String[]) null);
+                    Map<String, Object> params = super.buildParams(whereClauses);
+                    return super.getNamedParameterJdbcTemplate().query(fullQuery, params, new RowMapper<>() {
+                        @Override
+                        public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            return OrganizationExtractor.extractOrganization(rs, false, tenantId);
+                        }
+                    });
+                });
     }
 
     @Override

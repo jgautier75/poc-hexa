@@ -1,5 +1,6 @@
 package com.acme.jga.spi.dao.tenant.impl;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
@@ -53,12 +54,12 @@ class TenantsDaoImplTest {
     }
 
     @Test
-    public void Tenant_Operations_Nominal() {
+    public void Tenant_Operations_Nominal() throws FunctionalException {
         Tenant rdbmsTenantCreate = new Tenant(new CompositeId(null, UUID.randomUUID().toString()), TENANT_CODE, TENANT_NAME, TenantStatus.ACTIVE);
         CompositeId compositeId = tenantsDao.save(rdbmsTenantCreate);
         assertNotNull(compositeId, "CompositeId is null");
 
-        boolean existsByExternalId = tenantsDao.existsByExternalId(compositeId.externalId());
+        boolean existsByExternalId = tenantsDao.existsByExternalId(compositeId.externalId(),null);
         assertTrue(existsByExternalId, "Tenant exists by externalId");
 
         boolean existsByCode = tenantsDao.existsByCode(TENANT_CODE);
@@ -100,7 +101,7 @@ class TenantsDaoImplTest {
         });
 
         tenantsDao.delete(rdbmsUpdatedByCode.id());
-        boolean exists = tenantsDao.existsByExternalId(rdbmsUpdatedByCode.id().externalId());
+        boolean exists = tenantsDao.existsByExternalId(rdbmsUpdatedByCode.id().externalId(),null);
         assertFalse(exists, "Tenant does not exists by externalId (deleted)");
     }
 
