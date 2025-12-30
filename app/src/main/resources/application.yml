@@ -82,6 +82,7 @@ logging:
 app:
   config:
     moduleName: poc-hexa
+    moduleVersion: 1.0.0-SNAPSHOT
     errorPath: "./errors"
     vault-path: dev-secrets/creds
     otlp-endpoint: http://localhost:4317

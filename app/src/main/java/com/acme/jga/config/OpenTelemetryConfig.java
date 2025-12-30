@@ -33,7 +33,7 @@ public class OpenTelemetryConfig {
     public Resource otelResource() {
         return Resource.getDefault().toBuilder()
                 .put("service.name", appGenericProperties.getModuleName())
-                .put("service.version", "1.0.0").build();
+                .put("service.version", appGenericProperties.getModuleVersion()).build();
     }
 
 
