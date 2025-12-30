@@ -5,6 +5,4 @@ import com.acme.jga.domain.model.organization.Organization;
 
 public interface OrganizationCreateOutput {
     CompositeId save(Organization organization);
-
-
 }
