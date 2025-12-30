@@ -1,0 +1,29 @@
+meta {
+  name: CREATE
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations/ff866a02-5d23-4c30-815e-ddad655b83fe/users
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "login": "mhamilton",
+    "firstName":"margaret",
+    "lastName": "HAMILTON",
+    "email": "m.hamilton@test.fr",
+    "status": 1  
+  }
+}
+
+settings {
+  encodeUrl: true
+}
