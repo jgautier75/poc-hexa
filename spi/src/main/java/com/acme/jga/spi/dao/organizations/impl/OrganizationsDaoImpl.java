@@ -16,7 +16,6 @@ import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
 import io.micrometer.observation.ObservationRegistry;
 import io.opentelemetry.sdk.logs.SdkLoggerProvider;
-import org.jspecify.annotations.Nullable;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

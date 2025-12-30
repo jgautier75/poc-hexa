@@ -4,6 +4,7 @@ import com.acme.jga.spi.dao.organizations.impl.OrganizationsDaoImpl;
 import com.acme.jga.spi.dao.sectors.impl.SectorsDaoImpl;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
+import com.acme.jga.spi.dao.users.impl.UsersDaoImpl;
 import io.micrometer.observation.ObservationRegistry;
 import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,13 @@ public class DatabaseTestConfig {
                                      @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
                                      @Autowired SdkLoggerProvider sdkLoggerProvider) {
         return new SectorsDaoImpl(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
+    }
+
+    @Bean
+    public UsersDaoImpl usersDao(@Autowired ObservationRegistry observationRegistry,
+                                 @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                                 @Autowired SdkLoggerProvider sdkLoggerProvider) {
+        return new UsersDaoImpl(namedParameterJdbcTemplate, observationRegistry, sdkLoggerProvider);
     }
 
     @Bean

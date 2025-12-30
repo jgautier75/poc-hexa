@@ -34,6 +34,7 @@ public final class DaoConstants {
     public static final String P_STATUS = "pStatus";
     public static final String P_PARENT_ID = "pParentId";
     public static final String P_SECRETS = "pSecrets";
+    public static final String P_NOTIF = "pNotif";
     public static final String ORDER_BY = " order by ";
     public static final String ORDER_ASC_SIGN = "+";
     public static final String ORDER_DESC_SIGN = "-";
