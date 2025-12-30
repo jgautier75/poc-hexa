@@ -21,7 +21,7 @@ public class TenantUpdateFuncImpl implements TenantUpdateInput {
 
     @Override
     public boolean update(Tenant tenant) throws FunctionalException {
-        boolean exists = tenantExistsFunc.existsByExternalId(tenant.id().get(), null);
+        boolean exists = tenantExistsFunc.existsByExternalId(tenant.id().get());
         if (!exists) {
             throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", tenant.id().get()));
         }

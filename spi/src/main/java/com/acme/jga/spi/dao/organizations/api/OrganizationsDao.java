@@ -1,10 +1,8 @@
 package com.acme.jga.spi.dao.organizations.api;
 
-import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
-import io.opentelemetry.api.trace.Span;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ public interface OrganizationsDao {
 
     boolean existsByCode(String code);
 
-    List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException;
+    List<Organization> findAll(CompositeId tenantId);
 
     Organization findByCode(String code);
 

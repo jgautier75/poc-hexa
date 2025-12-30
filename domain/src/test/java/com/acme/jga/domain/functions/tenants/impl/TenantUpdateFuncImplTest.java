@@ -7,7 +7,6 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
 import com.acme.jga.domain.output.functions.tenants.TenantUpdateOutput;
-import io.opentelemetry.api.trace.TracerProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -22,7 +21,7 @@ class TenantUpdateFuncImplTest {
     private static final Tenant TENANT = new Tenant(TENANT_ID, "tcode", "tlabel", TenantStatus.ACTIVE);
     private static final List<Tenant> TENANTS = List.of(TENANT);
     private static final TenantExistsOutputStub TENANT_EXISTS_OUTPUT_STUB = new TenantExistsOutputStub(TENANTS);
-    private static final TenantExistsFuncImpl TENANT_EXISTS_FUNC = new TenantExistsFuncImpl(TENANT_EXISTS_OUTPUT_STUB, TracerProvider.noop());
+    private static final TenantExistsFuncImpl TENANT_EXISTS_FUNC = new TenantExistsFuncImpl(TENANT_EXISTS_OUTPUT_STUB);
     private static final TenantUpdateOutput TENANT_UPDATE_OUTPUT = new TenantUpdateOutputStub(TENANTS);
     private static final TenantUpdateFuncImpl TENANT_UPDATE_FUNC = new TenantUpdateFuncImpl(TENANT_UPDATE_OUTPUT, TENANT_EXISTS_FUNC);
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OrganizationFindInput {
 
-    List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException;
+    List<Organization> findAll(CompositeId tenantId) throws FunctionalException;
 
     Organization findById(CompositeId tenantId, CompositeId organizationId) throws FunctionalException;
 

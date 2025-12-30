@@ -13,7 +13,7 @@ public interface OrganizationFindOutput {
 
     boolean existsByCode(String code);
 
-    List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException;
+    List<Organization> findAll(CompositeId tenantId) throws FunctionalException;
 
     Organization findByCode(String code);
 }

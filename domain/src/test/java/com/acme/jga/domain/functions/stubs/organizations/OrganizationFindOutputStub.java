@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class OrganizationFindOutputStub implements OrganizationFindOutput {
-
     public static final CompositeId DEFAULT_ORG_ID = new CompositeId(1L, UUID.randomUUID().toString());
     private static final List<Organization> organizations = new ArrayList<>();
 
@@ -35,7 +34,7 @@ public class OrganizationFindOutputStub implements OrganizationFindOutput {
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId, Span parentSpan) {
+    public List<Organization> findAll(CompositeId tenantId) {
         return organizations;
     }
 

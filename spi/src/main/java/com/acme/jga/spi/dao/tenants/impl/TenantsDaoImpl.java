@@ -9,8 +9,8 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.TracerProvider;
+import io.micrometer.observation.ObservationRegistry;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,10 +27,10 @@ import java.util.Map;
 
 @Repository
 public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao {
-    private static final String INSTRUMENTATION_NAME = TenantsDaoImpl.class.getCanonicalName();
-
-    public TenantsDaoImpl(TracerProvider tracerProvider, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        super(tracerProvider, namedParameterJdbcTemplate);
+    public TenantsDaoImpl(ObservationRegistry observationRegistry,
+                          NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                          SdkLoggerProvider sdkLoggerProvider) {
+        super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"tenants.properties"});
     }
 
@@ -72,14 +72,12 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
     }
 
     @Override
-    public boolean existsByExternalId(String externalId, Span parentSpan) throws FunctionalException {
-        return super.executeWithSpan(INSTRUMENTATION_NAME, "TENANT_DAO_EXISTS_BY_EXTERNAL_ID", Map.of("external_id", externalId), parentSpan, (span) -> {
-            String baseQuery = super.getQuery("tenant_exists_by_uid");
-            Map<String, Object> params = new HashMap<>();
-            params.put(DaoConstants.P_UID, externalId);
-            return super.getNamedParameterJdbcTemplate().query(baseQuery, params, rs -> {
-                return super.executeExists(baseQuery, params);
-            });
+    public boolean existsByExternalId(String externalId) throws FunctionalException {
+        String baseQuery = super.getQuery("tenant_exists_by_uid");
+        Map<String, Object> params = new HashMap<>();
+        params.put(DaoConstants.P_UID, externalId);
+        return super.getNamedParameterJdbcTemplate().query(baseQuery, params, rs -> {
+            return super.executeExists(baseQuery, params);
         });
     }
 

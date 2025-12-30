@@ -1,26 +1,20 @@
 package com.acme.jga.rest.controllers;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
 import com.acme.jga.rest.utils.WebApiVersions;
-import io.opentelemetry.api.trace.TracerProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
-public class OrganizationsController extends OpenTelemetryWrapper {
-    private static final String INSTRUMENTATION_NAME = OrganizationsController.class.getCanonicalName();
+public class OrganizationsController {
     private final AppOrganizationsService appOrganizationsService;
 
-    public OrganizationsController(AppOrganizationsService appOrganizationsService, TracerProvider tracerProvider) {
-        super(tracerProvider);
+    public OrganizationsController(AppOrganizationsService appOrganizationsService) {
         this.appOrganizationsService = appOrganizationsService;
     }
 
@@ -37,12 +31,7 @@ public class OrganizationsController extends OpenTelemetryWrapper {
                                                                        @RequestParam(value = "index", required = false, defaultValue = "1") Integer pageIndex,
                                                                        @RequestParam(value = "size", required = false, defaultValue = "10") Integer pageSize,
                                                                        @RequestParam(value = "orderBy", required = false, defaultValue = "label") String orderBy) throws FunctionalException {
-        OrganizationListDisplayDto organizationListDisplayDto = super.executeWithSpan(INSTRUMENTATION_NAME,
-                "ORGS_API_LIST",
-                Map.of("tenant_uid", tenantUid, "filter", nvl(searchFilter)),
-                null,
-                (span) -> appOrganizationsService.listOrganizations(tenantUid, span)
-        );
+        OrganizationListDisplayDto organizationListDisplayDto = appOrganizationsService.listOrganizations(tenantUid);
         return new ResponseEntity<>(organizationListDisplayDto, HttpStatus.OK);
     }
 

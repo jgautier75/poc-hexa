@@ -25,7 +25,7 @@ public class TenantFindOutputStub implements TenantFindOutput {
     }
 
     @Override
-    public Tenant findById(CompositeId tenantId, Span parentSpan) {
+    public Tenant findById(CompositeId tenantId) {
         if (tenantId != null && tenantId.internalId() != null) {
             return tenants.stream().filter(t -> t.id().internalId().longValue() == tenantId.internalId().longValue()).findFirst().orElse(null);
         } else if (tenantId != null && tenantId.externalId() != null) {

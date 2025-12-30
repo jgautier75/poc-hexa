@@ -8,22 +8,15 @@ import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.TracerProvider;
-
-import java.util.Map;
 
 @DomainService
-public class TenantFindFuncImpl extends OpenTelemetryWrapper implements TenantFindInput {
-    private static final String INSTRUMENTATION_NAME = TenantFindFuncImpl.class.getCanonicalName();
+public class TenantFindFuncImpl implements TenantFindInput {
     private final TenantFindOutput tenantFindOutput;
     private final TenantExistsInput tenantExistsFunc;
 
-    public TenantFindFuncImpl(TenantFindOutput tenantFindOutput, TenantExistsInput tenantExistsFunc, TracerProvider tracerProvider) {
-        super(tracerProvider);
+    public TenantFindFuncImpl(TenantFindOutput tenantFindOutput, TenantExistsInput tenantExistsFunc) {
         this.tenantFindOutput = tenantFindOutput;
         this.tenantExistsFunc = tenantExistsFunc;
     }
@@ -42,17 +35,15 @@ public class TenantFindFuncImpl extends OpenTelemetryWrapper implements TenantFi
     }
 
     @Override
-    public Tenant findById(CompositeId tenantId, Span parentSpan) throws FunctionalException {
-        return super.executeWithSpan(INSTRUMENTATION_NAME, "TENANTS_DOMAIN_BY_ID", Map.of("tenant_id", tenantId.toString()), parentSpan, (span) -> {
-            // Ensure tenant exists
-            boolean exists = tenantExistsFunc.existsById(tenantId, span);
-            if (!exists) {
-                throwException(tenantId.get());
-            }
+    public Tenant findById(CompositeId tenantId) throws FunctionalException {
 
-            return tenantFindOutput.findById(tenantId, span);
-        });
+        // Ensure tenant exists
+        boolean exists = tenantExistsFunc.existsById(tenantId);
+        if (!exists) {
+            throwException(tenantId.get());
+        }
 
+        return tenantFindOutput.findById(tenantId);
     }
 
     private void throwException(String args) throws FunctionalException {

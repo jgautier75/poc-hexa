@@ -10,7 +10,8 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
-import io.opentelemetry.api.trace.TracerProvider;
+import io.micrometer.observation.ObservationRegistry;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -30,8 +31,10 @@ import static java.util.Optional.ofNullable;
 @Repository
 public class SectorsDaoImpl extends AbstractJdbcDaoSupport implements com.acme.jga.spi.dao.sectors.api.SectorsDao {
 
-    public SectorsDaoImpl(TracerProvider tracerProvider, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        super(tracerProvider, namedParameterJdbcTemplate);
+    public SectorsDaoImpl(ObservationRegistry observationRegistry,
+                          NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                          SdkLoggerProvider sdkLoggerProvider) {
+        super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"sectors.properties"});
     }
 

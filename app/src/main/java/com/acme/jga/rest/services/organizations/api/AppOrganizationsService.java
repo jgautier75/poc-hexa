@@ -12,7 +12,7 @@ public interface AppOrganizationsService {
 
     UidDto createOrganization(String tenantUid, OrganizationDto organizationDto) throws FunctionalException;
 
-    OrganizationListDisplayDto listOrganizations(String tenantUid, Span parentSpan) throws FunctionalException;
+    OrganizationListDisplayDto listOrganizations(String tenantUid) throws FunctionalException;
 
     OrganizationDto findOrganization(String tenantUid, String organizationUid) throws FunctionalException;
 

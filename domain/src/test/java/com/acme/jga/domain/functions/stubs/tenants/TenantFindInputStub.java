@@ -4,7 +4,6 @@ import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import io.opentelemetry.api.trace.Span;
 
 public class TenantFindInputStub implements TenantFindInput {
 
@@ -20,7 +19,7 @@ public class TenantFindInputStub implements TenantFindInput {
     }
 
     @Override
-    public Tenant findById(CompositeId tenantId, Span parentSpan) throws FunctionalException {
+    public Tenant findById(CompositeId tenantId) throws FunctionalException {
         return tenant.id().internalId().longValue() == tenantId.internalId().longValue() ? tenant : null;
     }
 }

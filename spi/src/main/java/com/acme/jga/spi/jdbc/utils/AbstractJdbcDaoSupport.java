@@ -3,8 +3,10 @@ package com.acme.jga.spi.jdbc.utils;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.sorting.OrderByClause;
-import com.acme.jga.domain.otel.OpenTelemetryWrapper;
-import io.opentelemetry.api.trace.TracerProvider;
+import com.acme.jga.domain.micrometer.MicrometerWrapper;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.*;
 
-public class AbstractJdbcDaoSupport extends OpenTelemetryWrapper {
+public class AbstractJdbcDaoSupport extends MicrometerWrapper {
 
     private Logger LOG = LoggerFactory.getLogger(AbstractJdbcDaoSupport.class);
 
@@ -33,8 +35,11 @@ public class AbstractJdbcDaoSupport extends OpenTelemetryWrapper {
 
     protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    protected AbstractJdbcDaoSupport(TracerProvider tracerProvider, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        super(tracerProvider);
+
+    protected AbstractJdbcDaoSupport(ObservationRegistry observationRegistry,
+                                     NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                                     SdkLoggerProvider sdkLoggerProvider) {
+        super(observationRegistry, sdkLoggerProvider);
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 

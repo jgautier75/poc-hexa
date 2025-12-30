@@ -31,7 +31,7 @@ public class SectorHierarchyFuncImpl implements SectorsListInput {
 
     @Override
     public Sector findSectorHierarchy(CompositeId tenantId, CompositeId organizationId) throws FunctionalException {
-        Tenant tenant = tenantFindInput.findById(tenantId, null);
+        Tenant tenant = tenantFindInput.findById(tenantId);
         Organization organization = organizationFindInput.findById(tenantId, organizationId);
         List<Sector> allSectors = sectorFindOuput.findAll(tenant.id(), organization.id());
         Optional<Sector> rootSector = StreamUtil.ofNullableList(allSectors).filter(Sector::isRoot).findFirst();

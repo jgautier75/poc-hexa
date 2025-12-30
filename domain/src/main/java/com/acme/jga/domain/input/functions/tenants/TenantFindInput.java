@@ -9,6 +9,6 @@ public interface TenantFindInput {
 
     Tenant findByCode(String code) throws FunctionalException;
 
-    Tenant findById(CompositeId tenantId, Span parentSpan) throws FunctionalException;
+    Tenant findById(CompositeId tenantId) throws FunctionalException;
 
 }

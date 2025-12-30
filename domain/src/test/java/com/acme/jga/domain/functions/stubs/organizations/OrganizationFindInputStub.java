@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class OrganizationFindInputStub implements OrganizationFindInput {
-
     public static final CompositeId DEFAULT_ORG_ID = new CompositeId(1L, UUID.randomUUID().toString());
     private static final List<Organization> organizations = new ArrayList<>();
 
@@ -25,7 +24,7 @@ public class OrganizationFindInputStub implements OrganizationFindInput {
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException {
+    public List<Organization> findAll(CompositeId tenantId) throws FunctionalException {
         return organizations;
     }
 

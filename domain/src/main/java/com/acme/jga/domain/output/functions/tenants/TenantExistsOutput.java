@@ -7,7 +7,7 @@ import io.opentelemetry.api.trace.Span;
 public interface TenantExistsOutput {
     boolean existsByCode(String code);
 
-    boolean existsByExternalId(String externalId, Span parentSpan) throws FunctionalException;
+    boolean existsByExternalId(String externalId) throws FunctionalException;
 
-    boolean existsById(CompositeId compositeId, Span parentSpan) throws FunctionalException;
+    boolean existsById(CompositeId compositeId) throws FunctionalException;
 }

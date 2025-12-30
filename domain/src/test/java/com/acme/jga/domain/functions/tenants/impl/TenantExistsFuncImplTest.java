@@ -21,7 +21,7 @@ class TenantExistsFuncImplTest {
     private static final Tenant TENANT = new Tenant(TENANT_ID, "tcode", "tlabel", TenantStatus.ACTIVE);
     private static final List<Tenant> TENANTS = List.of(TENANT);
     private static final TenantExistsOutputStub TENANT_EXISTS_OUTPUT_STUB = new TenantExistsOutputStub(TENANTS);
-    private static final TenantExistsFuncImpl TENANT_EXISTS_FUNC = new TenantExistsFuncImpl(TENANT_EXISTS_OUTPUT_STUB, TracerProvider.noop());
+    private static final TenantExistsFuncImpl TENANT_EXISTS_FUNC = new TenantExistsFuncImpl(TENANT_EXISTS_OUTPUT_STUB);
 
     @Test
     void Tenant_Exists_By_Code_Nominal() {
@@ -31,7 +31,7 @@ class TenantExistsFuncImplTest {
 
     @Test
     void Tenant_Exists_By_External_Id_Nominal() throws FunctionalException {
-        boolean exists = TENANT_EXISTS_FUNC.existsByExternalId(TENANT.id().get(), null);
+        boolean exists = TENANT_EXISTS_FUNC.existsByExternalId(TENANT.id().get());
         assertTrue(exists, "Tenant exists");
     }
 }

@@ -39,7 +39,7 @@ public class AppTenantsServiceImpl implements AppTenantsService {
 
     @Override
     public TenantDisplayDto findByUid(String uid) throws FunctionalException {
-        Tenant tenant = tenantFindInput.findById(new CompositeId(null, uid), null);
+        Tenant tenant = tenantFindInput.findById(new CompositeId(null, uid));
         return new TenantDisplayDto(tenant.id().externalId(), tenant.code(), tenant.label(), tenant.status());
     }
 

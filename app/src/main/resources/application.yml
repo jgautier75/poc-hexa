@@ -70,6 +70,18 @@ management:
       enabled: true
     defaults:
       enabled: true
+  opentelemetry:
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+          transport: http
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+          transport: http
+        schedule-delay: 5s
 server:
   servlet:
     context-path: /poc-hexa/
@@ -85,8 +97,6 @@ app:
     moduleVersion: 1.0.0-SNAPSHOT
     errorPath: "./errors"
     vault-path: dev-secrets/creds
-    otlp-endpoint: http://localhost:4317
-    otlp-push-frequency: 5
   debugging:
     forceDebugMode: "false"
     headerName: "X-APP-DEBUG"

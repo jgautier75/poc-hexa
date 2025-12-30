@@ -5,36 +5,26 @@ import com.acme.jga.domain.input.functions.organizations.OrganizationCreateInput
 import com.acme.jga.domain.input.functions.organizations.OrganizationDeleteInput;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.organizations.OrganizationUpdateInput;
-import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
-import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.TracerProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
-public class AppOrganizationsServiceImpl extends OpenTelemetryWrapper implements AppOrganizationsService {
-    private static final String INSTRUMENTATION_NAME = AppOrganizationsServiceImpl.class.getCanonicalName();
-    private final TenantFindInput tenantFindInput;
+public class AppOrganizationsServiceImpl implements AppOrganizationsService {
     private final OrganizationCreateInput organizationCreateInput;
     private final OrganizationFindInput organizationFindInput;
     private final OrganizationUpdateInput organizationUpdateInput;
     private final OrganizationDeleteInput organizationDeleteInput;
 
-    public AppOrganizationsServiceImpl(TenantFindInput tenantFindInput, OrganizationCreateInput organizationCreateInput,
+    public AppOrganizationsServiceImpl(OrganizationCreateInput organizationCreateInput,
                                        OrganizationFindInput organizationFindInput, OrganizationUpdateInput organizationUpdateInput,
-                                       OrganizationDeleteInput organizationDeleteInput,
-                                       TracerProvider tracerProvider) {
-        super(tracerProvider);
-        this.tenantFindInput = tenantFindInput;
+                                       OrganizationDeleteInput organizationDeleteInput) {
         this.organizationCreateInput = organizationCreateInput;
         this.organizationFindInput = organizationFindInput;
         this.organizationUpdateInput = organizationUpdateInput;
@@ -50,11 +40,9 @@ public class AppOrganizationsServiceImpl extends OpenTelemetryWrapper implements
     }
 
     @Override
-    public OrganizationListDisplayDto listOrganizations(String tenantUid, Span parentSpan) throws FunctionalException {
-        List<OrganizationDto> dtosOrgs = super.executeWithSpan(INSTRUMENTATION_NAME, "ORGS_SVC_LIST", Map.of("tenant_uid", tenantUid), parentSpan, (span) -> {
-            List<Organization> orgs = this.organizationFindInput.findAll(new CompositeId(null, tenantUid), span);
-            return orgs.stream().map(org -> new OrganizationDto(org.id().externalId(), org.code(), org.label(), org.kind(), org.country(), org.status())).toList();
-        });
+    public OrganizationListDisplayDto listOrganizations(String tenantUid) throws FunctionalException {
+        List<Organization> orgs = this.organizationFindInput.findAll(new CompositeId(null, tenantUid));
+        List<OrganizationDto> dtosOrgs = orgs.stream().map(org -> new OrganizationDto(org.id().externalId(), org.code(), org.label(), org.kind(), org.country(), org.status())).toList();
         return new OrganizationListDisplayDto(dtosOrgs);
     }
 

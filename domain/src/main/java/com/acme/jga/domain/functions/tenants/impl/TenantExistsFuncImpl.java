@@ -3,21 +3,14 @@ package com.acme.jga.domain.functions.tenants.impl;
 import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.TracerProvider;
-
-import java.util.Map;
 
 @DomainService
-public class TenantExistsFuncImpl extends OpenTelemetryWrapper implements TenantExistsInput {
-    private static final String INSTRUMENTATION_NAME = TenantExistsFuncImpl.class.getCanonicalName();
+public class TenantExistsFuncImpl implements TenantExistsInput {
     private final TenantExistsOutput tenantExistsOutput;
 
-    public TenantExistsFuncImpl(TenantExistsOutput tenantExistsOutput, TracerProvider tracerProvider) {
-        super(tracerProvider);
+    public TenantExistsFuncImpl(TenantExistsOutput tenantExistsOutput) {
         this.tenantExistsOutput = tenantExistsOutput;
     }
 
@@ -27,19 +20,12 @@ public class TenantExistsFuncImpl extends OpenTelemetryWrapper implements Tenant
     }
 
     @Override
-    public boolean existsByExternalId(String externalId, Span parentSpan) throws FunctionalException {
-        return super.executeWithSpan(INSTRUMENTATION_NAME,
-                "TENANTS_DOMAIN_EXIST",
-                Map.of("uuid", externalId),
-                parentSpan,
-                (span) -> tenantExistsOutput.existsByExternalId(externalId, span));
+    public boolean existsByExternalId(String externalId) throws FunctionalException {
+        return tenantExistsOutput.existsByExternalId(externalId);
     }
 
     @Override
-    public boolean existsById(CompositeId compositeId, Span parentSpan) throws FunctionalException {
-        return super.executeWithSpan(INSTRUMENTATION_NAME,"TENANTS_DOMAIN_EXISTS_ID",Map.of("id",compositeId.toString()),parentSpan,
-                (span) -> {
-                    return tenantExistsOutput.existsById(compositeId, span);
-                });
+    public boolean existsById(CompositeId compositeId) throws FunctionalException {
+        return tenantExistsOutput.existsById(compositeId);
     }
 }

@@ -2,22 +2,15 @@ package com.acme.jga.spi.adapter.tenant;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.TracerProvider;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 @Service
-public class TenantExistsOutputImpl extends OpenTelemetryWrapper implements TenantExistsOutput {
-    private static final String INSTRUMENTATION_NAME = TenantExistsOutputImpl.class.getCanonicalName();
+public class TenantExistsOutputImpl implements TenantExistsOutput {
     private final TenantsDao tenantsDao;
 
-    public TenantExistsOutputImpl(TenantsDao tenantsDao, TracerProvider tracerProvider) {
-        super(tracerProvider);
+    public TenantExistsOutputImpl(TenantsDao tenantsDao) {
         this.tenantsDao = tenantsDao;
     }
 
@@ -27,18 +20,12 @@ public class TenantExistsOutputImpl extends OpenTelemetryWrapper implements Tena
     }
 
     @Override
-    public boolean existsByExternalId(String externalId, Span parentSpan) throws FunctionalException {
-        return super.executeWithSpan(INSTRUMENTATION_NAME,
-                "TENANTS_SPI_EXISTS",
-                Map.of("external_id", externalId),
-                parentSpan,
-                (span) -> this.tenantsDao.existsByExternalId(externalId, parentSpan));
+    public boolean existsByExternalId(String externalId) throws FunctionalException {
+        return this.tenantsDao.existsByExternalId(externalId);
     }
 
     @Override
-    public boolean existsById(CompositeId compositeId, Span parentSpan) throws FunctionalException {
-        return super.executeWithSpan(INSTRUMENTATION_NAME,"TENANTS_DAO_EXISTS_ID",Map.of("id",compositeId.toString()),parentSpan,(span) -> {
-            return this.tenantsDao.existsById(compositeId);
-        });
+    public boolean existsById(CompositeId compositeId) throws FunctionalException {
+        return this.tenantsDao.existsById(compositeId);
     }
 }

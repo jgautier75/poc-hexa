@@ -20,7 +20,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,7 +58,7 @@ class TenantsDaoImplTest {
         CompositeId compositeId = tenantsDao.save(rdbmsTenantCreate);
         assertNotNull(compositeId, "CompositeId is null");
 
-        boolean existsByExternalId = tenantsDao.existsByExternalId(compositeId.externalId(),null);
+        boolean existsByExternalId = tenantsDao.existsByExternalId(compositeId.externalId());
         assertTrue(existsByExternalId, "Tenant exists by externalId");
 
         boolean existsByCode = tenantsDao.existsByCode(TENANT_CODE);
@@ -101,7 +100,7 @@ class TenantsDaoImplTest {
         });
 
         tenantsDao.delete(rdbmsUpdatedByCode.id());
-        boolean exists = tenantsDao.existsByExternalId(rdbmsUpdatedByCode.id().externalId(),null);
+        boolean exists = tenantsDao.existsByExternalId(rdbmsUpdatedByCode.id().externalId());
         assertFalse(exists, "Tenant does not exists by externalId (deleted)");
     }
 

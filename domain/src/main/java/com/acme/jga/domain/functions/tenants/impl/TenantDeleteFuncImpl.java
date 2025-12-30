@@ -23,7 +23,7 @@ public class TenantDeleteFuncImpl implements TenantDeleteInput {
 
     @Override
     public boolean deleteTenant(ExternalId id) throws FunctionalException {
-        boolean exists = this.tenantExistsFunc.existsByExternalId(id.get(), null);
+        boolean exists = this.tenantExistsFunc.existsByExternalId(id.get());
         if (!exists) {
             throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", id.get()));
         }

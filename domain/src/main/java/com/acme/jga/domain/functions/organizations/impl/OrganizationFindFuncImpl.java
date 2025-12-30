@@ -7,47 +7,45 @@ import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
+import com.acme.jga.domain.micrometer.MicrometerWrapper;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.otel.OpenTelemetryWrapper;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.TracerProvider;
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.annotation.Observed;
+import io.opentelemetry.api.logs.Severity;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @DomainService
-public class OrganizationFindFuncImpl extends OpenTelemetryWrapper implements OrganizationFindInput {
-    private static final String INSTRUMENTATION_NAME = OrganizationFindFuncImpl.class.getCanonicalName();
+public class OrganizationFindFuncImpl extends MicrometerWrapper implements OrganizationFindInput {
     private final OrganizationFindOutput organizationFindOutput;
     private final TenantFindInput tenantFindInput;
 
-    public OrganizationFindFuncImpl(OrganizationFindOutput organizationFindOutput, TenantFindInput tenantFindInput, TracerProvider tracerProvider) {
-        super(tracerProvider);
+    public OrganizationFindFuncImpl(OrganizationFindOutput organizationFindOutput,
+                                    TenantFindInput tenantFindInput, ObservationRegistry observationRegistry, SdkLoggerProvider sdkLoggerProvider) {
+        super(observationRegistry, sdkLoggerProvider);
         this.organizationFindOutput = organizationFindOutput;
         this.tenantFindInput = tenantFindInput;
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId, Span parentSpan) throws FunctionalException {
-        return super.executeWithSpan(INSTRUMENTATION_NAME, "ORGS_DOMAIN_LIST", Map.of("tenant", tenantId.toString()), parentSpan, (span) -> {
-            Tenant tenant = tenantFindInput.findById(tenantId, span);
-            return organizationFindOutput.findAll(tenant.id(), span);
-        });
+    public List<Organization> findAll(CompositeId tenantId) throws FunctionalException {
+        super.log("Listing organizations for tenant [" + tenantId.toString() + "]", null);
+        Tenant tenant = tenantFindInput.findById(tenantId);
+        return organizationFindOutput.findAll(tenant.id());
     }
 
     @Override
     public Organization findById(CompositeId tenantId, CompositeId organizationId) throws FunctionalException {
-        return super.executeWithSpan(INSTRUMENTATION_NAME, "ORGS_DOMAIN_BY_ID", Map.of("tenant_id", tenantId.toString(), "org_id", organizationId.toString()), null, (span) -> {
-            Tenant tenant = tenantFindInput.findById(tenantId, span);
-            Organization org = this.organizationFindOutput.findById(tenant.id(), organizationId);
-            if (org == null) {
-                throw new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("organization.not_found", organizationId.externalId()));
-            }
-            return org;
-        });
-
+        Tenant tenant = tenantFindInput.findById(tenantId);
+        return Optional
+                .of(this.organizationFindOutput.findById(tenant.id(), organizationId))
+                .orElseThrow(() -> new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("organization.not_found", organizationId.externalId())));
     }
 }
