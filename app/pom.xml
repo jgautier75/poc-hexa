@@ -35,6 +35,11 @@
             <artifactId>crypto</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.acme.jga</groupId>
+            <artifactId>search-filter</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <!--  TECHNICAL DEPENDENCIES-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

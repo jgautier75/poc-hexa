@@ -3,8 +3,10 @@ package com.acme.jga.spi.dao.organizations.api;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
+import com.acme.jga.search.filtering.constants.SearchParams;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrganizationsDao {
 

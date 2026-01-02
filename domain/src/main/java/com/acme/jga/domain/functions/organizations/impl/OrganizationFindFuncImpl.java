@@ -12,14 +12,15 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
+import com.acme.jga.domain.search.SearchUtilities;
+import com.acme.jga.search.filtering.constants.SearchParams;
+import com.acme.jga.search.filtering.utils.ParsingResult;
 import io.micrometer.observation.ObservationRegistry;
-import io.micrometer.observation.annotation.Observed;
-import io.opentelemetry.api.logs.Severity;
 import io.opentelemetry.sdk.logs.SdkLoggerProvider;
+import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @DomainService
@@ -36,8 +37,15 @@ public class OrganizationFindFuncImpl extends MicrometerWrapper implements Organ
 
     @Override
     public List<Organization> findAll(CompositeId tenantId) throws FunctionalException {
-        super.log("Listing organizations for tenant [" + tenantId.toString() + "]", null);
+        super.log("Listing organizations for tenant [" + tenantId + "]", null);
         Tenant tenant = tenantFindInput.findById(tenantId);
+        /*Map<SearchParams, Object> params = SearchUtilities.checkParameters(searchParams);
+        ParsingResult parsingResult = (ParsingResult) params.get(SearchParams.PARSING_RESULTS);
+        if (!parsingResult.getErrorNodes().isEmpty()) {
+            final StringBuilder sb = new StringBuilder();
+            parsingResult.getErrorNodes().forEach(en -> sb.append(en.toString()));
+            throw new FunctionalException(Scope.REQUEST.name(), FunctionalErrors.INVALID_PROPERTY.name(), BundleFactory.getMessage("filter_invalid", sb.toString()));
+        }*/
         return organizationFindOutput.findAll(tenant.id());
     }
 

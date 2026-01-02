@@ -3,9 +3,8 @@ package com.acme.jga.spi.dao.organizations.impl;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
-import com.acme.jga.domain.model.sorting.OrderByClause;
-import com.acme.jga.domain.model.sorting.OrderDirection;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
+import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.jdbc.extractors.OrganizationExtractor;
 import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
@@ -26,17 +25,20 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements OrganizationsDao {
+    private ExpressionsProcessor expressionsProcessor;
 
     public OrganizationsDaoImpl(ObservationRegistry observationRegistry,
                                 NamedParameterJdbcTemplate namedParameterJdbcTemplate,
                                 SdkLoggerProvider sdkLoggerProvider) {
         super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"organizations.properties"});
+        this.expressionsProcessor = new ExpressionsProcessor();
     }
 
     @Override
@@ -130,15 +132,12 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
                     .operator(WhereOperator.AND)
                     .paramValue(tenantId.internalId())
                     .build());
+            Map<String, Object> params = super.buildParams(whereClauses);
             String fullQuery = super.buildFullQuery(
                     baseQuery,
                     whereClauses,
-                    List.of(OrderByClause.builder()
-                            .expression("label")
-                            .orderDirection(OrderDirection.ASC)
-                            .build()),
+                    Collections.emptyList(),
                     (String[]) null);
-            Map<String, Object> params = super.buildParams(whereClauses);
             List<Organization> queryResults = super.getNamedParameterJdbcTemplate().query(fullQuery, params, new RowMapper<>() {
                 @Override
                 public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {

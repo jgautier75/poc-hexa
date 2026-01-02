@@ -11,9 +11,11 @@ import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
+import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AppOrganizationsServiceImpl implements AppOrganizationsService {

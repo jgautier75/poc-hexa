@@ -6,9 +6,13 @@ import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
 import com.acme.jga.rest.utils.WebApiVersions;
+import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class OrganizationsController {
@@ -31,6 +35,11 @@ public class OrganizationsController {
                                                                        @RequestParam(value = "index", required = false, defaultValue = "1") Integer pageIndex,
                                                                        @RequestParam(value = "size", required = false, defaultValue = "10") Integer pageSize,
                                                                        @RequestParam(value = "orderBy", required = false, defaultValue = "label") String orderBy) throws FunctionalException {
+        Map<SearchParams, Object> searchParams = new HashMap<>();
+        searchParams.put(SearchParams.FILTER, searchFilter);
+        searchParams.put(SearchParams.PAGE_INDEX, pageIndex);
+        searchParams.put(SearchParams.PAGE_SIZE, pageSize);
+        searchParams.put(SearchParams.ORDER_BY, orderBy);
         OrganizationListDisplayDto organizationListDisplayDto = appOrganizationsService.listOrganizations(tenantUid);
         return new ResponseEntity<>(organizationListDisplayDto, HttpStatus.OK);
     }

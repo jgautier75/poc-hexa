@@ -8,7 +8,6 @@ import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.domain.model.tenant.Tenant;
-import io.opentelemetry.api.trace.Span;
 
 import java.util.ArrayList;
 import java.util.List;
