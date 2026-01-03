@@ -35,6 +35,11 @@
             <artifactId>crypto</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.acme.jga</groupId>
+            <artifactId>search-filter</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <!--  TECHNICAL DEPENDENCIES-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,6 +83,21 @@
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-opentelemetry</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-otlp</artifactId>
+            <version>1.16.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-otel</artifactId>
+            <version>1.6.1</version>
         </dependency>
     </dependencies>
 

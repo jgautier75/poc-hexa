@@ -75,7 +75,7 @@ class OrganizationsDaoImplTest {
         boolean exists = organizationsDao.existsByCode(ORG_CODE);
         assertTrue(exists, "Organization exists by code");
 
-        List<Organization> orgs = organizationsDao.findAll(tenantId);
+        List<Organization> orgs = organizationsDao.findAll(tenantId, null);
         assertEquals(1, orgs.size(), "Organizations found");
 
         String updatedName = "My Org Label";

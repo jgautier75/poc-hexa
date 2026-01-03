@@ -1,5 +1,6 @@
 package com.acme.jga.spi.adapter.tenant;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
@@ -19,12 +20,12 @@ public class TenantExistsOutputImpl implements TenantExistsOutput {
     }
 
     @Override
-    public boolean existsByExternalId(String externalId) {
+    public boolean existsByExternalId(String externalId) throws FunctionalException {
         return this.tenantsDao.existsByExternalId(externalId);
     }
 
     @Override
-    public boolean existsById(CompositeId compositeId) {
+    public boolean existsById(CompositeId compositeId) throws FunctionalException {
         return this.tenantsDao.existsById(compositeId);
     }
 }

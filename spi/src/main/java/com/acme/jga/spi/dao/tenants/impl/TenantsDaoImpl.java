@@ -1,5 +1,6 @@
 package com.acme.jga.spi.dao.tenants.impl;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
@@ -8,6 +9,8 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
+import io.micrometer.observation.ObservationRegistry;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,9 +27,10 @@ import java.util.Map;
 
 @Repository
 public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao {
-
-    public TenantsDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        super(namedParameterJdbcTemplate);
+    public TenantsDaoImpl(ObservationRegistry observationRegistry,
+                          NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                          SdkLoggerProvider sdkLoggerProvider) {
+        super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"tenants.properties"});
     }
 
@@ -68,7 +72,7 @@ public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao
     }
 
     @Override
-    public boolean existsByExternalId(String externalId) {
+    public boolean existsByExternalId(String externalId) throws FunctionalException {
         String baseQuery = super.getQuery("tenant_exists_by_uid");
         Map<String, Object> params = new HashMap<>();
         params.put(DaoConstants.P_UID, externalId);

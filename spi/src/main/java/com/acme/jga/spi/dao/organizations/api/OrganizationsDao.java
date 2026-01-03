@@ -3,8 +3,10 @@ package com.acme.jga.spi.dao.organizations.api;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
+import com.acme.jga.search.filtering.constants.SearchParams;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrganizationsDao {
 
@@ -18,7 +20,9 @@ public interface OrganizationsDao {
 
     boolean existsByCode(String code);
 
-    List<Organization> findAll(CompositeId tenantId);
+    List<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams);
+
+    Integer countAll(CompositeId tenantId, Map<SearchParams, Object> searchParams);
 
     Organization findByCode(String code);
 

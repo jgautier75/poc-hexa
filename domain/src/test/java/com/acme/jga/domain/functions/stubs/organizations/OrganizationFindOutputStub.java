@@ -6,13 +6,14 @@ import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
+import com.acme.jga.search.filtering.constants.SearchParams;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class OrganizationFindOutputStub implements OrganizationFindOutput {
-
     public static final CompositeId DEFAULT_ORG_ID = new CompositeId(1L, UUID.randomUUID().toString());
     private static final List<Organization> organizations = new ArrayList<>();
 
@@ -34,8 +35,13 @@ public class OrganizationFindOutputStub implements OrganizationFindOutput {
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId) {
+    public List<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
         return organizations;
+    }
+
+    @Override
+    public Integer countAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
+        return organizations.size();
     }
 
     @Override

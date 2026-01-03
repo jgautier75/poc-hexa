@@ -1,5 +1,6 @@
 package com.acme.jga.spi.dao.tenants.api;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 
@@ -13,7 +14,7 @@ public interface TenantsDao {
 
     boolean existsByCode(String code);
 
-    boolean existsByExternalId(String externalId);
+    boolean existsByExternalId(String externalId) throws FunctionalException;
 
     Tenant findByCode(String code);
 

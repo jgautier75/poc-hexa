@@ -3,6 +3,7 @@ package com.acme.jga.domain.functions.stubs.tenants;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
+import io.opentelemetry.api.trace.Span;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.acme.jga.spi.dao.tenant.impl;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
@@ -19,7 +20,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,7 +53,7 @@ class TenantsDaoImplTest {
     }
 
     @Test
-    public void Tenant_Operations_Nominal() {
+    public void Tenant_Operations_Nominal() throws FunctionalException {
         Tenant rdbmsTenantCreate = new Tenant(new CompositeId(null, UUID.randomUUID().toString()), TENANT_CODE, TENANT_NAME, TenantStatus.ACTIVE);
         CompositeId compositeId = tenantsDao.save(rdbmsTenantCreate);
         assertNotNull(compositeId, "CompositeId is null");

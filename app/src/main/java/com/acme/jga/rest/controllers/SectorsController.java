@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SectorsController {
-    private static final String INSTRUMENTATION_NAME = SectorsController.class.getCanonicalName();
     private final AppSectorsService appSectorsService;
 
     public SectorsController(AppSectorsService appSectorsService) {

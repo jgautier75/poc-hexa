@@ -1,17 +1,23 @@
 package com.acme.jga.spi.dao.organizations.impl;
 
 import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.metadata.KeyValuePair;
+import com.acme.jga.domain.model.metadata.OrganizationMetaData;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
-import com.acme.jga.domain.model.sorting.OrderByClause;
-import com.acme.jga.domain.model.sorting.OrderDirection;
+import com.acme.jga.search.filtering.constants.SearchParams;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
+import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.jdbc.extractors.OrganizationExtractor;
 import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
+import io.micrometer.common.KeyValue;
+import io.micrometer.common.KeyValues;
+import io.micrometer.observation.ObservationRegistry;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,10 +33,14 @@ import java.util.Map;
 
 @Repository
 public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements OrganizationsDao {
+    private final ExpressionsProcessor expressionsProcessor;
 
-    public OrganizationsDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        super(namedParameterJdbcTemplate);
+    public OrganizationsDaoImpl(ObservationRegistry observationRegistry,
+                                NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                                SdkLoggerProvider sdkLoggerProvider) {
+        super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"organizations.properties"});
+        this.expressionsProcessor = new ExpressionsProcessor();
     }
 
     @Override
@@ -114,22 +124,33 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId) {
-        String baseQuery = super.getQuery("org_sel_base");
-        List<WhereClause> whereClauses = new ArrayList<>();
-        whereClauses.add(WhereClause.builder()
-                .expression(buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
-                .paramName(DaoConstants.P_TENANT_ID)
-                .operator(WhereOperator.AND)
-                .paramValue(tenantId.internalId())
-                .build());
-        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, List.of(OrderByClause.builder().expression("label").orderDirection(OrderDirection.ASC).build()), (String[]) null);
-        Map<String, Object> params = super.buildParams(whereClauses);
-        return super.getNamedParameterJdbcTemplate().query(fullQuery, params, new RowMapper<>() {
-            @Override
-            public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return OrganizationExtractor.extractOrganization(rs, false, tenantId);
-            }
+    public Integer countAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
+        return super.observe("ORGS_DAO_COUNT", KeyValues.of(KeyValue.of("id", tenantId.toString())), () -> {
+            String baseQuery = super.getQuery("org_count");
+            QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, searchParams);
+            return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), resultSet -> {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    return null;
+                }
+            });
+        });
+    }
+
+    @Override
+    public List<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
+        return super.observe("ORGS_DAO_LIST", KeyValues.of(KeyValue.of("id", tenantId.toString())), () -> {
+            String baseQuery = super.getQuery("org_sel_base");
+            QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, searchParams);
+            List<Organization> queryResults = super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), new RowMapper<>() {
+                @Override
+                public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return OrganizationExtractor.extractOrganization(rs, false, tenantId);
+                }
+            });
+            super.log("Found [" + queryResults.size() + "]", null);
+            return queryResults;
         });
     }
 
@@ -148,6 +169,28 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
         return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {
             return OrganizationExtractor.extractOrganization(rs, true, null);
         });
+    }
+
+    private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, Map<SearchParams, Object> searchParams) {
+        List<WhereClause> whereClauses = new ArrayList<>();
+        whereClauses.add(WhereClause.builder()
+                .expression(buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
+                .paramName(DaoConstants.P_TENANT_ID)
+                .operator(WhereOperator.AND)
+                .paramValue(tenantId.internalId())
+                .build());
+
+        Map<String, Object> params = super.buildParams(whereClauses);
+        Map<String, KeyValuePair> columnsDefsByAlias = OrganizationMetaData.columnsByAlias();
+        CompositeQuery compositeQuery = expressionsProcessor.buildFilterQuery(params, searchParams, columnsDefsByAlias);
+
+        // Where clause, force filtering on tenant
+        String whereClause = DaoConstants.WHERE_CLAUSE + super.buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID);
+        if (compositeQuery.notEmpty()) {
+            whereClause += DaoConstants.AND + compositeQuery.query();
+        }
+        String fullQuery = baseQuery + whereClause + compositeQuery.pagination();
+        return new QueryAndParams(fullQuery, params);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.acme.jga.spi.adapter.tenant;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
@@ -29,8 +30,7 @@ public class TenantFindOutputImpl implements TenantFindOutput {
     }
 
     @Override
-    public Tenant findById(CompositeId tenantId) {
-        Tenant rdbmsTenant = this.tenantsDao.findByExternalId(tenantId.get());
-        return null;
+    public Tenant findById(CompositeId tenantId) throws FunctionalException {
+        return this.tenantsDao.findById(tenantId);
     }
 }

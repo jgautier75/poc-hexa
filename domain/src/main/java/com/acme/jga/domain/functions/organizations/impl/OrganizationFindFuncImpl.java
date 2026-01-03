@@ -7,48 +7,56 @@ import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
+import com.acme.jga.domain.micrometer.MicrometerWrapper;
 import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.generic.PaginatedResults;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
-import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
+import com.acme.jga.domain.search.SearchUtilities;
+import com.acme.jga.search.filtering.constants.SearchParams;
+import com.acme.jga.search.filtering.utils.ParsingResult;
+import io.micrometer.observation.ObservationRegistry;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @DomainService
-public class OrganizationFindFuncImpl implements OrganizationFindInput {
-    private final TenantExistsInput tenantExistsFunc;
+public class OrganizationFindFuncImpl extends MicrometerWrapper implements OrganizationFindInput {
     private final OrganizationFindOutput organizationFindOutput;
     private final TenantFindInput tenantFindInput;
 
-    public OrganizationFindFuncImpl(TenantExistsInput tenantExistsFunc, OrganizationFindOutput organizationFindOutput, TenantFindInput tenantFindInput) {
-        this.tenantExistsFunc = tenantExistsFunc;
+    public OrganizationFindFuncImpl(OrganizationFindOutput organizationFindOutput,
+                                    TenantFindInput tenantFindInput, ObservationRegistry observationRegistry, SdkLoggerProvider sdkLoggerProvider) {
+        super(observationRegistry, sdkLoggerProvider);
         this.organizationFindOutput = organizationFindOutput;
         this.tenantFindInput = tenantFindInput;
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId) throws FunctionalException {
-        boolean tenantExists = tenantExistsFunc.existsByExternalId(tenantId.externalId());
-        if (!tenantExists) {
-            throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", tenantId.externalId()));
-        }
+    public PaginatedResults<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) throws FunctionalException {
+        super.log("Listing organizations for tenant [" + tenantId + "]", null);
         Tenant tenant = tenantFindInput.findById(tenantId);
-        return organizationFindOutput.findAll(tenant.id());
+        Map<SearchParams, Object> params = SearchUtilities.checkParameters(searchParams);
+        Integer nbOrgs = organizationFindOutput.countAll(tenant.id(), params);
+        List<Organization> orgs = organizationFindOutput.findAll(tenant.id(), searchParams);
+        return new PaginatedResults<>(nbOrgs,
+                nbOrgs != null ? (nbOrgs / (Integer) searchParams.get(SearchParams.PAGE_SIZE) + 1) : 0,
+                orgs,
+                (Integer) searchParams.get(SearchParams.PAGE_INDEX),
+                (Integer) searchParams.get(SearchParams.PAGE_SIZE)
+        );
     }
 
     @Override
     public Organization findById(CompositeId tenantId, CompositeId organizationId) throws FunctionalException {
-        boolean tenantExists = tenantExistsFunc.existsById(tenantId);
-        if (!tenantExists) {
-            throw new FunctionalException(Scope.TENANT.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("tenant.not_found", tenantId.externalId()));
-        }
-
         Tenant tenant = tenantFindInput.findById(tenantId);
-        Organization org = this.organizationFindOutput.findById(tenant.id(), organizationId);
-        if (org == null) {
-            throw new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("organization.not_found", organizationId.externalId()));
-        }
-        return org;
+        Organization organization = this.organizationFindOutput.findById(tenant.id(), organizationId);
+        return Optional
+                .of(organization)
+                .orElseThrow(() -> new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("organization.not_found", organizationId.externalId())));
     }
 }

@@ -9,28 +9,21 @@ import com.acme.jga.domain.input.functions.organizations.OrganizationCreateInput
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
-import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationCreateOutput;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
-import com.acme.jga.domain.output.functions.sectors.SectorCreateOutput;
 import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @DomainService
-@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
     private final TenantExistsInput tenantExistsFunc;
     private final TenantFindInput tenantFindInput;
-    private final SectorCreateOutput sectorCreateOutput;
     private final OrganizationFindOutput organizationFindOutput;
     private final OrganizationCreateOutput organizationCreateOutput;
 
-    public OrganizationCreateFuncImpl(TenantExistsInput tenantExistsFunc, TenantFindInput tenantFindInput, SectorCreateOutput sectorCreateOutput, OrganizationFindOutput organizationFindOutput, OrganizationCreateOutput organizationCreateOutput) {
+    public OrganizationCreateFuncImpl(TenantExistsInput tenantExistsFunc, TenantFindInput tenantFindInput, OrganizationFindOutput organizationFindOutput, OrganizationCreateOutput organizationCreateOutput) {
         this.tenantExistsFunc = tenantExistsFunc;
         this.tenantFindInput = tenantFindInput;
-        this.sectorCreateOutput = sectorCreateOutput;
         this.organizationFindOutput = organizationFindOutput;
         this.organizationCreateOutput = organizationCreateOutput;
     }
@@ -47,14 +40,7 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
         }
 
         Tenant tenant = tenantFindInput.findById(organization.tenantId());
-
         Organization org = new Organization(null, tenant.id(), organization.label(), organization.code(), organization.kind(), organization.country(), organization.status());
-        CompositeId orgCompositeId = organizationCreateOutput.save(org);
-
-        // Always create a root sector when creating an organization
-        Sector sector = new Sector(null, tenant.id(), orgCompositeId, organization.label(), organization.code(), null, true, null);
-        this.sectorCreateOutput.create(sector);
-
-        return orgCompositeId;
+        return organizationCreateOutput.save(org);
     }
 }

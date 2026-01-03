@@ -15,19 +15,12 @@ spring:
       kv:
         enabled: true
         backend: secret
-        default-context: poc-spring-telemetry
+        default-context: poc-hexa
   threads:
     virtual:
       enabled: true
   main:
     banner-mode: console
-  liquibase:
-    enabled: false
-  devtools:
-    restart:
-      enabled: false
-    livereload:
-      enabled: false
   messages:
     basename: i18n/messages
     encoding: UTF-8
@@ -77,11 +70,18 @@ management:
       enabled: true
     defaults:
       enabled: true
-  tracing:
-    sampling:
-      # Trace 100% of requests
-      probability: 1.0
-
+  opentelemetry:
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+          transport: http
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+          transport: http
+        schedule-delay: 5s
 server:
   servlet:
     context-path: /poc-hexa/
@@ -94,9 +94,8 @@ logging:
 app:
   config:
     moduleName: poc-hexa
+    moduleVersion: 1.0.0-SNAPSHOT
     errorPath: "./errors"
-    otlp-endpoint: http://localhost:4317
-    otlp-push-frequency: 5
     vault-path: dev-secrets/creds
   debugging:
     forceDebugMode: "false"

@@ -1,10 +1,13 @@
 package com.acme.jga.domain.functions.tenants.impl;
 
+import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.functions.stubs.tenants.TenantExistsOutputStub;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.api.trace.TracerProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -27,7 +30,7 @@ class TenantExistsFuncImplTest {
     }
 
     @Test
-    void Tenant_Exists_By_External_Id_Nominal() {
+    void Tenant_Exists_By_External_Id_Nominal() throws FunctionalException {
         boolean exists = TENANT_EXISTS_FUNC.existsByExternalId(TENANT.id().get());
         assertTrue(exists, "Tenant exists");
     }
