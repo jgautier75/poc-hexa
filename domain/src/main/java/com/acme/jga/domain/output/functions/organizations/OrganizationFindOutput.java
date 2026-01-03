@@ -15,7 +15,9 @@ public interface OrganizationFindOutput {
 
     boolean existsByCode(String code);
 
-    List<Organization> findAll(CompositeId tenantId) throws FunctionalException;
+    List<Organization> findAll(CompositeId tenantId,Map<SearchParams, Object> searchParams) throws FunctionalException;
+
+    Integer countAll(CompositeId tenantId, Map<SearchParams, Object> searchParams);
 
     Organization findByCode(String code);
 }

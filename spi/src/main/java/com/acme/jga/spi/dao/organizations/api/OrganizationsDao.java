@@ -20,7 +20,9 @@ public interface OrganizationsDao {
 
     boolean existsByCode(String code);
 
-    List<Organization> findAll(CompositeId tenantId);
+    List<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams);
+
+    Integer countAll(CompositeId tenantId, Map<SearchParams, Object> searchParams);
 
     Organization findByCode(String code);
 

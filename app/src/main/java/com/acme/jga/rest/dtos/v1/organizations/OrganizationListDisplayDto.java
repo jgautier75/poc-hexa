@@ -13,4 +13,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class OrganizationListDisplayDto {
     List<OrganizationDto> organizations;
+    Integer totalCount;
+    Integer pageIndex;
+    Integer totalNbPages;
 }

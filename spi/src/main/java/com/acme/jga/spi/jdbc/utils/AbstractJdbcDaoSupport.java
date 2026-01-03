@@ -20,7 +20,7 @@ import java.util.*;
 
 public class AbstractJdbcDaoSupport extends MicrometerWrapper {
 
-    private Logger LOG = LoggerFactory.getLogger(AbstractJdbcDaoSupport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractJdbcDaoSupport.class);
 
     private static final String DB_DAO_QUERY_FOLDER = "db/sql";
 
@@ -29,6 +29,9 @@ public class AbstractJdbcDaoSupport extends MicrometerWrapper {
 
     public record CompositeQuery(Boolean notEmpty, String query, Map<String, Object> parameters, String pagination,
                                  String orderBy) {
+    }
+
+    public record QueryAndParams(String query, Map<String, Object> params) {
     }
 
     protected final Properties queries = new Properties();

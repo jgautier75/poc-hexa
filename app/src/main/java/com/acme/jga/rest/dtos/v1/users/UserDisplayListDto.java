@@ -13,4 +13,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class UserDisplayListDto {
     private List<UserDisplayDto> users;
+    Integer totalCount;
+    Integer pageIndex;
+    Integer totalNbPages;
 }

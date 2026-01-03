@@ -9,6 +9,7 @@ import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.micrometer.MicrometerWrapper;
 import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.generic.PaginatedResults;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
@@ -36,24 +37,26 @@ public class OrganizationFindFuncImpl extends MicrometerWrapper implements Organ
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId) throws FunctionalException {
+    public PaginatedResults<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) throws FunctionalException {
         super.log("Listing organizations for tenant [" + tenantId + "]", null);
         Tenant tenant = tenantFindInput.findById(tenantId);
-        /*Map<SearchParams, Object> params = SearchUtilities.checkParameters(searchParams);
-        ParsingResult parsingResult = (ParsingResult) params.get(SearchParams.PARSING_RESULTS);
-        if (!parsingResult.getErrorNodes().isEmpty()) {
-            final StringBuilder sb = new StringBuilder();
-            parsingResult.getErrorNodes().forEach(en -> sb.append(en.toString()));
-            throw new FunctionalException(Scope.REQUEST.name(), FunctionalErrors.INVALID_PROPERTY.name(), BundleFactory.getMessage("filter_invalid", sb.toString()));
-        }*/
-        return organizationFindOutput.findAll(tenant.id());
+        Map<SearchParams, Object> params = SearchUtilities.checkParameters(searchParams);
+        Integer nbOrgs = organizationFindOutput.countAll(tenant.id(), params);
+        List<Organization> orgs = organizationFindOutput.findAll(tenant.id(), searchParams);
+        return new PaginatedResults<>(nbOrgs,
+                nbOrgs != null ? (nbOrgs / (Integer) searchParams.get(SearchParams.PAGE_SIZE) + 1) : 0,
+                orgs,
+                (Integer) searchParams.get(SearchParams.PAGE_INDEX),
+                (Integer) searchParams.get(SearchParams.PAGE_SIZE)
+        );
     }
 
     @Override
     public Organization findById(CompositeId tenantId, CompositeId organizationId) throws FunctionalException {
         Tenant tenant = tenantFindInput.findById(tenantId);
+        Organization organization = this.organizationFindOutput.findById(tenant.id(), organizationId);
         return Optional
-                .of(this.organizationFindOutput.findById(tenant.id(), organizationId))
+                .of(organization)
                 .orElseThrow(() -> new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("organization.not_found", organizationId.externalId())));
     }
 }

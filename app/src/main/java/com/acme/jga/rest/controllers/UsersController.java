@@ -6,9 +6,13 @@ import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
 import com.acme.jga.rest.dtos.v1.users.UserDto;
 import com.acme.jga.rest.services.users.api.AppUsersService;
 import com.acme.jga.rest.utils.WebApiVersions;
+import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class UsersController {
@@ -28,8 +32,17 @@ public class UsersController {
 
     @GetMapping(value = WebApiVersions.UsersResourceVersion.ROOT)
     public ResponseEntity<UserDisplayListDto> listUsers(@PathVariable("tenantUid") String tenantUid,
-                                                        @PathVariable(value = "orgUid") String orgUid) throws FunctionalException {
-        UserDisplayListDto displayListDto = appUsersService.findAll(tenantUid, orgUid);
+                                                        @PathVariable(value = "orgUid") String orgUid,
+                                                        @RequestParam(value = "filter", required = false) String searchFilter,
+                                                        @RequestParam(value = "index", required = false, defaultValue = "1") Integer pageIndex,
+                                                        @RequestParam(value = "size", required = false, defaultValue = "10") Integer pageSize,
+                                                        @RequestParam(value = "orderBy", required = false, defaultValue = "label") String orderBy) throws FunctionalException {
+        Map<SearchParams, Object> searchParams = new HashMap<>();
+        searchParams.put(SearchParams.FILTER, searchFilter);
+        searchParams.put(SearchParams.PAGE_INDEX, pageIndex);
+        searchParams.put(SearchParams.PAGE_SIZE, pageSize);
+        searchParams.put(SearchParams.ORDER_BY, orderBy);
+        UserDisplayListDto displayListDto = appUsersService.findAll(tenantUid, orgUid, searchParams);
         return new ResponseEntity<>(displayListDto, HttpStatus.OK);
     }
 }

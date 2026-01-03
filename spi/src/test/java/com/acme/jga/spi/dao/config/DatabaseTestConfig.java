@@ -1,6 +1,7 @@
 package com.acme.jga.spi.dao.config;
 
 import com.acme.jga.spi.dao.organizations.impl.OrganizationsDaoImpl;
+import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.sectors.impl.SectorsDaoImpl;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
@@ -60,7 +61,7 @@ public class DatabaseTestConfig {
     public UsersDaoImpl usersDao(@Autowired ObservationRegistry observationRegistry,
                                  @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
                                  @Autowired SdkLoggerProvider sdkLoggerProvider) {
-        return new UsersDaoImpl(namedParameterJdbcTemplate, observationRegistry, sdkLoggerProvider);
+        return new UsersDaoImpl(namedParameterJdbcTemplate, observationRegistry, sdkLoggerProvider, new ExpressionsProcessor());
     }
 
     @Bean

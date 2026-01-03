@@ -40,7 +40,7 @@ public class OrganizationsController {
         searchParams.put(SearchParams.PAGE_INDEX, pageIndex);
         searchParams.put(SearchParams.PAGE_SIZE, pageSize);
         searchParams.put(SearchParams.ORDER_BY, orderBy);
-        OrganizationListDisplayDto organizationListDisplayDto = appOrganizationsService.listOrganizations(tenantUid);
+        OrganizationListDisplayDto organizationListDisplayDto = appOrganizationsService.listOrganizations(tenantUid, searchParams);
         return new ResponseEntity<>(organizationListDisplayDto, HttpStatus.OK);
     }
 

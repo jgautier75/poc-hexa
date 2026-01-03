@@ -6,7 +6,6 @@ import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.domain.output.functions.organizations.OrganizationCreateOutput;
 import com.acme.jga.domain.output.functions.sectors.SectorCreateOutput;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
-import com.acme.jga.spi.dao.sectors.api.SectorsDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

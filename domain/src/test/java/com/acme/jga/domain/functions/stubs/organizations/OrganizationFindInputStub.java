@@ -4,13 +4,16 @@ import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.generic.PaginatedResults;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.domain.model.tenant.Tenant;
+import com.acme.jga.search.filtering.constants.SearchParams;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class OrganizationFindInputStub implements OrganizationFindInput {
@@ -23,8 +26,8 @@ public class OrganizationFindInputStub implements OrganizationFindInput {
     }
 
     @Override
-    public List<Organization> findAll(CompositeId tenantId) throws FunctionalException {
-        return organizations;
+    public PaginatedResults<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) throws FunctionalException {
+        return new PaginatedResults<>(organizations.size(), 1, organizations, 1, 1);
     }
 
     @Override

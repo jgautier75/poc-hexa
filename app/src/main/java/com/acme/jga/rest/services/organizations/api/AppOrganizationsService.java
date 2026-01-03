@@ -15,7 +15,7 @@ public interface AppOrganizationsService {
 
     UidDto createOrganization(String tenantUid, OrganizationDto organizationDto) throws FunctionalException;
 
-    OrganizationListDisplayDto listOrganizations(String tenantUid) throws FunctionalException;
+    OrganizationListDisplayDto listOrganizations(String tenantUid, Map<SearchParams, Object> searchParams) throws FunctionalException;
 
     OrganizationDto findOrganization(String tenantUid, String organizationUid) throws FunctionalException;
 

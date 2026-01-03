@@ -1,9 +1,12 @@
 package com.acme.jga.spi.dao.users.impl;
 
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.model.sorting.OrderByClause;
-import com.acme.jga.domain.model.sorting.OrderDirection;
+import com.acme.jga.domain.model.metadata.KeyValuePair;
+import com.acme.jga.domain.model.metadata.UserMetaData;
 import com.acme.jga.domain.model.user.User;
+import com.acme.jga.search.filtering.constants.SearchParams;
+import com.acme.jga.spi.dao.organizations.impl.OrganizationsDaoImpl;
+import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.dao.users.api.UsersDao;
 import com.acme.jga.spi.jdbc.extractors.UserExtractor;
@@ -26,9 +29,11 @@ import java.util.*;
 
 @Repository
 public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
+    private final ExpressionsProcessor expressionsProcessor;
 
-    public UsersDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, ObservationRegistry observationRegistry, SdkLoggerProvider sdkLoggerProvider) {
+    public UsersDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, ObservationRegistry observationRegistry, SdkLoggerProvider sdkLoggerProvider, ExpressionsProcessor expressionsProcessor) {
         super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
+        this.expressionsProcessor = expressionsProcessor;
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"users.properties"});
     }
 
@@ -38,7 +43,6 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String uuid = DaoConstants.generatedUUID();
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        //insert into users (tenant_id,uid,org_id,login,email,first_name,last_name, middle_name,status,secrets, notif_email) values(?,?,?,?,?,?,?,?,?,?)
         mapSqlParameterSource.addValue(DaoConstants.P_TENANT_ID, user.tenantId().internalId());
         mapSqlParameterSource.addValue(DaoConstants.P_UID, uuid);
         mapSqlParameterSource.addValue(DaoConstants.P_ORG_ID, user.organizationId().internalId());
@@ -108,33 +112,26 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     }
 
     @Override
-    public List<User> findAll(CompositeId tenantId, CompositeId organizationId) {
+    public List<User> findAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
         String baseQuery = super.getQuery("user_sel_base");
-        List<WhereClause> whereClauses = new ArrayList<>();
-        whereClauses.add(
-                WhereClause.builder()
-                        .expression(super.buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
-                        .operator(WhereOperator.AND)
-                        .paramName(DaoConstants.P_TENANT_ID)
-                        .paramValue(tenantId.internalId())
-                        .build());
-        whereClauses.add(
-                WhereClause.builder()
-                        .expression(super.buildSQLEqualsExpression(DaoConstants.FIELD_ORG_ID, DaoConstants.P_ORG_ID))
-                        .operator(WhereOperator.AND)
-                        .paramName(DaoConstants.P_ORG_ID)
-                        .paramValue(organizationId.internalId())
-                        .build());
-        Map<String, Object> params = super.buildParams(whereClauses);
-        String fullQuery = super.buildFullQuery(baseQuery, whereClauses,
-                List.of(
-                        OrderByClause.builder().orderDirection(OrderDirection.ASC).expression("last_name").build(),
-                        OrderByClause.builder().orderDirection(OrderDirection.ASC).expression("first_name").build()
-                ));
-        return super.getNamedParameterJdbcTemplate().query(fullQuery, params, new RowMapper<>() {
+        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams);
+        return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), new RowMapper<>() {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return UserExtractor.extractUser(rs, false, tenantId, organizationId);
+            }
+        });
+    }
+
+    @Override
+    public Integer countAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
+        String baseQuery = super.getQuery("user_count");
+        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams);
+        return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), resultSet -> {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return null;
             }
         });
     }
@@ -165,6 +162,38 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
         params.put(DaoConstants.P_ORG_ID, organizationId.internalId());
         return super.getNamedParameterJdbcTemplate().update(baseQuery, params);
+    }
+
+    private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
+        List<WhereClause> whereClauses = new ArrayList<>();
+        whereClauses.add(
+                WhereClause.builder()
+                        .expression(super.buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
+                        .operator(WhereOperator.AND)
+                        .paramName(DaoConstants.P_TENANT_ID)
+                        .paramValue(tenantId.internalId())
+                        .build());
+        whereClauses.add(
+                WhereClause.builder()
+                        .expression(super.buildSQLEqualsExpression(DaoConstants.FIELD_ORG_ID, DaoConstants.P_ORG_ID))
+                        .operator(WhereOperator.AND)
+                        .paramName(DaoConstants.P_ORG_ID)
+                        .paramValue(organizationId.internalId())
+                        .build());
+
+        Map<String, Object> params = super.buildParams(whereClauses);
+        Map<String, KeyValuePair> columnsDefsByAlias = UserMetaData.columnsByAlias();
+        CompositeQuery compositeQuery = expressionsProcessor.buildFilterQuery(params, searchParams, columnsDefsByAlias);
+        params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
+        params.put(DaoConstants.P_ORG_ID, organizationId.internalId());
+
+        // Where clause, force filtering on tenant
+        String fQuery = super.buildFullQuery(baseQuery, whereClauses, Collections.emptyList());
+        if (compositeQuery.notEmpty()) {
+            fQuery += DaoConstants.AND + compositeQuery.query();
+        }
+        String fullQuery = fQuery + compositeQuery.orderBy() + compositeQuery.pagination();
+        return new OrganizationsDaoImpl.QueryAndParams(fullQuery, params);
     }
 
 }
