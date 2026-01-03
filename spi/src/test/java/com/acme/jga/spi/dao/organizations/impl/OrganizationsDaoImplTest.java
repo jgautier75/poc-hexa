@@ -6,6 +6,7 @@ import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
+import com.acme.jga.domain.search.SearchUtilities;
 import com.acme.jga.spi.dao.config.DatabaseTestConfig;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
@@ -75,7 +76,8 @@ class OrganizationsDaoImplTest {
         boolean exists = organizationsDao.existsByCode(ORG_CODE);
         assertTrue(exists, "Organization exists by code");
 
-        List<Organization> orgs = organizationsDao.findAll(tenantId, null);
+
+        List<Organization> orgs = organizationsDao.findAll(tenantId, SearchUtilities.getDefaultParameters());
         assertEquals(1, orgs.size(), "Organizations found");
 
         String updatedName = "My Org Label";

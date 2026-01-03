@@ -50,4 +50,11 @@ public class SearchUtilities {
         return params;
     }
 
+    public static Map<SearchParams, Object> getDefaultParameters(){
+        HashMap<SearchParams, Object> params = new HashMap<>();
+        params.put(SearchParams.PAGE_SIZE, DEFAULT_PAGE_SIZE);
+        params.put(SearchParams.PAGE_INDEX, DEFAULT_PAGE_INDEX);
+        return params;
+    }
+
 }
