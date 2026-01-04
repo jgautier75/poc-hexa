@@ -1,0 +1,11 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: false
+logging:
+  file:
+    path: .
