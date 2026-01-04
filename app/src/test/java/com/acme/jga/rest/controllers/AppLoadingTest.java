@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.containers.wait.strategy.WaitStrategyTarget;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
@@ -55,7 +54,7 @@ import static org.awaitility.Awaitility.await;
 @Transactional
 public class AppLoadingTest {
     private static final String OIDC_BASE_REALM_URI = "/realms/myrealm";
-    private static final BasicCredentialsProvider basicAuthProvider = new BasicCredentialsProvider();
+    private static final BasicCredentialsProvider BASIC_AUTH_PROVIDER = new BasicCredentialsProvider();
 
     @LocalServerPort
     int randomServerPort;
@@ -70,10 +69,10 @@ public class AppLoadingTest {
     private CryptoEncoder cryptoEngine;
 
     @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DaoTestUtils.POSTGRESQL_VERSION);
+    public static PostgreSQLContainer<?> PG_CONTAINER = new PostgreSQLContainer<>(DaoTestUtils.POSTGRESQL_VERSION);
 
     @Container
-    public static GenericContainer<?> otlpContainer = new GenericContainer<>(DockerImageName.parse("otel/opentelemetry-collector-contrib:0.142.0"))
+    public static GenericContainer<?> OTEL_CONTAINER = new GenericContainer<>(DockerImageName.parse("otel/opentelemetry-collector-contrib:0.142.0"))
             .withExposedPorts(4317, 4318)
             .withCopyFileToContainer(
                     MountableFile.forClasspathResource("otel-collector-config.yml"),
@@ -104,23 +103,19 @@ public class AppLoadingTest {
     }
 
     @DynamicPropertySource
-    static void registerPgProperties(DynamicPropertyRegistry registry) {
+    static void registerContainers(DynamicPropertyRegistry registry) {
         registry.add("management.otlp.metrics.export.enabled",() -> false);
-        postgreSQLContainer.start();
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        PG_CONTAINER.start();
+        registry.add("spring.datasource.url", PG_CONTAINER::getJdbcUrl);
+        registry.add("spring.datasource.username", PG_CONTAINER::getUsername);
+        registry.add("spring.datasource.password", PG_CONTAINER::getPassword);
         registry.add("spring.security.oauth2.resourceserver.jwt.issuerUri", () -> wireMockServer.baseUrl() + OIDC_BASE_REALM_URI);
-        otlpContainer.start();
-        Integer mappedHttpPort = otlpContainer.getMappedPort(4318);
-        registry.add("management.opentelemetry.logging.export.otlp.endpoint", () -> "http://" + otlpContainer.getHost() + ":" + mappedHttpPort + "/v1/logs");
-        registry.add("management.opentelemetry.tracing.export.otlp.endpoint", () -> "http://" + otlpContainer.getHost() + ":" + mappedHttpPort + "/v1/traces");
-        registry.add("management.otlp.metrics.export.url", () -> "http://" + otlpContainer.getHost() + ":" + mappedHttpPort + "/v1/metrics");
+        OTEL_CONTAINER.start();
     }
 
     @BeforeEach
     public void beforeTests() throws Exception {
-        DaoTestUtils.performLiquibaseUpdate(postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(), postgreSQLContainer.getPassword());
+        DaoTestUtils.performLiquibaseUpdate(PG_CONTAINER.getJdbcUrl(), PG_CONTAINER.getUsername(), PG_CONTAINER.getPassword());
     }
 
     @Test
@@ -139,9 +134,9 @@ public class AppLoadingTest {
         String actuatorUrl = "http://" + hostName + ":" + randomServerPort + "/poc-hexa/actuator";
         HttpHost targetHost = new HttpHost("http", hostName, randomServerPort);
         AuthScope authScope = new AuthScope(targetHost);
-        basicAuthProvider.setCredentials(authScope, new UsernamePasswordCredentials(securityProperties.getUserName(), securityProperties.getPass().toCharArray()));
+        BASIC_AUTH_PROVIDER.setCredentials(authScope, new UsernamePasswordCredentials(securityProperties.getUserName(), securityProperties.getPass().toCharArray()));
 
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(basicAuthProvider).disableAutomaticRetries().build()) {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(BASIC_AUTH_PROVIDER).disableAutomaticRetries().build()) {
             HttpGet httpGet = new HttpGet(actuatorUrl);
             httpStatus.set(httpClient.execute(httpGet, HttpResponse::getCode));
             log.info("Http response status: {}", httpStatus);
