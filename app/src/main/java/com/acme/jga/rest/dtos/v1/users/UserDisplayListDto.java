@@ -1,5 +1,6 @@
 package com.acme.jga.rest.dtos.v1.users;
 
+import com.acme.jga.rest.dtos.shared.Pagination;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,5 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class UserDisplayListDto {
     private List<UserDisplayDto> users;
-    Integer totalCount;
-    Integer pageIndex;
-    Integer totalNbPages;
+    private Pagination pagination;
 }

@@ -1,5 +1,6 @@
 package com.acme.jga.rest.dtos.v1.organizations;
 
+import com.acme.jga.rest.dtos.shared.Pagination;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,6 @@ import java.util.List;
 @Data
 @Builder(toBuilder = true)
 public class OrganizationListDisplayDto {
-    List<OrganizationDto> organizations;
-    Integer totalCount;
-    Integer pageIndex;
-    Integer totalNbPages;
+    private List<OrganizationDto> organizations;
+    private Pagination pagination;
 }

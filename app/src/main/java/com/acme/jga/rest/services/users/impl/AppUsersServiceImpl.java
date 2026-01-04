@@ -6,6 +6,7 @@ import com.acme.jga.domain.input.functions.users.UserFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.PaginatedResults;
 import com.acme.jga.domain.model.user.User;
+import com.acme.jga.rest.dtos.shared.Pagination;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
@@ -40,6 +41,6 @@ public class AppUsersServiceImpl implements AppUsersService {
     public UserDisplayListDto findAll(String tenantUid, String organizationUid, Map<SearchParams, Object> searchParams) throws FunctionalException {
         PaginatedResults<User> pres = userFindInput.findAll(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), searchParams);
         List<UserDisplayDto> displayDtos = pres.results().stream().map(usr -> new UserDisplayDto(usr.login(), usr.firstName(), usr.lastName(), usr.middleName(), usr.email(), usr.status(), usr.notifEmail())).toList();
-        return new UserDisplayListDto(displayDtos, pres.nbResults(), pres.pageIndex(), pres.nbPages());
+        return new UserDisplayListDto(displayDtos,new Pagination(pres.nbResults(), pres.pageIndex(), pres.nbPages()));
     }
 }

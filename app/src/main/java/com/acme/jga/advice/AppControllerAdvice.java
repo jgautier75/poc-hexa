@@ -4,7 +4,9 @@ import com.acme.jga.config.AppGenericProperties;
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
+import com.acme.jga.domain.validation.ValidationException;
 import com.acme.jga.rest.dtos.shared.ApiError;
+import com.acme.jga.rest.dtos.shared.ApiErrorDetail;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static com.acme.jga.domain.shared.StreamUtil.ofNullableList;
 
 @RequiredArgsConstructor
 @ControllerAdvice
@@ -40,8 +47,29 @@ public class AppControllerAdvice {
         } catch (IOException e) {
             log.error("An error occurred writing dump file {}", dumpFileName);
         }
-        ApiError apiError = new ApiError(Scope.INTERNAL.name(), HttpStatus.INTERNAL_SERVER_ERROR.name(), "Internal server error, dump file [" + dumpFileName + "]", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        ApiError apiError = new ApiError(Scope.INTERNAL.name(),
+                HttpStatus.INTERNAL_SERVER_ERROR.name(),
+                "Internal server error, dump file [" + dumpFileName + "]",
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                Collections.emptyList());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(apiError);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiError> handleValidationException(Exception ex) {
+        List<ApiErrorDetail> errorDetailList = new ArrayList<>();
+        final ApiError apiError = ApiError.builder()
+                .scope(Scope.REQUEST.name())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .code(HttpStatus.BAD_REQUEST.name())
+                .details(errorDetailList)
+                .message("ArgumentNotValid").build();
+        ofNullableList(((ValidationException) ex).getValidationErrors()).forEach(validationError -> errorDetailList.add(ApiErrorDetail.builder()
+                .code(validationError.getValidationRule())
+                .field(validationError.getFieldName())
+                .message(validationError.getMessage())
+                .build()));
+        return ResponseEntity.badRequest().body(apiError);
     }
 
     @ExceptionHandler(FunctionalException.class)
@@ -50,7 +78,11 @@ public class AppControllerAdvice {
         if (FunctionalErrors.NOT_FOUND.name().equals(exception.getCode())) {
             targetStatus = HttpStatus.NOT_FOUND.value();
         }
-        ApiError apiError = new ApiError(exception.getScope(), exception.getCode(), exception.getMessage(), targetStatus);
+        ApiError apiError = new ApiError(exception.getScope(),
+                exception.getCode(),
+                exception.getMessage(),
+                targetStatus,
+                Collections.emptyList());
         return ResponseEntity.status(targetStatus).body(apiError);
     }
 
@@ -83,7 +115,7 @@ public class AppControllerAdvice {
             sb.append("\n").append(name).append("=").append(request.getHeader(name));
         });
         request.getParameterNames().asIterator().forEachRemaining(name -> {
-            sb.append("\n").append("params: ").append(name).append("=").append(request.getParameter(name));
+            sb.append("\n").append("param: [").append(name).append("]=[").append(request.getParameter(name)).append("]");
         });
         return sb.toString();
     }

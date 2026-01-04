@@ -8,6 +8,7 @@ import com.acme.jga.domain.input.functions.organizations.OrganizationUpdateInput
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.PaginatedResults;
 import com.acme.jga.domain.model.organization.Organization;
+import com.acme.jga.rest.dtos.shared.Pagination;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
@@ -46,7 +47,7 @@ public class AppOrganizationsServiceImpl implements AppOrganizationsService {
     public OrganizationListDisplayDto listOrganizations(String tenantUid, Map<SearchParams, Object> searchParams) throws FunctionalException {
         PaginatedResults<Organization> orgs = this.organizationFindInput.findAll(new CompositeId(null, tenantUid), searchParams);
         List<OrganizationDto> dtosOrgs = orgs.results().stream().map(org -> new OrganizationDto(org.id().externalId(), org.code(), org.label(), org.kind(), org.country(), org.status())).toList();
-        return new OrganizationListDisplayDto(dtosOrgs, orgs.nbResults(), (Integer) searchParams.get(SearchParams.PAGE_INDEX), orgs.nbPages());
+        return new OrganizationListDisplayDto(dtosOrgs, new Pagination(orgs.nbResults(), (Integer) searchParams.get(SearchParams.PAGE_INDEX), orgs.nbPages()));
     }
 
     @Override
