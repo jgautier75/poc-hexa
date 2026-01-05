@@ -116,10 +116,6 @@
             <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-sdk-logs</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

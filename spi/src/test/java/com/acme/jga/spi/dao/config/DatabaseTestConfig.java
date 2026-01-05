@@ -7,7 +7,6 @@ import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.dao.users.impl.UsersDaoImpl;
 import io.micrometer.observation.ObservationRegistry;
-import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,41 +36,28 @@ public class DatabaseTestConfig {
     }
 
     @Bean
-    public TenantsDao tenantsDao(@Autowired ObservationRegistry observationRegistry,
-                                 @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                 @Autowired SdkLoggerProvider sdkLoggerProvider) {
-        return new TenantsDaoImpl(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
+    public TenantsDao tenantsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new TenantsDaoImpl(namedParameterJdbcTemplate);
     }
 
     @Bean
-    public OrganizationsDaoImpl organizationsDao(@Autowired ObservationRegistry observationRegistry,
-                                                 @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                                 @Autowired SdkLoggerProvider sdkLoggerProvider) {
-        return new OrganizationsDaoImpl(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
+    public OrganizationsDaoImpl organizationsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new OrganizationsDaoImpl(namedParameterJdbcTemplate);
     }
 
     @Bean
-    public SectorsDaoImpl sectorsDao(@Autowired ObservationRegistry observationRegistry,
-                                     @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                     @Autowired SdkLoggerProvider sdkLoggerProvider) {
-        return new SectorsDaoImpl(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
+    public SectorsDaoImpl sectorsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new SectorsDaoImpl(namedParameterJdbcTemplate);
     }
 
     @Bean
-    public UsersDaoImpl usersDao(@Autowired ObservationRegistry observationRegistry,
-                                 @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                 @Autowired SdkLoggerProvider sdkLoggerProvider) {
-        return new UsersDaoImpl(namedParameterJdbcTemplate, observationRegistry, sdkLoggerProvider, new ExpressionsProcessor());
+    public UsersDaoImpl usersDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new UsersDaoImpl(namedParameterJdbcTemplate, new ExpressionsProcessor());
     }
 
     @Bean
     public ObservationRegistry observationRegistry() {
         return ObservationRegistry.NOOP;
-    }
-
-    @Bean
-    public SdkLoggerProvider sdkLoggerProvider() {
-        return SdkLoggerProvider.builder().build();
     }
 
 }

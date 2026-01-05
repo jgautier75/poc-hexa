@@ -9,8 +9,6 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
-import io.micrometer.observation.ObservationRegistry;
-import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,10 +25,8 @@ import java.util.Map;
 
 @Repository
 public class TenantsDaoImpl extends AbstractJdbcDaoSupport implements TenantsDao {
-    public TenantsDaoImpl(ObservationRegistry observationRegistry,
-                          NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                          SdkLoggerProvider sdkLoggerProvider) {
-        super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
+    public TenantsDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        super(namedParameterJdbcTemplate);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"tenants.properties"});
     }
 

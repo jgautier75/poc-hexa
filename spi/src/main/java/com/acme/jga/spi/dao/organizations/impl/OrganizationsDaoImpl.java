@@ -14,10 +14,9 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
-import io.micrometer.common.KeyValue;
-import io.micrometer.common.KeyValues;
-import io.micrometer.observation.ObservationRegistry;
-import io.opentelemetry.sdk.logs.SdkLoggerProvider;
+import io.micrometer.observation.annotation.Observed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -34,11 +33,10 @@ import java.util.Map;
 @Repository
 public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements OrganizationsDao {
     private final ExpressionsProcessor expressionsProcessor;
+    private static final Logger LOGGER = LoggerFactory.getLogger("OTEL");
 
-    public OrganizationsDaoImpl(ObservationRegistry observationRegistry,
-                                NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                SdkLoggerProvider sdkLoggerProvider) {
-        super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
+    public OrganizationsDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        super(namedParameterJdbcTemplate);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"organizations.properties"});
         this.expressionsProcessor = new ExpressionsProcessor();
     }
@@ -125,33 +123,30 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
 
     @Override
     public Integer countAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
-        return super.observe("ORGS_DAO_COUNT", KeyValues.of(KeyValue.of("id", tenantId.toString())), () -> {
-            String baseQuery = super.getQuery("org_count");
-            QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, searchParams);
-            return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), resultSet -> {
-                if (resultSet.next()) {
-                    return resultSet.getInt(1);
-                } else {
-                    return null;
-                }
-            });
+        String baseQuery = super.getQuery("org_count");
+        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, searchParams);
+        return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), resultSet -> {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return null;
+            }
         });
     }
 
+    @Observed(name = "org_dao_find_all")
     @Override
     public List<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
-        return super.observe("ORGS_DAO_LIST", KeyValues.of(KeyValue.of("id", tenantId.toString())), () -> {
-            String baseQuery = super.getQuery("org_sel_base");
-            QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, searchParams);
-            List<Organization> queryResults = super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), new RowMapper<>() {
-                @Override
-                public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return OrganizationExtractor.extractOrganization(rs, false, tenantId);
-                }
-            });
-            super.log("Found [" + queryResults.size() + "]", null);
-            return queryResults;
+        LOGGER.info("Filtering orgs for tenant [{}] with filter [{}]", tenantId, searchParams.get(SearchParams.FILTER));
+        String baseQuery = super.getQuery("org_sel_base");
+        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, searchParams);
+        List<Organization> queryResults = super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), new RowMapper<>() {
+            @Override
+            public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return OrganizationExtractor.extractOrganization(rs, false, tenantId);
+            }
         });
+        return queryResults;
     }
 
     @Override

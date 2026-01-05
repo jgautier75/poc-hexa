@@ -3,15 +3,11 @@ package com.acme.jga.domain.functions.tenants.impl;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.functions.stubs.tenants.TenantExistsOutputStub;
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
-import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.api.trace.TracerProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

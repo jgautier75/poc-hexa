@@ -17,33 +17,38 @@
             <pattern>%d{ISO8601} %-5level [%thread] - %msg%n%throwable</pattern>
         </encoder>
     </appender>
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+    </appender>
     <root level="info">
-        <appender-ref ref="Console" />
+        <appender-ref ref="Console"/>
+        <appender-ref ref="OTEL"/>
     </root>
-   <logger name="org.springframework.jdbc" level="info" additivity="false">
-        <appender-ref ref="Console" />
+    <logger name="org.springframework.jdbc" level="info" additivity="false">
+        <appender-ref ref="Console"/>
     </logger>
     <logger name="org.springframework" level="off" additivity="false">
-        <appender-ref ref="Console" />
+        <appender-ref ref="Console"/>
     </logger>
     <logger name="com.acme" level="info" additivity="false">
-        <appender-ref ref="Console" />
-        <appender-ref ref="APP-MAIN-FILE" />
+        <appender-ref ref="Console"/>
+        <appender-ref ref="APP-MAIN-FILE"/>
+        <appender-ref ref="OTEL"/>
     </logger>
     <logger name="org.jboss" level="off" additivity="false">
-        <appender-ref ref="Console" />
+        <appender-ref ref="Console"/>
     </logger>
     <logger name="org.apache" level="off" additivity="false">
-        <appender-ref ref="Console" />
+        <appender-ref ref="Console"/>
     </logger>
     <logger name="org.postgresql" level="off" additivity="false">
-        <appender-ref ref="Console" />
+        <appender-ref ref="Console"/>
     </logger>
     <logger name="com.zaxxer" level="off" additivity="false">
-        <appender-ref ref="Console" />
+        <appender-ref ref="Console"/>
     </logger>
-    <logger name="app-logger" level="debug" additivity="false">
-        <appender-ref ref="Console" />
-        <appender-ref ref="APP-MAIN-FILE" />
+    <logger name="app-logger" level="info" additivity="false">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="APP-MAIN-FILE"/>
+        <appender-ref ref="OTEL"/>
     </logger>
 </configuration>

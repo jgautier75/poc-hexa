@@ -14,8 +14,6 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
-import io.micrometer.observation.ObservationRegistry;
-import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -31,8 +29,8 @@ import java.util.*;
 public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     private final ExpressionsProcessor expressionsProcessor;
 
-    public UsersDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, ObservationRegistry observationRegistry, SdkLoggerProvider sdkLoggerProvider, ExpressionsProcessor expressionsProcessor) {
-        super(observationRegistry, namedParameterJdbcTemplate, sdkLoggerProvider);
+    public UsersDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, ExpressionsProcessor expressionsProcessor) {
+        super(namedParameterJdbcTemplate);
         this.expressionsProcessor = expressionsProcessor;
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"users.properties"});
     }

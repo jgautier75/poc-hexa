@@ -31,7 +31,6 @@ spring:
       resourceserver:
         jwt:
           issuerUri: http://localhost:7080/realms/myrealm
-
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/poc-st
@@ -70,6 +69,20 @@ management:
       enabled: true
     defaults:
       enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+    export:
+      otlp:
+        enabled: on
+  observations:
+    annotations:
+      enabled: on
+  otlp:
+    metrics:
+      export:
+        step: 5s
+        url: http://localhost:4318/v1/metrics
   opentelemetry:
     logging:
       export:
