@@ -75,3 +75,8 @@ bin/
 /search-filter/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst
 /search-filter/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
 /search-filter/target/search-filter-1.0.0-SNAPSHOT.jar
+/app/target/classes/META-INF/spring/logback-model
+/app/target/classes/META-INF/spring/logback-pattern-rules
+/app/target/spring-aot/main/resources/META-INF/spring/logback-model
+/app/target/spring-aot/main/resources/META-INF/spring/logback-pattern-rules
+/app/target/app

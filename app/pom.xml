@@ -12,7 +12,67 @@
     <artifactId>app</artifactId>
     <name>Exposition Layers (Rest APP, Kafka Consumer)</name>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.acme.jga.PocApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>0.11.3</version>
+                        <configuration>
+                            <debug>true</debug>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build-native</id>
+                                <goals>
+                                    <goal>compile-no-fork</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>com.acme.jga.PocApplication</mainClass>
+                                    <buildArgs>
+                                        <arg>--enable-sbom=false</arg>
+                                        <arg>-H:+UnlockExperimentalVMOptions</arg>
+                                        <arg>-H:IncludeResources=.*properties$</arg>
+                                        <arg>-H:Class=com.acme.jga.PocApplication</arg>
+                                        <!--<arg>-H:ReflectionConfigurationFiles=./spring-native/reflect-config.json</arg>-->
+                                        <!--<arg>
+                                            &#45;&#45;trace-class-initialization=org.apache.commons.logging.LogFactoryService,org.apache.commons.logging.LogFactory
+                                        </arg>-->
+                                    </buildArgs>
+                                </configuration>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <properties>
+        <java.version>25</java.version>
         <jdk.version>25</jdk.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
