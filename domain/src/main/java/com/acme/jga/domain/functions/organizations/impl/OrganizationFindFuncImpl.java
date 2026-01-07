@@ -33,9 +33,9 @@ public class OrganizationFindFuncImpl implements OrganizationFindInput {
     @Override
     public PaginatedResults<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) throws FunctionalException {
         Tenant tenant = tenantFindInput.findById(tenantId);
-        Map<SearchParams, Object> params = SearchUtilities.checkParameters(searchParams);
-        Integer nbOrgs = organizationFindOutput.countAll(tenant.id(), params);
-        List<Organization> orgs = organizationFindOutput.findAll(tenant.id(), searchParams);
+        Map<SearchParams, Object> computedSearchParams = SearchUtilities.checkParameters(searchParams);
+        Integer nbOrgs = organizationFindOutput.countAll(tenant.id(), computedSearchParams);
+        List<Organization> orgs = organizationFindOutput.findAll(tenant.id(), computedSearchParams);
         return new PaginatedResults<>(nbOrgs,
                 nbOrgs != null ? (nbOrgs / (Integer) searchParams.get(SearchParams.PAGE_SIZE) + 1) : 0,
                 orgs,

@@ -30,6 +30,8 @@ public class SearchUtilities {
             } else {
                 if (((Integer) searchParams.get(SearchParams.PAGE_SIZE)) > MAX_PAGE_SIZE) {
                     params.put(SearchParams.PAGE_SIZE, DEFAULT_PAGE_SIZE);
+                } else {
+                    params.put(SearchParams.PAGE_SIZE, searchParams.get(SearchParams.PAGE_SIZE));
                 }
             }
             if (!searchParams.containsKey(SearchParams.PAGE_INDEX)) {
@@ -37,7 +39,12 @@ public class SearchUtilities {
             } else {
                 if (((Integer) searchParams.get(SearchParams.PAGE_INDEX)) <= 0) {
                     params.put(SearchParams.PAGE_INDEX, DEFAULT_PAGE_INDEX);
+                } else {
+                    params.put(SearchParams.PAGE_INDEX, searchParams.get(SearchParams.PAGE_INDEX));
                 }
+            }
+            if (searchParams.containsKey(SearchParams.ORDER_BY)) {
+                params.put(SearchParams.ORDER_BY, searchParams.get(SearchParams.ORDER_BY));
             }
         }
         ParsingResult parsingResult = QUERY_PARSER.parseQuery((String) searchParams.get(SearchParams.FILTER));
@@ -50,7 +57,7 @@ public class SearchUtilities {
         return params;
     }
 
-    public static Map<SearchParams, Object> getDefaultParameters(){
+    public static Map<SearchParams, Object> getDefaultParameters() {
         HashMap<SearchParams, Object> params = new HashMap<>();
         params.put(SearchParams.PAGE_SIZE, DEFAULT_PAGE_SIZE);
         params.put(SearchParams.PAGE_INDEX, DEFAULT_PAGE_INDEX);
