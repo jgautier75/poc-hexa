@@ -11,7 +11,7 @@ import java.util.Collections;
 public class UserCreateValidationEngine implements ValidationEngine<User> {
     @Override
     public void validate(User user) throws ValidationException {
-        ValidationResult validationResult = new ValidationResult(true, Collections.emptyList());
+        ValidationResult validationResult = new ValidationResult(true, null);
         ValidationUtils.validateNotNull(validationResult, "firstName", user.firstName());
         ValidationUtils.validateNotNull(validationResult, "lastName", user.lastName());
         ValidationUtils.validateNotNull(validationResult, "email", user.email());

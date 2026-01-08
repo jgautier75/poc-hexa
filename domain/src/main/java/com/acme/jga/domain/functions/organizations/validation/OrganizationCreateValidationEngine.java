@@ -12,7 +12,7 @@ public class OrganizationCreateValidationEngine implements ValidationEngine<Orga
 
     @Override
     public void validate(Organization org) throws ValidationException {
-        ValidationResult validationResult = new ValidationResult(true, Collections.emptyList());
+        ValidationResult validationResult = new ValidationResult(true, null);
         ValidationUtils.validateNotNull(validationResult, "code", org.code());
         ValidationUtils.validateNotNull(validationResult, "label", org.label());
         ValidationUtils.validateNotNull(validationResult, "kind", org.kind());
