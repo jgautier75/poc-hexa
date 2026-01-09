@@ -1,4 +1,4 @@
-package com.acme.jga.domain.functions.events.builders;
+package com.acme.jga.domain.functions.events.builders.organizations;
 
 public enum EventOrganizationHolder {
     ;

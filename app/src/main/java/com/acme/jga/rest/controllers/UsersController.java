@@ -4,6 +4,7 @@ import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
 import com.acme.jga.rest.dtos.v1.users.UserDto;
+import com.acme.jga.rest.dtos.v1.users.UserUpdateDto;
 import com.acme.jga.rest.services.users.api.AppUsersService;
 import com.acme.jga.rest.utils.WebApiVersions;
 import com.acme.jga.search.filtering.constants.SearchParams;
@@ -45,4 +46,21 @@ public class UsersController {
         UserDisplayListDto displayListDto = appUsersService.findAll(tenantUid, orgUid, searchParams);
         return new ResponseEntity<>(displayListDto, HttpStatus.OK);
     }
+
+    @PostMapping(value = WebApiVersions.UsersResourceVersion.WITH_UID)
+    public ResponseEntity<Void> updateUser(@PathVariable("tenantUid") String tenantUid,
+                                           @PathVariable("orgUid") String orgUid, @PathVariable("userUid") String userUid,
+                                           @RequestBody UserUpdateDto userDto) throws FunctionalException {
+        appUsersService.update(tenantUid, orgUid, userDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(WebApiVersions.UsersResourceVersion.WITH_UID)
+    public ResponseEntity<Void> deleteUser(@PathVariable("tenantUid") String tenantUid,
+                                           @PathVariable("orgUid") String orgUid,
+                                           @PathVariable("userUid") String userUid) throws FunctionalException {
+        appUsersService.delete(tenantUid, orgUid, userUid);
+        return ResponseEntity.noContent().build();
+    }
+
 }

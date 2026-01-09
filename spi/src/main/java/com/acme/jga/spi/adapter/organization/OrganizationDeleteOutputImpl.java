@@ -1,5 +1,6 @@
 package com.acme.jga.spi.adapter.organization;
 
+import com.acme.jga.domain.model.event.EventData;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.output.functions.organizations.OrganizationDeleteOutput;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
@@ -16,7 +17,7 @@ public class OrganizationDeleteOutputImpl implements OrganizationDeleteOutput {
     }
 
     @Override
-    public Integer delete(CompositeId tenantId, CompositeId orgId) {
+    public Integer delete(CompositeId tenantId, CompositeId orgId, EventData eventData) {
         return this.organizationsDao.delete(tenantId, orgId);
     }
 }

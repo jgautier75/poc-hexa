@@ -21,7 +21,7 @@ spring:
       enabled: true
   main:
     banner-mode: console
-  messages:
+  es:
     basename: i18n/messages
     encoding: UTF-8
     fallback-to-system-locale: false
@@ -110,16 +110,10 @@ app:
     moduleVersion: 1.0.0-SNAPSHOT
     errorPath: "./errors"
     vault-path: dev-secrets/creds
-  debugging:
-    forceDebugMode: "false"
-    headerName: "X-APP-DEBUG"
-    debugValue: "1"
   security:
     userName: admin
     pass: admin
   kafka:
-    consumer:
-      auditEventsGroupId: "kproto-grp"
     producer:
       bootstrap-servers:
         - localhost:9092

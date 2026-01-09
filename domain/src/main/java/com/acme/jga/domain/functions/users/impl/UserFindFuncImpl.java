@@ -1,7 +1,10 @@
 package com.acme.jga.domain.functions.users.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
+import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
+import com.acme.jga.domain.exceptions.Scope;
+import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.input.functions.users.UserFindInput;
@@ -16,6 +19,7 @@ import com.acme.jga.search.filtering.constants.SearchParams;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @DomainService
 public class UserFindFuncImpl implements UserFindInput {
@@ -42,5 +46,16 @@ public class UserFindFuncImpl implements UserFindInput {
                 (Integer) searchParams.get(SearchParams.PAGE_INDEX),
                 (Integer) searchParams.get(SearchParams.PAGE_SIZE)
         );
+    }
+
+    @Override
+    public User findById(CompositeId tenantId, CompositeId organizationId, CompositeId id) throws FunctionalException {
+        Tenant tenant = tenantFindInput.findById(tenantId);
+        Organization organization = organizationFindInput.findById(tenant.id(), organizationId);
+        User byId = userFindOutput.findById(tenant.id(), organization.id(), id);
+        return Optional
+                .of(byId)
+                .orElseThrow(() -> new FunctionalException(Scope.USER.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("user.not_found", id.externalId())));
+
     }
 }

@@ -22,7 +22,9 @@ public class JacksonConfig {
                 .defaultTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC))
                 .changeDefaultPropertyInclusion(value -> {
                     value.withContentInclusion(JsonInclude.Include.NON_NULL);
+                    value.withContentInclusion(JsonInclude.Include.NON_EMPTY);
                     value.withValueInclusion(JsonInclude.Include.NON_NULL);
+                    value.withValueInclusion(JsonInclude.Include.NON_EMPTY);
                     return value;
                 })
                 .build();

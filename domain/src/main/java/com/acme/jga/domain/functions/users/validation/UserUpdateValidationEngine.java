@@ -6,7 +6,7 @@ import com.acme.jga.domain.validation.ValidationException;
 import com.acme.jga.domain.validation.ValidationResult;
 import com.acme.jga.domain.validation.ValidationUtils;
 
-public class UserCreateValidationEngine implements ValidationEngine<User> {
+public class UserUpdateValidationEngine implements ValidationEngine<User> {
     @Override
     public void validate(User user) throws ValidationException {
         ValidationResult validationResult = new ValidationResult(true, null);

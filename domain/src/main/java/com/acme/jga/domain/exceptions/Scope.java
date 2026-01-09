@@ -4,6 +4,7 @@ public enum Scope {
     TENANT,
     ORGANIZATION,
     SECTOR,
+    USER,
     INTERNAL,
     REQUEST;
 }

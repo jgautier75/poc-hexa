@@ -1,4 +1,4 @@
-package com.acme.jga.spi.adapter.event;
+package com.acme.jga.spi.adapter.event.impl;
 
 import com.acme.jga.domain.exceptions.TechnicalException;
 import com.acme.jga.domain.model.event.AuditAuthor;

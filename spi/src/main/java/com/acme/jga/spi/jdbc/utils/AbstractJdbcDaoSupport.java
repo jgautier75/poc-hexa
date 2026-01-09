@@ -246,6 +246,10 @@ public class AbstractJdbcDaoSupport /*extends MicrometerWrapper*/ {
         return columnName + "=:" + paramName;
     }
 
+    protected String buildSQLNotEqualsExpression(String columnName, String paramName) {
+        return columnName + "!=:" + paramName;
+    }
+
     /**
      * Build SQL in expression.
      *

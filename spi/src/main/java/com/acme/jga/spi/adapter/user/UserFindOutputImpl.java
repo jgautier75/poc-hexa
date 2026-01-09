@@ -27,4 +27,9 @@ public class UserFindOutputImpl implements UserFindOutput {
     public Integer countAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
         return usersDao.countAll(tenantId, organizationId, searchParams);
     }
+
+    @Override
+    public User findById(CompositeId tenantId, CompositeId organizationId, CompositeId id) {
+        return usersDao.findById(tenantId, organizationId, id);
+    }
 }

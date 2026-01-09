@@ -14,7 +14,6 @@ public class OrganizationUpdateOutputImpl implements OrganizationUpdateOutput {
     private final OrganizationsDao organizationsDao;
     private final EventUpdateOutput eventUpdateOutput;
 
-
     public OrganizationUpdateOutputImpl(OrganizationsDao organizationsDao, EventUpdateOutput eventUpdateOutput) {
         this.organizationsDao = organizationsDao;
         this.eventUpdateOutput = eventUpdateOutput;

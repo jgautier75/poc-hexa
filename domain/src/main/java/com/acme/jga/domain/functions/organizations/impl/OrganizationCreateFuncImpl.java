@@ -1,6 +1,7 @@
 package com.acme.jga.domain.functions.organizations.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
+import com.acme.jga.domain.events.EventPublisher;
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
@@ -21,17 +22,22 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
     private final TenantFindInput tenantFindInput;
     private final OrganizationFindOutput organizationFindOutput;
     private final OrganizationCreateOutput organizationCreateOutput;
+    private final EventPublisher eventPublisher;
 
-    public OrganizationCreateFuncImpl(TenantExistsInput tenantExistsFunc, TenantFindInput tenantFindInput, OrganizationFindOutput organizationFindOutput, OrganizationCreateOutput organizationCreateOutput) {
+    public OrganizationCreateFuncImpl(TenantExistsInput tenantExistsFunc,
+                                      TenantFindInput tenantFindInput,
+                                      OrganizationFindOutput organizationFindOutput,
+                                      OrganizationCreateOutput organizationCreateOutput,
+                                      EventPublisher eventPublisher) {
         this.tenantExistsFunc = tenantExistsFunc;
         this.tenantFindInput = tenantFindInput;
         this.organizationFindOutput = organizationFindOutput;
         this.organizationCreateOutput = organizationCreateOutput;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
     public CompositeId create(Organization organization) throws FunctionalException {
-
         // Ensure tenant exists
         boolean tenantExists = tenantExistsFunc.existsByExternalId(organization.tenantId().externalId());
         if (!tenantExists) {
@@ -49,6 +55,8 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
 
         Tenant tenant = tenantFindInput.findById(organization.tenantId());
         Organization org = new Organization(null, tenant.id(), organization.label(), organization.code(), organization.kind(), organization.country(), organization.status());
-        return organizationCreateOutput.save(org);
+        CompositeId orgId = organizationCreateOutput.save(org);
+        this.eventPublisher.pushAuditEvents();
+        return orgId;
     }
 }

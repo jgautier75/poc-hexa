@@ -1,0 +1,7 @@
+package com.acme.jga.domain.output.functions.users;
+
+import com.acme.jga.domain.model.generic.CompositeId;
+
+public interface UserDeleteOutput {
+    Integer delete(CompositeId tenantId, CompositeId organizationId, CompositeId id);
+}

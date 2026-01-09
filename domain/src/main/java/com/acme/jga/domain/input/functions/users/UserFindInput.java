@@ -10,4 +10,6 @@ import java.util.Map;
 
 public interface UserFindInput {
     PaginatedResults<User> findAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) throws FunctionalException;
+
+    User findById(CompositeId tenantId, CompositeId organizationId, CompositeId id) throws FunctionalException;
 }

@@ -1,10 +1,11 @@
 package com.acme.jga.domain.functions.organizations.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
+import com.acme.jga.domain.events.EventPublisher;
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
-import com.acme.jga.domain.functions.events.builders.EventOrganizationHolder;
+import com.acme.jga.domain.functions.events.builders.organizations.EventOrganizationHolder;
 import com.acme.jga.domain.functions.organizations.validation.OrganizationUpdateValidationHolder;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationUpdateInput;
@@ -26,16 +27,20 @@ public class OrganizationUpdateFuncImpl implements OrganizationUpdateInput {
     private final OrganizationFindOutput organizationFindOutput;
     private final OrganizationUpdateOutput organizationUpdateOutput;
     private final ContextUserHolder contextUserHolder;
+    private final EventPublisher eventPublisher;
 
     public OrganizationUpdateFuncImpl(TenantFindOutput tenantFindOutput,
                                       TenantExistsOutput tenantExistsOutput,
                                       OrganizationFindOutput organizationFindOutput,
-                                      OrganizationUpdateOutput organizationUpdateOutput, ContextUserHolder contextUserHolder) {
+                                      OrganizationUpdateOutput organizationUpdateOutput,
+                                      ContextUserHolder contextUserHolder,
+                                      EventPublisher eventPublisher) {
         this.tenantFindOutput = tenantFindOutput;
         this.tenantExistsOutput = tenantExistsOutput;
         this.organizationFindOutput = organizationFindOutput;
         this.organizationUpdateOutput = organizationUpdateOutput;
         this.contextUserHolder = contextUserHolder;
+        this.eventPublisher = eventPublisher;
     }
 
 
@@ -62,8 +67,9 @@ public class OrganizationUpdateFuncImpl implements OrganizationUpdateInput {
         Organization updateOrg = new Organization(rdbmsOrg.id(), tenant.id(), organization.label(), organization.code(), organization.kind(), organization.country(), organization.status());
         List<AuditChange> auditChanges = EventOrganizationHolder.getInstance().build(rdbmsOrg, updateOrg);
         EventData eventData = buildEventData(tenant, updateOrg.id().externalId(), auditChanges);
-
         this.organizationUpdateOutput.update(updateOrg, eventData);
+        this.eventPublisher.pushAuditEvents();
+
     }
 
     private EventData buildEventData(Tenant tenant, String orgUid, List<AuditChange> auditChanges) {

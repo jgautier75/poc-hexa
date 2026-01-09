@@ -1,6 +1,5 @@
 package com.acme.jga.rest.controllers;
 
-import com.acme.jga.config.AppDebuggingProperties;
 import com.acme.jga.config.AppGenericProperties;
 import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
@@ -35,8 +34,6 @@ class OrganizationsControllerTest {
     private AppOrganizationsService organizationPortService;
     @MockitoBean
     private AppGenericProperties appGenericProperties;
-    @MockitoBean
-    private AppDebuggingProperties appDebuggingProperties;
     @Autowired
     private MockMvc mockMvc;
     @Autowired

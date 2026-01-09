@@ -11,4 +11,6 @@ public interface UserFindOutput {
     List<User> findAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams);
 
     Integer countAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams);
+
+    User findById(CompositeId tenantId, CompositeId organizationId, CompositeId id);
 }
