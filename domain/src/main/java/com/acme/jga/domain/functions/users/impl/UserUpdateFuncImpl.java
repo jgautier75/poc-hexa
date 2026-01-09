@@ -48,7 +48,7 @@ public class UserUpdateFuncImpl implements UserUpdateInput {
         Tenant tenant = tenantFindInput.findById(user.tenantId());
         Organization organization = organizationFindInput.findById(tenant.id(), user.organizationId());
         User rdbmsUser = userFindInput.findById(tenant.id(), organization.id(), user.id());
-        User updateUser = new User(null, tenant.id(), organization.id(), user.login(), user.firstName(), user.lastName(), user.middleName(), user.email(), user.status(), user.notifEmail(), null);
+        User updateUser = new User(rdbmsUser.id(), tenant.id(), organization.id(), user.login(), user.firstName(), user.lastName(), user.middleName(), user.email(), user.status(), user.notifEmail(), null);
         List<AuditChange> auditChanges = EventUserHolder.getInstance().build(rdbmsUser, updateUser);
         EventData eventData = buildEventData(tenant, organization, updateUser.id().externalId(), auditChanges);
         Integer nbUpdated = userUpdateOutput.update(updateUser, eventData);

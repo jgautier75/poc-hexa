@@ -5,7 +5,7 @@ import com.acme.jga.domain.model.event.AuditAuthor;
 import com.acme.jga.domain.model.event.AuditEvent;
 import com.acme.jga.domain.model.event.EventData;
 import com.acme.jga.domain.model.event.EventStatus;
-import com.acme.jga.domain.output.functions.events.EventUpdateOutput;
+import com.acme.jga.domain.output.functions.events.EventOutput;
 import com.acme.jga.spi.dao.events.api.EventsDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +18,11 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class EventUpdateOutputImpl implements EventUpdateOutput {
+public class EventOutputImpl implements EventOutput {
     private final EventsDao eventsDao;
     private final JsonMapper jsonMapper;
 
-    public EventUpdateOutputImpl(EventsDao eventsDao, JsonMapper jsonMapper) {
+    public EventOutputImpl(EventsDao eventsDao, JsonMapper jsonMapper) {
         this.eventsDao = eventsDao;
         this.jsonMapper = jsonMapper;
     }

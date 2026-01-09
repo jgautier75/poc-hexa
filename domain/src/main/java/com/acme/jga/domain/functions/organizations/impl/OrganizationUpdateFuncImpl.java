@@ -69,7 +69,6 @@ public class OrganizationUpdateFuncImpl implements OrganizationUpdateInput {
         EventData eventData = buildEventData(tenant, updateOrg.id().externalId(), auditChanges);
         this.organizationUpdateOutput.update(updateOrg, eventData);
         this.eventPublisher.pushAuditEvents();
-
     }
 
     private EventData buildEventData(Tenant tenant, String orgUid, List<AuditChange> auditChanges) {
