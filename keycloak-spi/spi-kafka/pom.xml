@@ -30,7 +30,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>${project-encoding}</project.build.sourceEncoding>
         <kafka-clients-version>4.1.1</kafka-clients-version>
-        <kafka-main-version>8.1.1</kafka-main-version>
+        <kafka-main-version>8.1.0</kafka-main-version>
     </properties>
 
     <build>
@@ -165,6 +165,11 @@
             <groupId>org.apache.httpcomponents.core5</groupId>
             <artifactId>httpcore5</artifactId>
             <version>5.3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf-version}</version>
         </dependency>
     </dependencies>
 

@@ -1,4 +1,4 @@
-package com.acme.jga.domain.functions.events.builders.events;
+package com.acme.jga.domain.functions.events.builders.users;
 
 public enum EventUserHolder {
     ;

@@ -52,14 +52,15 @@
                                 <configuration>
                                     <mainClass>com.acme.jga.PocApplication</mainClass>
                                     <buildArgs>
+                                        <arg>--emit build-report</arg>
                                         <arg>--enable-sbom=false</arg>
-                                        <arg>-H:+UnlockExperimentalVMOptions</arg>
-                                        <arg>-H:IncludeResources=.*properties$</arg>
+                                        <!--<arg>&#45;&#45;enable-sbom=classpath,export</arg>-->
+                                        <arg>-O0</arg>
+                                        <arg>--verbose</arg>
+                                        <arg>-g</arg>
+                                        <arg>-H:+SourceLevelDebug</arg>
+                                        <arg>-H:+ReportExceptionStackTraces</arg>
                                         <arg>-H:Class=com.acme.jga.PocApplication</arg>
-                                        <!--<arg>-H:ReflectionConfigurationFiles=./spring-native/reflect-config.json</arg>-->
-                                        <!--<arg>
-                                            &#45;&#45;trace-class-initialization=org.apache.commons.logging.LogFactoryService,org.apache.commons.logging.LogFactory
-                                        </arg>-->
                                     </buildArgs>
                                 </configuration>
                                 <phase>package</phase>
@@ -254,16 +255,6 @@
             <groupId>com.acme.jga</groupId>
             <artifactId>db-migration</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test-autoconfigure</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

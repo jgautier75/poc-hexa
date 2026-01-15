@@ -72,11 +72,6 @@ public class EventOrganizationBuilder extends AbstractEventBuilder {
                         .to(newOrg.kind().getValue().toString())
                         .object("kind")
                         .operation(AuditOperation.ADD)
-                        .build(),
-                AuditChange.builder()
-                        .object("uuid")
-                        .operation(AuditOperation.ADD)
-                        .to(newOrg.id().externalId())
                         .build()
         );
     }
@@ -101,11 +96,6 @@ public class EventOrganizationBuilder extends AbstractEventBuilder {
                 AuditChange.builder()
                         .from(newOrg.kind().getValue().toString())
                         .object("kind")
-                        .operation(AuditOperation.REMOVE)
-                        .build(),
-                AuditChange.builder()
-                        .from(newOrg.id().externalId())
-                        .object("uuid")
                         .operation(AuditOperation.REMOVE)
                         .build()
         );

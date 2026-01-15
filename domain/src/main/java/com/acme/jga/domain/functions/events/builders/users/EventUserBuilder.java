@@ -1,4 +1,4 @@
-package com.acme.jga.domain.functions.events.builders.events;
+package com.acme.jga.domain.functions.events.builders.users;
 
 import com.acme.jga.domain.functions.events.builders.AbstractEventBuilder;
 import com.acme.jga.domain.model.event.AuditChange;

@@ -20,7 +20,7 @@
         <jdk.version>25</jdk.version>
         <project-encoding>UTF-8</project-encoding>
         <lombok-version>1.18.42</lombok-version>
-        <protobuf-version>4.33.2</protobuf-version>
+        <protobuf-version>4.32.0</protobuf-version>
         <otel-version>1.57.0</otel-version>
     </properties>
     <repositories>

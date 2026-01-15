@@ -21,9 +21,12 @@ public class OrganizationUpdateOutputImpl implements OrganizationUpdateOutput {
 
     @Override
     public Integer update(Organization organization, EventData eventData) {
+
         Integer nbUpdated = this.organizationsDao.update(organization.tenantId(), organization.id(),
                 organization.code(), organization.label(), organization.country(), organization.status());
-        eventOutput.saveChanges(eventData);
+        if (!eventData.auditChanges().isEmpty()) {
+            eventOutput.saveChanges(eventData);
+        }
         return nbUpdated;
     }
 }

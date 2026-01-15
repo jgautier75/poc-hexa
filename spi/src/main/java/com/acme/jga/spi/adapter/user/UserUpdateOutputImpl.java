@@ -22,7 +22,9 @@ public class UserUpdateOutputImpl implements UserUpdateOutput {
     @Override
     public Integer update(User user, EventData eventData) {
         Integer nbUpdated = usersDao.update(user);
-        eventOutput.saveChanges(eventData);
+        if (!eventData.auditChanges().isEmpty()) {
+            eventOutput.saveChanges(eventData);
+        }
         return nbUpdated;
     }
 }

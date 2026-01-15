@@ -4,7 +4,7 @@ import com.acme.jga.crypto.encode.CryptoEncoder;
 import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.events.EventPublisher;
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.functions.events.builders.events.EventUserHolder;
+import com.acme.jga.domain.functions.events.builders.users.EventUserHolder;
 import com.acme.jga.domain.functions.users.validation.UserCreateValidationHolder;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
