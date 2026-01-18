@@ -893,3 +893,5 @@ Filtering docker containers by label
 ```shell
 docker ps --filter "label=com.acme.jga.pst=pst-keycloak"
 ```
+
+docker build -t jga-spotel:1.0.0 . --build-arg="MAVEN_ROOT=maven"
