@@ -38,7 +38,7 @@ public class UserFindFuncImpl implements UserFindInput {
         Tenant tenant = tenantFindInput.findById(tenantId);
         Organization organization = organizationFindInput.findById(tenant.id(), organizationId);
         Map<SearchParams, Object> params = SearchUtilities.checkParameters(searchParams);
-        Integer nbUsers = this.userFindOutput.countAll(tenantId, organizationId, params);
+        Integer nbUsers = this.userFindOutput.countAll(tenant.id(), organization.id(), params);
         List<User> users = this.userFindOutput.findAll(tenant.id(), organization.id(), params);
         return new PaginatedResults<>(nbUsers,
                 nbUsers != null ? (nbUsers / (Integer) searchParams.get(SearchParams.PAGE_SIZE) + 1) : 0,
