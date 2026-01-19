@@ -5,7 +5,7 @@ import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
 import com.acme.jga.rest.dtos.v1.users.UserDto;
 import com.acme.jga.rest.dtos.v1.users.UserUpdateDto;
-import com.acme.jga.rest.services.users.api.AppUsersService;
+import com.acme.jga.rest.adapters.users.api.AppUsersService;
 import com.acme.jga.rest.utils.WebApiVersions;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.http.HttpStatus;

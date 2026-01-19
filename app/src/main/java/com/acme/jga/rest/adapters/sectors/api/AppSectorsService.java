@@ -1,4 +1,4 @@
-package com.acme.jga.rest.services.sectors.api;
+package com.acme.jga.rest.adapters.sectors.api;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.rest.dtos.v1.sectors.SectorDisplayDto;

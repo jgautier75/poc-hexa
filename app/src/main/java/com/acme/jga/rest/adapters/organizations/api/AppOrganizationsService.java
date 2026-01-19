@@ -1,13 +1,10 @@
-package com.acme.jga.rest.services.organizations.api;
+package com.acme.jga.rest.adapters.organizations.api;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.search.filtering.constants.SearchParams;
-import io.micrometer.observation.Observation;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.context.Context;
 
 import java.util.Map;
 

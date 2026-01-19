@@ -1,4 +1,4 @@
-package com.acme.jga.rest.services.organizations.impl;
+package com.acme.jga.rest.adapters.organizations.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.input.functions.organizations.OrganizationCreateInput;
@@ -12,7 +12,7 @@ import com.acme.jga.rest.dtos.shared.Pagination;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
-import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
+import com.acme.jga.rest.adapters.organizations.api.AppOrganizationsService;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.stereotype.Service;
 

@@ -5,7 +5,7 @@ import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.rest.dtos.v1.organizations.OrganizationDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
-import com.acme.jga.rest.services.organizations.api.AppOrganizationsService;
+import com.acme.jga.rest.adapters.organizations.api.AppOrganizationsService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

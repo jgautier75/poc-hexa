@@ -5,7 +5,7 @@ import com.acme.jga.rest.dtos.v1.tenants.TenantDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.TenantDto;
 import com.acme.jga.rest.dtos.v1.tenants.TenantListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
-import com.acme.jga.rest.services.tenants.api.AppTenantsService;
+import com.acme.jga.rest.adapters.tenants.api.AppTenantsService;
 import com.acme.jga.rest.utils.WebApiVersions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

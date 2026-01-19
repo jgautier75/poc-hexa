@@ -1,4 +1,4 @@
-package com.acme.jga.rest.services.users.impl;
+package com.acme.jga.rest.adapters.users.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.input.functions.users.UserCreateInput;
@@ -14,7 +14,7 @@ import com.acme.jga.rest.dtos.v1.users.UserDisplayDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
 import com.acme.jga.rest.dtos.v1.users.UserDto;
 import com.acme.jga.rest.dtos.v1.users.UserUpdateDto;
-import com.acme.jga.rest.services.users.api.AppUsersService;
+import com.acme.jga.rest.adapters.users.api.AppUsersService;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.stereotype.Service;
 

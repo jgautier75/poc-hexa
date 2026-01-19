@@ -1,4 +1,4 @@
-package com.acme.jga.rest.services.tenants.impl;
+package com.acme.jga.rest.adapters.tenants.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.input.functions.tenants.*;
@@ -9,7 +9,7 @@ import com.acme.jga.rest.dtos.v1.tenants.TenantDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.TenantDto;
 import com.acme.jga.rest.dtos.v1.tenants.TenantListDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
-import com.acme.jga.rest.services.tenants.api.AppTenantsService;
+import com.acme.jga.rest.adapters.tenants.api.AppTenantsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

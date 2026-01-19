@@ -1,4 +1,4 @@
-package com.acme.jga.rest.services.users.api;
+package com.acme.jga.rest.adapters.users.api;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
