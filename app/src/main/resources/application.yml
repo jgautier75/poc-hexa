@@ -33,7 +33,7 @@ spring:
           issuerUri: http://localhost:7080/realms/myrealm
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/poc-st
+    url: jdbc:postgresql://localhost:5434/poc-st
     username: poc_st_app
     password: poc_st_app
     hikari:

@@ -29,6 +29,10 @@ Standard REST application relying on:
 - OpenTelemetry (Monitoring)
 - Junit/Mockito/Testcontainers for testing
 
+INFO: This application relies oin JDK 25 for application but JDK 21 for keycloak spi.
+
+Thus, ensure both JDK 21 & 25 are installed and maven toolchain is set up. (see maven directory)
+
 ## Docker
 
 Start using the following order:
@@ -78,7 +82,7 @@ Use docker/setup_all.sh script to start the following "base" containers/services
 
 | Service             | Version | Port | Description                               |
 |---------------------|---------|------|-------------------------------------------|
-| postgreSQL          | 18.1    | 5432 | Spring app storage                        |
+| postgreSQL          | 18.1    | 5434 | Spring app storage                        |
 | keycloak            | 26.4.7  | 7080 | Keycloak dev instance                     |
 | keycloak-postgreSQL | 18.1    | 5433 | Keycloak app storage                      |
 | openbao             | 2.4.4   | 8200 | OpenBao port                              |
@@ -228,17 +232,6 @@ If jq is intalled, secret values can be extracted using a command like:
 curl -H "X-Vault-Token: dev-root-token" -X GET http://192.168.1.13:8200/v1/dev-secrets/data/creds | jq '.data.data'
 ```
 
-## OpenTelemetry
-
-Quote from OpenTelemetry website: "OpenTelemetry is a collection of APIs, SDKs, and tools. Use it to instrument,
-generate, collect, and export telemetry data (metrics, logs, and traces)"
-
-OpenTelemetry main component is called the collector which collects metrics,logs and traces and uses various exporters
-like prometheus, grafana loki, grafana tempo, jaeger, ...
-
-Different docker configurations are provided in this project, jaeger or grafana loki (for logs) and tempo (e.g for
-counter, gauges, ...)
-
 ## Entities
 
 - **Tenant**:
@@ -297,51 +290,6 @@ counter, gauges, ...)
         - action: Enumeration: CREATE, UPDATE, DELETE
         - status: Event status (Enumeration: PENDING(0), PROCESSED(1), FAILED(2))
         - payload: Audit event in json format (PostgreSQL jsonb)
-
-## OpenAPI
-
-REST endpoints OpenApi specifications: docs/poc_st_openapi.yml
-
-Transform OpenAPI spec to html with redocly:
-
-```bash
-npm install @redocly/cli -g
-```
-
-Transform to HTML:
-
-```bash
-redocly build-docs ../poc_st_openapi.yml
-```
-
-Generating java code from openapi specification, first download the latest version of openapi-generator-cli on
-mvnrepository.com site
-
-Then create a json config file:
-
-```json
-{
-  "basePackage": "com.tutorial.codegen",
-  "configPackage": "com.tutorial.codegen.config",
-  "apiPackage": "com.tutorial.codegen.controllers",
-  "modelPackage": "com.tutorial.codegen.model",
-  "groupId": "com.tutorial",
-  "artifactId": "spring-boot-codegenerator"
-}
-
-```
-
-Http client generation:
-
-```
-java -jar openapi-generator-cli-7.13.0.jar generate -g java -i poc_st_openapi.yml -c openapi-gen-config.json -o spring-boot-codegenerator
-```
-
-Server side generation:
-
-```
-java -jar openapi-generator-cli-7.13.0.jar generate -g client -i poc_st_openapi.yml -c openapi-gen-config.json -o spring-boot-codegenerator
-```
 
 ## Audit events
 
@@ -513,32 +461,9 @@ An [Bruno](https://www.usebruno.com/) collection (UsersManagement.json) is avail
 **WARNING** system endpoints like actuator and system endpoints are secured using basic authentication, other endpoints
 are secured using oauth2
 
-## Debugging HTTP requests
-
-A particular HTTP filter (see: LogHttpFilter class in webapi module) has been designed to be able to debug a single HTTP
-request.
-
-Indeed, the problem with changing level mode of loggers is that all incoming traffic is debugged.
-
-To avoid this, since it's a classic REST API, one HTTP request => One thread.
-
-Thus, a ThreadLocal (LogHttpUtils.APP_LOG_CTX) can be used to position a debug flag depending on the presence or absence
-of an HTTP header in request.
-
-This custom header is customizable in application.yml (Defaults to X-APP-DEBUG)
-
-Moreover, the unique Spring LogService logs requests depending of the ThreadLocal value set by filter.
-
-Finally, by default all requests are debugged, this behaviour is controlled by "forceDebugMode" parameter in
-application.yml
-
 ## Technical errors:
 
-When a technical error occurs, the controller advice generates a technical report file and a micrometer gauge is
-incremented (see MicrometerPrometheus class).
-
-Moreover, the gauge value is exported in actuator/prometheus endpoint and thus can be scrapped by a prometheus job (
-tech_errors is example below).
+When a technical error occurs, the controller advice generates a technical report file in errors directory.
 
 ![](docs/images/micrometer-prometheus-gauge.png)
 
@@ -559,7 +484,7 @@ Parameters:
 - 4: Automatic modules: list of automatic modules, typically legacy libraries (multiple values separator is the comma)
 
 ```sh
-./get-spring-boot-modules.sh ../adapter-rest/target/adapter-rest-1.0.0-SNAPSHOT.jar 25 ../adapter-rest/target/tmp "okio-jvm-3.16.2.jar"
+./get-spring-boot-modules.sh ../app/target/app-1.0.0-SNAPSHOT.jar 25 ../adapter-rest/target/tmp "okio-jvm-3.16.2.jar"
 java.base,java.desktop,java.instrument,java.net.http,java.prefs,java.rmi,java.scripting,java.security.jgss,java.security.sasl,java.sql.rowset,jdk.compiler,jdk.jfr,jdk.management,jdk.unsupported,org.graalvm.nativeimage
 ```
 
@@ -570,7 +495,7 @@ Update adapter-rest/Dockerfile accordingly in jlinks section
 Building Docker image:
 
 ```sh
-docker build . -t adapter-rest:1.0.0 --build-arg="JAR_FILE=target/adapter-rest-1.0.0-SNAPSHOT.jar"
+docker build . -t poc-hexa-:1.0.0 --build-arg="MAVEN_ROOT=maven"
 ```
 
 ## Native image with GraalVM
@@ -598,6 +523,7 @@ Plugin configuration example in webapi/pom.xml file
 
 **2025-11-13** : Upgrading to graalvm built on top of jdk 25, sbom generation must be disabled otherwise and error
 occurs during install phase (base_sbom.json file not found !)
+Uncomment args for debugging purposes
 
 ```xml
 
@@ -622,13 +548,12 @@ occurs during install phase (base_sbom.json file not found !)
                             <mainClass>com.acme.jga.PocApplication</mainClass>
                             <buildArgs>
                                 <arg>--enable-sbom=false</arg>
-                                <arg>-H:+UnlockExperimentalVMOptions</arg>
-                                <arg>-H:IncludeResources=.*properties$</arg>
                                 <arg>-H:Class=com.acme.jga.PocApplication</arg>
-                                <!--<arg>-H:ReflectionConfigurationFiles=./spring-native/reflect-config.json</arg>-->
-                                <!--<arg>
-                                    &#45;&#45;trace-class-initialization=org.apache.commons.logging.LogFactoryService,org.apache.commons.logging.LogFactory
-                                </arg>-->
+                                <!--<arg>&#45;&#45;emit build-report</arg>
+                                <arg>-O0</arg>
+                                <arg>-g</arg>
+                                <arg>-H:+SourceLevelDebug</arg>
+                                <arg>-H:+ReportExceptionStackTraces</arg>-->
                             </buildArgs>
                         </configuration>
                         <phase>package</phase>
@@ -652,26 +577,13 @@ To achieve this, a reflect-config file must be designed to indicate how to seria
 
 See https://www.graalvm.org/latest/reference-manual/native-image/dynamic-features/Reflection/
 
-In this project, spring-native/reflect-config.json file describes classes like:
+In this project, app/src/main/resources/META-INF/native-image/reflect-config.json file describes classes for reflection like:
 
 - AuditEvent: These objects are serialized in json before being persisted in rdbms
 - AuditScope: A nested object of AuditEvent
 - ApiError: Standard POJO returned as json when an error occurs in REST controllers
 
-**2024-02-19** Update:
-
-Integrating kafka with protobuf is not an easy thing.
-
-Indeed, the problem with kafka & protobuf in a native image is that compilation succeeds but fails at runtime.
-
-Thus, the reflect-config.json file grew up to more than 500 lines with kafka & protobuf integration.
-
-https://docs.spring.io/spring-boot/docs/current/reference/html/native-image.html
-
-**Youtube Spring I/O**:
-
-- https://www.youtube.com/watch?v=8umoZWj6UcU
-- https://www.youtube.com/watch?v=HWUy0kTlcj8
+In this project, app/src/main/resources/META-INF/native-image/resources-config.json file lists resources to include in native image
 
 ## Keycloak
 
@@ -708,54 +620,6 @@ email.
 > Moreover, if a dependency is copied in keycloak container, don't forget ro mark dependecy with scope provided in spi
 > pom.xml file and to remove/comment target library in maven-shade-plugin configuration
 
-### Docker image (optimized)
-
-For production use, first build an optimized version of keycloak with Dockerfile located in docker/keycloak-image:
-
-```bash
-docker build . -t keycloak-with-spi:1.0.0 --build-arg="SPI_FEDERATION_FILE=spi-user-storage.jar" --build-arg="SPI_KAFKA_FILE=spi-kafka.jar"
-```
-
-Then to run keycloak with the following variables:
-
-* KC_SPI_TRUSTSTORE_FILE_FILE: truststore file
-* KC_SPI_TRUSTSTORE_FILE_PASSWORD: truststore password
-* KC_PROXY = edge
-
-```bash
-/opt/keycloak/bin/kc.sh start --optimized
-```
-
-## Minikube:
-
-Enabling ingress (nginx):
-
-```sh
-minikube addons enable ingress
-```
-
-Verifying nginx ingress is up:
-
-```sh
-kubectl -n ingress-nginx get pods
-```
-
-Using minikube docker
-
-```sh
-minikube docker-env
-```
-
-```sh
-eval $(minikube -p minikube docker-env)
-```
-
-Listing images:
-
-```sh
-minikube image ls --format table
-```
-
 ### Init Database
 
 Please refer to Docker > Database setup to build image.
@@ -774,31 +638,6 @@ Command above will deploy a pod in kubernetes, this pod performs liquibase updat
 
 ### WebApi
 
-Either save image and load in minikube:
-
-```sh
-docker save 4ed63bb1fddb --output poc-st-webapi.tar
-minikube image load poc-st-webapi.tar
-```
-
-Or build image in minikube:
-
-```sh
-minikube image build . -t poc-st-webapi:1.0.0 --build-env="JAR_FILE=target/webapi-1.0.0-SNAPSHOT.jar"
-```
-
-Templating with helm and deploying:
-
-```sh
-helm template poc-st-webapi poc-st-webapi | kubectl apply -f -
-```
-
-Opening service endpoint
-
-```sh
-minikube service poc-st-webapi
-```
-
 ## OpenTelemetry
 
 Goal of [OpenTelemetry](https://opentelemetry.io/) is used to instrument, generate, collect, and export telemetry data (
@@ -815,36 +654,15 @@ Update -Dotel.javaagent.debug=true argument to disable opentelementry java agent
 NB: If you wanna launch application with java agent instrumentation, ensure to comment OpenTelemetryConfig.java
 configuration class !
 
-OpenTelemetry spans logs:
-
-```sh
-otel.javaagent 2024-01-17 22:36:06:457 +0100] [http-nio-8080-exec-1] INFO io.opentelemetry.exporter.logging.LoggingSpanExporter - 'SELECT poc_st.tenants' : 62dd1652c7fe3942a5c33403e84f0f44 00c752df75943a17 CLIENT [tracer: io.opentelemetry.jdbc:2.0.0-alpha] AttributesMap{data={db.operation=SELECT, db.sql.table=tenants, db.name=poc_st, thread.name=http-nio-8080-exec-1, thread.id=49, db.user=poc_st_app, db.connection_string=postgresql://localhost:5432, server.address=localhost, db.system=postgresql, db.statement=select id,uid,code,label from tenants where (uid=?), server.port=5432}, capacity=128, totalAddedValues=11}
-[otel.javaagent 2024-01-17 22:36:06:460 +0100] [http-nio-8080-exec-1] INFO io.opentelemetry.exporter.logging.LoggingSpanExporter - 'SELECT poc_st.organizations' : 62dd1652c7fe3942a5c33403e84f0f44 edb8737ec0cc3856 CLIENT [tracer: io.opentelemetry.jdbc:2.0.0-alpha] AttributesMap{data={db.operation=SELECT, db.sql.table=organizations, db.name=poc_st, thread.name=http-nio-8080-exec-1, thread.id=49, db.user=poc_st_app, db.connection_string=postgresql://localhost:5432, server.address=localhost, db.system=postgresql, db.statement=select id from organizations where code=?, server.port=5432}, capacity=128, totalAddedValues=11}
-[otel.javaagent 2024-01-17 22:36:06:463 +0100] [http-nio-8080-exec-1] INFO io.opentelemetry.exporter.logging.LoggingSpanExporter - 'INSERT poc_st.organizations' : 62dd1652c7fe3942a5c33403e84f0f44 ca323db9cd220da5 CLIENT [tracer: io.opentelemetry.jdbc:2.0.0-alpha] AttributesMap{data={db.operation=INSERT, db.sql.table=organizations, db.name=poc_st, thread.name=http-nio-8080-exec-1, thread.id=49, db.user=poc_st_app, db.connection_string=postgresql://localhost:5432, server.address=localhost, db.system=postgresql, db.statement=insert into organizations(tenant_id,uid,code,label,kind,country,status) values (?,?,?,?,?,?,?), server.port=5432}, capacity=128, totalAddedValues=11}
-[otel.javaagent 2024-01-17 22:36:06:469 +0100] [http-nio-8080-exec-1] INFO io.opentelemetry.exporter.logging.LoggingSpanExporter - 'INSERT poc_st.events' : 62dd1652c7fe3942a5c33403e84f0f44 fb12855a3d92f909 CLIENT [tracer: io.opentelemetry.jdbc:2.0.0-alpha] AttributesMap{data={db.operation=INSERT, db.sql.table=events, db.name=poc_st, thread.name=http-nio-8080-exec-1, thread.id=49, db.user=poc_st_app, db.connection_string=postgresql://localhost:5432, server.address=localhost, db.system=postgresql, db.statement=insert into events(uid,created_at,last_updated_at,target,object_uid,action,status,payload) values(?,?,?,?,?,?,?,?), server.port=5432}, capacity=128, totalAddedValues=11}
-[otel.javaagent 2024-01-17 22:36:06:470 +0100] [http-nio-8080-exec-1] INFO io.opentelemetry.exporter.logging.LoggingSpanExporter - 'INSERT poc_st.sectors' : 62dd1652c7fe3942a5c33403e84f0f44 8021aa0286c870ad CLIENT [tracer: io.opentelemetry.jdbc:2.0.0-alpha] AttributesMap{data={db.operation=INSERT, db.sql.table=sectors, db.name=poc_st, thread.name=http-nio-8080-exec-1, thread.id=49, db.user=poc_st_app, db.connection_string=postgresql://localhost:5432, server.address=localhost, db.system=postgresql, db.statement=insert into sectors(uid,tenant_id,org_id,label,code,root,parent_id) values(?,?,?,?,?,?,?), server.port=5432}, capacity=128, totalAddedValues=11}
-2024-01-17 22:36:06,471 INFO  [http-nio-8080-exec-1] - com.acme.users.mgt.infra.services.impl.sectors.SectorsInfraServicecreateSector: Created sector with uid [8939cdfb-7543-46bb-8626-a03d3cf345f2] on tenant [1] and organization [5]
-[otel.javaagent 2024-01-17 22:36:06:472 +0100] [http-nio-8080-exec-1] INFO io.opentelemetry.exporter.logging.LoggingSpanExporter - 'INSERT poc_st.events' : 62dd1652c7fe3942a5c33403e84f0f44 f50362fdb0ee9610 CLIENT [tracer: io.opentelemetry.jdbc:2.0.0-alpha] AttributesMap{data={db.operation=INSERT, db.sql.table=events, db.name=poc_st, thread.name=http-nio-8080-exec-1, thread.id=49, db.user=poc_st_app, db.connection_string=postgresql://localhost:5432, server.address=localhost, db.system=postgresql, db.statement=insert into events(uid,created_at,last_updated_at,target,object_uid,action,status,payload) values(?,?,?,?,?,?,?,?), server.port=5432}, capacity=128, totalAddedValues=11}
-2024-01-17 22:36:06,483 DEBUG [http-nio-8080-exec-1] - com.acme.users.mgt.events.kafka.handlers.EventBusHandler: Handling wakeup message
-[otel.javaagent 2024-01-17 22:36:06:485 +0100] [http-nio-8080-exec-1] INFO io.opentelemetry.exporter.logging.LoggingSpanExporter - 'SELECT poc_st.events' : 62dd1652c7fe3942a5c33403e84f0f44 7d3459dbd94ab94c CLIENT [tracer: io.opentelemetry.jdbc:2.0.0-alpha] AttributesMap{data={db.operation=SELECT, db.sql.table=events, db.name=poc_st, thread.name=http-nio-8080-exec-1, thread.id=49, db.user=poc_st_app, db.connection_string=postgresql://localhost:5432, server.address=localhost, db.system=postgresql, db.statement=select uid,created_at,last_updated_at,target,object_uid,action,status,payload from events where (status=?) order by created_at ASC, server.port=5432}, capacity=128, totalAddedValues=11}
-```
 ### LOKI & TEMPO
 
-Test counters & logging methods are registered in OpenTelemetryWrapper:
+Opentelemetry traces and spans are available in Tempo:
 
-To visualize logs in grafana from Loki datasource, navigate to "Explore -> Logs":
+![](docs/images/otel_orgs_root.png)
 
-![](docs/images/loki_logs.png)
+Logs associated to to traces are vailable in Loki
 
-To visualize counters from Tempo datasource, create a new visualization in grafana:
-
-![](docs/images/tempo_counters.png)
-
-Finally, spans are also visible in tempo:
-
-![](docs/images/tempo.png)
-
-![](docs/images/tempo_2.png)
+![](docs/images/otel_orgs_logs.png)
 
 # Keycloak
 

@@ -52,15 +52,13 @@
                                 <configuration>
                                     <mainClass>com.acme.jga.PocApplication</mainClass>
                                     <buildArgs>
-                                        <arg>--emit build-report</arg>
                                         <arg>--enable-sbom=false</arg>
-                                        <!--<arg>&#45;&#45;enable-sbom=classpath,export</arg>-->
+                                        <arg>-H:Class=com.acme.jga.PocApplication</arg>
+                                        <!--<arg>&#45;&#45;emit build-report</arg>
                                         <arg>-O0</arg>
-                                        <arg>--verbose</arg>
                                         <arg>-g</arg>
                                         <arg>-H:+SourceLevelDebug</arg>
-                                        <arg>-H:+ReportExceptionStackTraces</arg>
-                                        <arg>-H:Class=com.acme.jga.PocApplication</arg>
+                                        <arg>-H:+ReportExceptionStackTraces</arg>-->
                                     </buildArgs>
                                 </configuration>
                                 <phase>package</phase>

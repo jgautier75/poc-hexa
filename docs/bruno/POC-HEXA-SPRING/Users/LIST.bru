@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations/ff866a02-5d23-4c30-815e-ddad655b83fe/users
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations/ff866a02-5d23-4c30-815e-ddad655b83fe/users?filter=(login eq 's.beal57' or login eq 'd.bocquet29') or (email eq 'hassane.benoit30@test.fr')
   body: none
   auth: bearer
+}
+
+params:query {
+  filter: (login eq 's.beal57' or login eq 'd.bocquet29') or (email eq 'hassane.benoit30@test.fr')
 }
 
 auth:bearer {
