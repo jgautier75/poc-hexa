@@ -29,7 +29,7 @@ Standard REST application relying on:
 - OpenTelemetry (Monitoring)
 - Junit/Mockito/Testcontainers for testing
 
-INFO: This application relies oin JDK 25 for application but JDK 21 for keycloak spi.
+INFO: This application relies on JDK 25 for application but JDK 21 for keycloak spi.
 
 Thus, ensure both JDK 21 & 25 are installed and maven toolchain is set up. (see maven directory)
 
@@ -165,8 +165,6 @@ docker run -it --env P_PGHOST=192.168.1.15 --env P_PGPORT=5432 --env P_PGUSER=po
 OpenBao is a fork of HashiCorp vault.
 
 By default OpenBao is started id dev mode, "dev-root-token" is used in configuration.
-
-Use Bruno collection to add/list secrets.
 
 ```bash
 export VAULT_ADDR='http://127.0.0.1:8200'
@@ -500,6 +498,12 @@ docker build . -t poc-hexa-:1.0.0 --build-arg="MAVEN_ROOT=maven"
 
 ## Native image with GraalVM
 
+Issue the following command to build a native image (Dockerfile in root directory):
+
+```sh
+docker build -t jga-spotel:1.0.0 . --build-arg="MAVEN_ROOT=maven"
+```
+
 Prerequisite: Graalvm installed https://www.graalvm.org/downloads/
 
 GCC installed:
@@ -577,13 +581,9 @@ To achieve this, a reflect-config file must be designed to indicate how to seria
 
 See https://www.graalvm.org/latest/reference-manual/native-image/dynamic-features/Reflection/
 
-In this project, app/src/main/resources/META-INF/native-image/reflect-config.json file describes classes for reflection like:
+In this project, app/src/main/resources/META-INF/native-image/reflect-config.json file describes classes for reflection.
 
-- AuditEvent: These objects are serialized in json before being persisted in rdbms
-- AuditScope: A nested object of AuditEvent
-- ApiError: Standard POJO returned as json when an error occurs in REST controllers
-
-In this project, app/src/main/resources/META-INF/native-image/resources-config.json file lists resources to include in native image
+Also in this project, the app/src/main/resources/META-INF/native-image/resources-config.json file lists resources to include in native image
 
 ## Keycloak
 
@@ -656,6 +656,20 @@ configuration class !
 
 ### LOKI & TEMPO
 
+In this project, we fully rely on OpenTelemetry Spring integration (performe by Spring using micrometer-tracing-bridge-otel).
+
+If you wanna add additional metrics, annotate the target method with @Observed annotation.
+
+```java
+@Observed(name = "org_dao_find_all")
+@Override
+public List<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
+
+}
+```
+
+Please check application.yml file for OpenTelemetry configuration.
+
 Opentelemetry traces and spans are available in Tempo:
 
 ![](docs/images/otel_orgs_root.png)
@@ -711,5 +725,3 @@ Filtering docker containers by label
 ```shell
 docker ps --filter "label=com.acme.jga.pst=pst-keycloak"
 ```
-
-docker build -t jga-spotel:1.0.0 . --build-arg="MAVEN_ROOT=maven"
