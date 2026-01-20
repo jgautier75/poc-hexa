@@ -6,7 +6,7 @@ import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.functions.events.builders.organizations.EventOrganizationHolder;
-import com.acme.jga.domain.functions.organizations.validation.OrganizationCreateValidationHolder;
+import com.acme.jga.domain.functions.organizations.validation.OrganizationValidationHolder;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationCreateInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
@@ -47,6 +47,10 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
 
     @Override
     public CompositeId create(Organization organization) throws FunctionalException {
+
+        // Validate payload
+        OrganizationValidationHolder.getInstance().validate(organization);
+
         // Ensure tenant exists
         boolean tenantExists = tenantExistsFunc.existsByExternalId(organization.tenantId().externalId());
         if (!tenantExists) {
@@ -59,8 +63,6 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
             throw new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.ALREADY_EXISTS.name(), BundleFactory.getMessage("organization.code_already_used", organization.code()));
         }
 
-        // Validate payload
-        OrganizationCreateValidationHolder.getInstance().validate(organization);
 
         Tenant tenant = tenantFindInput.findById(organization.tenantId());
 

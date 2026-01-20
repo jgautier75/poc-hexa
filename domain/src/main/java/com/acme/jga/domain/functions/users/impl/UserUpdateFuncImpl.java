@@ -19,7 +19,7 @@ import com.acme.jga.domain.security.holders.ContextUserHolder;
 
 import java.util.List;
 
-import static com.acme.jga.domain.functions.users.validation.UserUpdateValidationHolder.getInstance;
+import static com.acme.jga.domain.functions.users.validation.UserValidationHolder.getInstance;
 
 @DomainService
 public class UserUpdateFuncImpl extends UserEventFunc implements UserUpdateInput {

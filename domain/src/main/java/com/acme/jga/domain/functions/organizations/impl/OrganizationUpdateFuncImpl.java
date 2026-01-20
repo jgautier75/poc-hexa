@@ -6,7 +6,7 @@ import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.functions.events.builders.organizations.EventOrganizationHolder;
-import com.acme.jga.domain.functions.organizations.validation.OrganizationUpdateValidationHolder;
+import com.acme.jga.domain.functions.organizations.validation.OrganizationValidationHolder;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationUpdateInput;
 import com.acme.jga.domain.model.event.*;
@@ -48,7 +48,7 @@ public class OrganizationUpdateFuncImpl implements OrganizationUpdateInput {
     public void update(Organization organization) throws FunctionalException {
 
         // Validate
-        OrganizationUpdateValidationHolder.getInstance().validate(organization);
+        OrganizationValidationHolder.getInstance().validate(organization);
 
         boolean tenantExists = this.tenantExistsOutput.existsByExternalId(organization.tenantId().externalId());
         if (!tenantExists) {

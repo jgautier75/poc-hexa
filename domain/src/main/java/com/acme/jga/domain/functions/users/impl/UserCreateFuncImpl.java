@@ -7,7 +7,7 @@ import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.functions.events.builders.users.EventUserHolder;
-import com.acme.jga.domain.functions.users.validation.UserCreateValidationHolder;
+import com.acme.jga.domain.functions.users.validation.UserValidationHolder;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
@@ -55,14 +55,16 @@ public class UserCreateFuncImpl extends UserEventFunc implements UserCreateInput
     @Override
     public CompositeId create(User user) throws FunctionalException {
         // Validate payload
-        UserCreateValidationHolder.getInsance().validate(user);
+        UserValidationHolder.getInstance().validate(user);
         Tenant tenant = tenantFindInput.findById(user.tenantId());
         Organization organization = organizationFindInput.findById(tenant.id(), user.organizationId());
 
+        // Ensure email is not already used
         if (userFindOutput.emailUsed(user.email())) {
             throw new FunctionalException(Scope.USER.name(), FunctionalErrors.ALREADY_EXISTS.name(), BundleFactory.getMessage("user_email_used", user.email()));
         }
 
+        // Ensure login is not already used
         if (userFindOutput.loginUsed(user.login())) {
             throw new FunctionalException(Scope.USER.name(), FunctionalErrors.ALREADY_EXISTS.name(), BundleFactory.getMessage("user_login_used", user.login()));
         }

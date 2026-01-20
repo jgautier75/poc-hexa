@@ -177,4 +177,13 @@ public class ValidationUtils {
         return validationResult.isSuccess();
     }
 
+    public static boolean validateEmail(ValidationResult validationResult, String fieldName, String fieldValue) {
+        if (!isValidEmail(fieldValue)) {
+            String message = BundleFactory.getMessage("validation_email", fieldValue);
+            validationResult.setSuccess(false);
+            validationResult.addError(new ValidationError(fieldName, fieldValue, ValidationRule.EMAIL.name(), message));
+        }
+        return validationResult.isSuccess();
+    }
+
 }
