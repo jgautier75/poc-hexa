@@ -57,9 +57,7 @@ public class AbstractJdbcDaoSupport /*extends MicrometerWrapper*/ {
             } catch (Exception e) {
                 loadSucceeds = false;
             }
-            if (loadSucceeds) {
-                loadQueryFilePath(Thread.currentThread().getContextClassLoader(), queryFilePaths);
-            } else {
+            if (!loadSucceeds) {
                 loadQueryFilePath(AbstractJdbcDaoSupport.class.getClassLoader(), queryFilePaths);
             }
         }

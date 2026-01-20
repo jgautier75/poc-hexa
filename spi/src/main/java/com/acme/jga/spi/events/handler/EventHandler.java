@@ -5,7 +5,7 @@ import com.acme.jga.domain.model.event.AuditChange;
 import com.acme.jga.domain.model.event.AuditEvent;
 import com.acme.jga.domain.model.event.EventStatus;
 import com.acme.jga.domain.shared.StreamUtil;
-import com.acme.jga.spi.adapter.event.impl.EventAdapter;
+import com.acme.jga.spi.adapter.event.api.EventAdapter;
 import com.acme.jga.spi.config.KafkaProducerConfig;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.kafka.clients.producer.ProducerRecord;

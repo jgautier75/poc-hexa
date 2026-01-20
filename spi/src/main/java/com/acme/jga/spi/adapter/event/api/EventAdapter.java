@@ -1,4 +1,4 @@
-package com.acme.jga.spi.adapter.event.impl;
+package com.acme.jga.spi.adapter.event.api;
 
 import com.acme.jga.domain.model.event.AuditEvent;
 import com.acme.jga.domain.model.event.EventStatus;
