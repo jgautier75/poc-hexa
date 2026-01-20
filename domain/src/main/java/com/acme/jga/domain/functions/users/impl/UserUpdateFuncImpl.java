@@ -8,7 +8,9 @@ import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.input.functions.users.UserFindInput;
 import com.acme.jga.domain.input.functions.users.UserUpdateInput;
-import com.acme.jga.domain.model.event.*;
+import com.acme.jga.domain.model.event.AuditAction;
+import com.acme.jga.domain.model.event.AuditChange;
+import com.acme.jga.domain.model.event.EventData;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.user.User;
@@ -20,7 +22,7 @@ import java.util.List;
 import static com.acme.jga.domain.functions.users.validation.UserUpdateValidationHolder.getInstance;
 
 @DomainService
-public class UserUpdateFuncImpl implements UserUpdateInput {
+public class UserUpdateFuncImpl extends UserEventFunc implements UserUpdateInput {
     private final TenantFindInput tenantFindInput;
     private final OrganizationFindInput organizationFindInput;
     private final UserFindInput userFindInput;
@@ -50,19 +52,10 @@ public class UserUpdateFuncImpl implements UserUpdateInput {
         User rdbmsUser = userFindInput.findById(tenant.id(), organization.id(), user.id());
         User updateUser = new User(rdbmsUser.id(), tenant.id(), organization.id(), user.login(), user.firstName(), user.lastName(), user.middleName(), user.email(), user.status(), user.notifEmail(), null);
         List<AuditChange> auditChanges = EventUserHolder.getInstance().build(rdbmsUser, updateUser);
-        EventData eventData = buildEventData(tenant, organization, updateUser.id().externalId(), auditChanges);
+        EventData eventData = super.buildEventData(contextUserHolder.getCurrentUser(), AuditAction.UPDATE, rdbmsUser.id().externalId(), tenant, organization, auditChanges);
         Integer nbUpdated = userUpdateOutput.update(updateUser, eventData);
         this.eventPublisher.pushAuditEvents();
         return nbUpdated;
     }
 
-    private EventData buildEventData(Tenant tenant, Organization org, String userUid, List<AuditChange> auditChanges) {
-        AuditScope scope = new AuditScope().toBuilder()
-                .tenantName(tenant.code())
-                .tenantUid(tenant.id().externalId())
-                .organizationName(org.code())
-                .organizationUid(org.id().externalId())
-                .build();
-        return new EventData(contextUserHolder.getCurrentUser(), userUid, scope, AuditAction.UPDATE, EventTarget.USER, auditChanges);
-    }
 }

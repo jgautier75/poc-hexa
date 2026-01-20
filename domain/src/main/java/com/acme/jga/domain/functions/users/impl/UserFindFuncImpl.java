@@ -55,7 +55,7 @@ public class UserFindFuncImpl implements UserFindInput {
         User byId = userFindOutput.findById(tenant.id(), organization.id(), id);
         return Optional
                 .of(byId)
-                .orElseThrow(() -> new FunctionalException(Scope.USER.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("user.not_found", id.externalId())));
+                .orElseThrow(() -> new FunctionalException(Scope.USER.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("user_not_found", id.externalId())));
 
     }
 }

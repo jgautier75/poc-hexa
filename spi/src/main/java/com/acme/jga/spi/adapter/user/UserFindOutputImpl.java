@@ -32,4 +32,15 @@ public class UserFindOutputImpl implements UserFindOutput {
     public User findById(CompositeId tenantId, CompositeId organizationId, CompositeId id) {
         return usersDao.findById(tenantId, organizationId, id);
     }
+
+    @Override
+    public boolean emailUsed(String email) {
+        return usersDao.emailExists(email);
+    }
+
+    @Override
+    public boolean loginUsed(String login) {
+        return usersDao.loginExists(login);
+    }
+
 }

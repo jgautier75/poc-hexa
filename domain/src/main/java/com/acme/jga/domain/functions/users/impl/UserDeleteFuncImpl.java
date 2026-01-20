@@ -19,7 +19,7 @@ import com.acme.jga.domain.security.holders.ContextUserHolder;
 import java.util.List;
 
 @DomainService
-public class UserDeleteFuncImpl implements UserDeleteInput {
+public class UserDeleteFuncImpl extends UserEventFunc implements UserDeleteInput {
     private final UserFindInput userFindInput;
     private final UserDeleteOutput userDeleteOutput;
     private final EventPublisher eventPublisher;
@@ -43,24 +43,17 @@ public class UserDeleteFuncImpl implements UserDeleteInput {
 
     @Override
     public Integer delete(CompositeId tenantId, CompositeId organizationId, CompositeId id) throws FunctionalException {
-        User user = this.userFindInput.findById(tenantId, organizationId, id);
-        List<AuditChange> auditChanges = EventUserHolder.getInstance().build(user, null);
         Tenant tenant = tenantFindInput.findById(tenantId);
         Organization organization = organizationFindInput.findById(tenant.id(), organizationId);
-        EventData eventData = buildEventData(tenant, organization, user.id(), auditChanges);
+
+        User user = this.userFindInput.findById(tenant.id(), organization.id(), id);
+
+        List<AuditChange> auditChanges = EventUserHolder.getInstance().build(user, null);
+        EventData eventData = super.buildEventData(contextUserHolder.getCurrentUser(), AuditAction.DELETE, id.externalId(), tenant, organization, auditChanges);
+
         Integer nbDeleted = userDeleteOutput.delete(tenant.id(), user.organizationId(), user.id(), eventData);
         this.eventPublisher.pushAuditEvents();
         return nbDeleted;
-    }
-
-    private EventData buildEventData(Tenant tenant, Organization organization, CompositeId userId, List<AuditChange> auditChanges) {
-        AuditScope scope = new AuditScope().toBuilder()
-                .tenantName(tenant.code())
-                .tenantUid(tenant.id().externalId())
-                .organizationUid(organization.id().externalId())
-                .organizationName(organization.code())
-                .build();
-        return new EventData(contextUserHolder.getCurrentUser(), userId.externalId(), scope, AuditAction.DELETE, EventTarget.USER, auditChanges);
     }
 
 }

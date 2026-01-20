@@ -13,4 +13,8 @@ public interface UserFindOutput {
     Integer countAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams);
 
     User findById(CompositeId tenantId, CompositeId organizationId, CompositeId id);
+
+    boolean emailUsed(String email);
+
+    boolean loginUsed(String login);
 }
