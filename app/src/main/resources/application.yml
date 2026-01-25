@@ -21,11 +21,6 @@ spring:
       enabled: true
   main:
     banner-mode: console
-  es:
-    basename: i18n/messages
-    encoding: UTF-8
-    fallback-to-system-locale: false
-    use-code-as-default-message: true
   security:
     oauth2:
       resourceserver:
@@ -119,6 +114,6 @@ app:
         - localhost:9092
       schema-registry: "http://localhost:8085"
       acks: all
-      client-id: "poc-st"
+      client-id: "poc-hexa"
       retries: 100
       topicNameAuditEvents: "audit_events"

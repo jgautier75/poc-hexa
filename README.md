@@ -493,7 +493,7 @@ Update adapter-rest/Dockerfile accordingly in jlinks section
 Building Docker image:
 
 ```sh
-docker build . -t poc-hexa-:1.0.0 --build-arg="MAVEN_ROOT=maven"
+docker build -t jga-spotel:1.0.0 . --build-arg="MAVEN_ROOT=maven"
 ```
 
 ## Native image with GraalVM

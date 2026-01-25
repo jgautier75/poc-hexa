@@ -14,7 +14,7 @@
     <name>Keycloak Spi modules</name>
 
     <properties>
-        <keycloak-version>26.5.1</keycloak-version>
+        <keycloak-version>26.5.2</keycloak-version>
         <jdk.version>21</jdk.version>
     </properties>
 

@@ -12,7 +12,6 @@ import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.input.functions.users.UserCreateInput;
-import com.acme.jga.domain.input.functions.users.UserFindInput;
 import com.acme.jga.domain.model.event.AuditAction;
 import com.acme.jga.domain.model.event.AuditChange;
 import com.acme.jga.domain.model.event.EventData;
@@ -41,7 +40,6 @@ public class UserCreateFuncImpl extends UserEventFunc implements UserCreateInput
                               UserCreateOutput userCreateOutput,
                               CryptoEncoder cryptoEncoder,
                               EventPublisher eventPublisher,
-                              UserFindInput userFindInput,
                               ContextUserHolder contextUserHolder, UserFindOutput userFindOutput) {
         this.organizationFindInput = organizationFindInput;
         this.tenantFindInput = tenantFindInput;

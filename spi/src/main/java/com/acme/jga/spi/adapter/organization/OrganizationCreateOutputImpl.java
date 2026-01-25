@@ -1,6 +1,5 @@
 package com.acme.jga.spi.adapter.organization;
 
-import com.acme.jga.domain.events.EventPublisher;
 import com.acme.jga.domain.model.event.EventData;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
@@ -19,16 +18,13 @@ import java.util.Collections;
 public class OrganizationCreateOutputImpl implements OrganizationCreateOutput {
     private final OrganizationsDao organizationsDao;
     private final SectorCreateOutput sectorCreateOutput;
-    private final EventPublisher eventPublisher;
     private final EventOutput eventOutput;
 
     public OrganizationCreateOutputImpl(OrganizationsDao organizationsDao,
                                         SectorCreateOutput sectorCreateOutput,
-                                        EventPublisher eventPublisher,
                                         EventOutput eventOutput) {
         this.organizationsDao = organizationsDao;
         this.sectorCreateOutput = sectorCreateOutput;
-        this.eventPublisher = eventPublisher;
         this.eventOutput = eventOutput;
     }
 
