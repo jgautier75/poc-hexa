@@ -181,6 +181,11 @@
             <artifactId>opentelemetry-logback-appender-1.0</artifactId>
             <version>2.24.0-alpha</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-micrometer-observation</artifactId>
+            <version>4.0.2</version>
+        </dependency>
         <!-- TEST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

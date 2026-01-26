@@ -14,6 +14,9 @@ import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
+import io.micrometer.common.annotation.ValueResolver;
+import io.micrometer.observation.annotation.ObservationKeyValue;
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -109,8 +112,11 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         });
     }
 
+    @Observed(name = "user_dao_find_all")
     @Override
-    public List<User> findAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
+    public List<User> findAll(@ObservationKeyValue(key = "tenantId", expression = "externalId") CompositeId tenantId,
+                              @ObservationKeyValue(key = "organizationId", expression = "externalId") CompositeId organizationId,
+                              @ObservationKeyValue(key = "searchParams") Map<SearchParams, Object> searchParams) {
         String baseQuery = super.getQuery("user_sel_base");
         QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams);
         return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), new RowMapper<>() {

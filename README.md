@@ -658,15 +658,19 @@ configuration class !
 
 In this project, we fully rely on OpenTelemetry Spring integration (performe by Spring using micrometer-tracing-bridge-otel).
 
-If you wanna add additional metrics, annotate the target method with @Observed annotation.
+If you wanna add additional metrics, annotate the target method with @Observed annotation and parameters with @ObservedKeyValue (e.g UsersDaoImpl).
 
 ```java
-@Observed(name = "org_dao_find_all")
+@Observed(name = "user_dao_find_all")
 @Override
-public List<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
+public List<User> findAll(@ObservationKeyValue(key = "tenantId", expression = "externalId") CompositeId tenantId,
+                          @ObservationKeyValue(key = "organizationId", expression = "externalId") CompositeId organizationId,
+                          @ObservationKeyValue(key = "searchParams") Map<SearchParams, Object> searchParams) {
 
 }
 ```
+
+![](docs/images/observation_key_value.png)
 
 Please check application.yml file for OpenTelemetry configuration.
 
