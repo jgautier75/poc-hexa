@@ -1,5 +1,6 @@
 package com.acme.jga.spi.adapter.sector;
 
+import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.domain.output.functions.sectors.SectorDeleteOutput;
 import com.acme.jga.spi.dao.sectors.api.SectorsDao;
@@ -19,5 +20,10 @@ public class SectorDeleteOutputImpl implements SectorDeleteOutput {
     @Override
     public Integer delete(Sector sector) {
         return this.sectorsDao.delete(sector.getTenantId(), sector.getOrganizationId(), sector.getId(), sector.getParent());
+    }
+
+    @Override
+    public Integer deleteAll(CompositeId tenantId, CompositeId organizationId) {
+        return sectorsDao.deleteAll(tenantId, organizationId);
     }
 }

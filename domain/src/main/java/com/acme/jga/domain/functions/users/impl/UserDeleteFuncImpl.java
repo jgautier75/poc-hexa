@@ -51,7 +51,7 @@ public class UserDeleteFuncImpl extends UserEventFunc implements UserDeleteInput
         List<AuditChange> auditChanges = EventUserHolder.getInstance().build(user, null);
         EventData eventData = super.buildEventData(contextUserHolder.getCurrentUser(), AuditAction.DELETE, id.externalId(), tenant, organization, auditChanges);
 
-        Integer nbDeleted = userDeleteOutput.delete(tenant.id(), user.organizationId(), user.id(), eventData);
+        Integer nbDeleted = userDeleteOutput.deleteAll(tenant.id(), user.organizationId(), user.id(), eventData);
         this.eventPublisher.pushAuditEvents();
         return nbDeleted;
     }

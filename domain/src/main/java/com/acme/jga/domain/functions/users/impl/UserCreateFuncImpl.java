@@ -54,6 +54,7 @@ public class UserCreateFuncImpl extends UserEventFunc implements UserCreateInput
     public CompositeId create(User user) throws FunctionalException {
         // Validate payload
         UserValidationHolder.getInstance().validate(user);
+
         Tenant tenant = tenantFindInput.findById(user.tenantId());
         Organization organization = organizationFindInput.findById(tenant.id(), user.organizationId());
 

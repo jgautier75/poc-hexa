@@ -20,8 +20,13 @@ public class UserDeleteOutputImpl implements UserDeleteOutput {
     }
 
     @Override
-    public Integer delete(CompositeId tenantId, CompositeId organizationId, CompositeId id, EventData eventData) {
+    public Integer deleteAll(CompositeId tenantId, CompositeId organizationId, CompositeId id, EventData eventData) {
         eventOutput.saveChanges(eventData);
         return usersDao.deleteUser(id, tenantId, organizationId);
+    }
+
+    @Override
+    public Integer deleteAll(CompositeId tenantId, CompositeId organizationId) {
+        return usersDao.deleteAll(tenantId, organizationId);
     }
 }

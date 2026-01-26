@@ -150,4 +150,23 @@ public class SectorsDaoImpl extends AbstractJdbcDaoSupport implements com.acme.j
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, List.of(OrderByClause.builder().orderDirection(OrderDirection.ASC).expression("label").build()), (String[]) null);
         return super.getNamedParameterJdbcTemplate().update(fullQuery, params);
     }
+
+    @Override
+    public Integer deleteAll(CompositeId tenantId, CompositeId organizationId) {
+        String baseQuery = super.getQuery("sector_delete_all");
+        List<WhereClause> whereClauses = new ArrayList<>();
+        whereClauses.add(WhereClause.builder()
+                .expression(buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID))
+                .operator(WhereOperator.AND)
+                .paramName(DaoConstants.P_TENANT_ID)
+                .paramValue(tenantId.internalId()).build());
+        whereClauses.add(WhereClause.builder()
+                .expression(buildSQLEqualsExpression(DaoConstants.FIELD_ORG_ID, DaoConstants.P_ORG_ID))
+                .operator(WhereOperator.AND)
+                .paramName(DaoConstants.P_ORG_ID)
+                .paramValue(organizationId.internalId()).build());
+        Map<String, Object> params = super.buildParams(whereClauses);
+        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, List.of(OrderByClause.builder().orderDirection(OrderDirection.ASC).expression("label").build()), (String[]) null);
+        return super.getNamedParameterJdbcTemplate().update(fullQuery, params);
+    }
 }

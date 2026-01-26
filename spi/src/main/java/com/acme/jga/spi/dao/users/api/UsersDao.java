@@ -23,4 +23,6 @@ public interface UsersDao {
     Integer update(User user);
 
     Integer deleteUser(CompositeId id, CompositeId tenantId, CompositeId organizationId);
+
+    Integer deleteAll(CompositeId tenantId, CompositeId organizationId);
 }

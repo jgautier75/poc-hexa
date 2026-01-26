@@ -15,4 +15,6 @@ public interface SectorsDao {
     List<Sector> findAll(CompositeId tenantId, CompositeId organizationId);
 
     Integer delete(CompositeId tenantId, CompositeId organizationId, CompositeId sectorId, CompositeId sectorParentId);
+
+    Integer deleteAll(CompositeId tenantId, CompositeId organizationId);
 }

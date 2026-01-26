@@ -8,6 +8,7 @@ import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.functions.events.builders.organizations.EventOrganizationHolder;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationDeleteInput;
+import com.acme.jga.domain.input.functions.sectors.SectorDeleteInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.event.*;
 import com.acme.jga.domain.model.generic.CompositeId;
@@ -15,6 +16,8 @@ import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.output.functions.organizations.OrganizationDeleteOutput;
 import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
+import com.acme.jga.domain.output.functions.sectors.SectorDeleteOutput;
+import com.acme.jga.domain.output.functions.users.UserDeleteOutput;
 import com.acme.jga.domain.security.holders.ContextUserHolder;
 
 import java.util.List;
@@ -27,17 +30,23 @@ public class OrganizationDeleteFuncImpl implements OrganizationDeleteInput {
     private final OrganizationDeleteOutput organizationDeleteOutput;
     private final ContextUserHolder contextUserHolder;
     private final EventPublisher eventPublisher;
+    private final UserDeleteOutput userDeleteOutput;
+    private final SectorDeleteOutput sectorDeleteOutput;
 
     public OrganizationDeleteFuncImpl(TenantFindInput tenantFindInput,
                                       OrganizationFindOutput organizationFindOutput,
                                       OrganizationDeleteOutput organizationDeleteOutput,
                                       ContextUserHolder contextUserHolder,
-                                      EventPublisher eventPublisher) {
+                                      EventPublisher eventPublisher,
+                                      UserDeleteOutput userDeleteOutput,
+                                      SectorDeleteOutput sectorDeleteOutput) {
         this.tenantFindInput = tenantFindInput;
         this.organizationFindOutput = organizationFindOutput;
         this.organizationDeleteOutput = organizationDeleteOutput;
         this.contextUserHolder = contextUserHolder;
         this.eventPublisher = eventPublisher;
+        this.userDeleteOutput = userDeleteOutput;
+        this.sectorDeleteOutput = sectorDeleteOutput;
     }
 
     @Override
@@ -49,6 +58,9 @@ public class OrganizationDeleteFuncImpl implements OrganizationDeleteInput {
         }
         List<AuditChange> auditChanges = EventOrganizationHolder.getInstance().build(orgDb, null);
         EventData eventData = buildEventData(tenant, orgDb.id().externalId(), auditChanges);
+
+        this.userDeleteOutput.deleteAll(tenant.id(), orgDb.id());
+        this.sectorDeleteOutput.deleteAll(tenant.id(), orgDb.id());
         this.organizationDeleteOutput.delete(tenantId, orgDb.id(), eventData);
         eventPublisher.pushAuditEvents();
     }
