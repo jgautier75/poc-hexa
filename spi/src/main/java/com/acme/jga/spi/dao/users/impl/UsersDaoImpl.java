@@ -169,11 +169,19 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     }
 
     @Override
-    public Integer deleteAll(CompositeId tenantId, CompositeId organizationId) {
+    public Integer deleteByOrganization(CompositeId tenantId, CompositeId organizationId) {
         String baseQuery = super.getQuery("user_all_delete_by_org");
         Map<String, Object> params = new HashMap<>();
         params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
         params.put(DaoConstants.P_ORG_ID, organizationId.internalId());
+        return super.getNamedParameterJdbcTemplate().update(baseQuery, params);
+    }
+
+    @Override
+    public Integer deleteByTenant(CompositeId tenantId) {
+        String baseQuery = super.getQuery("user_all_delete_by_tenant");
+        Map<String, Object> params = new HashMap<>();
+        params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
         return super.getNamedParameterJdbcTemplate().update(baseQuery, params);
     }
 

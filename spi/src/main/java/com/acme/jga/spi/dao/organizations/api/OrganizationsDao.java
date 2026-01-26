@@ -5,6 +5,7 @@ import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.search.filtering.constants.SearchParams;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -26,4 +27,5 @@ public interface OrganizationsDao {
 
     Organization findByCode(String code);
 
+    Integer deleteByTenant(CompositeId tenantId);
 }

@@ -58,6 +58,6 @@ public class AppTenantsServiceImpl implements AppTenantsService {
 
     @Override
     public boolean deleteTenant(String uid) throws FunctionalException {
-        return tenantDeleteInput.deleteTenant(() -> uid);
+        return tenantDeleteInput.deleteTenant(new CompositeId(null, uid));
     }
 }

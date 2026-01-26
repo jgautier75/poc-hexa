@@ -8,7 +8,6 @@ import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.functions.events.builders.organizations.EventOrganizationHolder;
 import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.organizations.OrganizationDeleteInput;
-import com.acme.jga.domain.input.functions.sectors.SectorDeleteInput;
 import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
 import com.acme.jga.domain.model.event.*;
 import com.acme.jga.domain.model.generic.CompositeId;
@@ -21,7 +20,6 @@ import com.acme.jga.domain.output.functions.users.UserDeleteOutput;
 import com.acme.jga.domain.security.holders.ContextUserHolder;
 
 import java.util.List;
-import java.util.Optional;
 
 @DomainService
 public class OrganizationDeleteFuncImpl implements OrganizationDeleteInput {
@@ -59,8 +57,8 @@ public class OrganizationDeleteFuncImpl implements OrganizationDeleteInput {
         List<AuditChange> auditChanges = EventOrganizationHolder.getInstance().build(orgDb, null);
         EventData eventData = buildEventData(tenant, orgDb.id().externalId(), auditChanges);
 
-        this.userDeleteOutput.deleteAll(tenant.id(), orgDb.id());
-        this.sectorDeleteOutput.deleteAll(tenant.id(), orgDb.id());
+        this.userDeleteOutput.deleteForOrganization(tenant.id(), orgDb.id());
+        this.sectorDeleteOutput.deleteForOrg(tenant.id(), orgDb.id());
         this.organizationDeleteOutput.delete(tenantId, orgDb.id(), eventData);
         eventPublisher.pushAuditEvents();
     }

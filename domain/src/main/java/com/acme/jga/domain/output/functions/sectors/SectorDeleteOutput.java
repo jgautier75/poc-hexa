@@ -6,5 +6,6 @@ import com.acme.jga.domain.model.sector.Sector;
 
 public interface SectorDeleteOutput {
     Integer delete(Sector sector) throws FunctionalException;
-    Integer deleteAll(CompositeId tenantId, CompositeId organizationId);
+    Integer deleteForOrg(CompositeId tenantId, CompositeId organizationId);
+    Integer deleteForTenant(CompositeId tenantId);
 }

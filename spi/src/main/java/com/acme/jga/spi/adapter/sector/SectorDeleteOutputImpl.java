@@ -23,7 +23,12 @@ public class SectorDeleteOutputImpl implements SectorDeleteOutput {
     }
 
     @Override
-    public Integer deleteAll(CompositeId tenantId, CompositeId organizationId) {
-        return sectorsDao.deleteAll(tenantId, organizationId);
+    public Integer deleteForOrg(CompositeId tenantId, CompositeId organizationId) {
+        return sectorsDao.deleteForOrganization(tenantId, organizationId);
+    }
+
+    @Override
+    public Integer deleteForTenant(CompositeId tenantId) {
+        return sectorsDao.deleteForTenant(tenantId);
     }
 }

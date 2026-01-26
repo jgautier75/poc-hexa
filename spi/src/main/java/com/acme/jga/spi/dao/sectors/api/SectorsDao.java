@@ -16,5 +16,7 @@ public interface SectorsDao {
 
     Integer delete(CompositeId tenantId, CompositeId organizationId, CompositeId sectorId, CompositeId sectorParentId);
 
-    Integer deleteAll(CompositeId tenantId, CompositeId organizationId);
+    Integer deleteForOrganization(CompositeId tenantId, CompositeId organizationId);
+
+    Integer deleteForTenant(CompositeId tenantId);
 }

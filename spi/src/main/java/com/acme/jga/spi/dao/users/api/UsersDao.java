@@ -24,5 +24,7 @@ public interface UsersDao {
 
     Integer deleteUser(CompositeId id, CompositeId tenantId, CompositeId organizationId);
 
-    Integer deleteAll(CompositeId tenantId, CompositeId organizationId);
+    Integer deleteByOrganization(CompositeId tenantId, CompositeId organizationId);
+
+    Integer deleteByTenant(CompositeId tenantId);
 }

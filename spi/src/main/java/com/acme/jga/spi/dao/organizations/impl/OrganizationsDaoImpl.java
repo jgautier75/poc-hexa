@@ -166,6 +166,16 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
         });
     }
 
+    @Override
+    public Integer deleteByTenant(CompositeId tenantId) {
+        String baseQuery = super.getQuery("org_delete_for_tenant");
+        List<WhereClause> whereClauses = new ArrayList<>();
+        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
+        Map<String, Object> params = super.buildParams(whereClauses);
+        params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
+        return super.getNamedParameterJdbcTemplate().update(fullQuery, params);
+    }
+
     private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, Map<SearchParams, Object> searchParams) {
         List<WhereClause> whereClauses = new ArrayList<>();
         whereClauses.add(WhereClause.builder()

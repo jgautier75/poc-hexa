@@ -5,4 +5,5 @@ import com.acme.jga.domain.model.generic.CompositeId;
 
 public interface OrganizationDeleteOutput {
     Integer delete(CompositeId tenantId, CompositeId orgId, EventData eventData);
+    Integer deleteByTenant(CompositeId tenantId);
 }

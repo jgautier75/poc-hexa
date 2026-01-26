@@ -42,6 +42,6 @@ public class SectorDeleteFuncImpl implements SectorDeleteInput {
     public Integer deleteAll(CompositeId tenantId, CompositeId organizationId) throws FunctionalException {
         Tenant tenant = tenantFindInput.findById(tenantId);
         Organization organization = organizationFindInput.findById(tenant.id(), organizationId);
-        return sectorDeleteOutput.deleteAll(tenant.id(), organization.id());
+        return sectorDeleteOutput.deleteForOrg(tenant.id(), organization.id());
     }
 }
