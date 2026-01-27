@@ -21,7 +21,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,18 +56,17 @@ public class AppControllerAdvice {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiError> handleValidationException(Exception ex) {
-        List<ApiErrorDetail> errorDetailList = new ArrayList<>();
+        List<ApiErrorDetail> apiErrorDetails = ofNullableList(((ValidationException) ex).getValidationErrors()).map(validationError -> ApiErrorDetail.builder()
+                .code(validationError.getValidationRule())
+                .field(validationError.getFieldName())
+                .message(validationError.getMessage())
+                .build()).toList();
         final ApiError apiError = ApiError.builder()
                 .scope(Scope.REQUEST.name())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .code(HttpStatus.BAD_REQUEST.name())
-                .details(errorDetailList)
+                .details(apiErrorDetails)
                 .message("ArgumentNotValid").build();
-        ofNullableList(((ValidationException) ex).getValidationErrors()).forEach(validationError -> errorDetailList.add(ApiErrorDetail.builder()
-                .code(validationError.getValidationRule())
-                .field(validationError.getFieldName())
-                .message(validationError.getMessage())
-                .build()));
         return ResponseEntity.badRequest().body(apiError);
     }
 

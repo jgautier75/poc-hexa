@@ -44,11 +44,6 @@
             <artifactId>micrometer-observation</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.20.0</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
