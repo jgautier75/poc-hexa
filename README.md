@@ -113,6 +113,10 @@ Open ports:
 To bulk create organizations and users, an [Jmeter](https://jmeter.apache.org/) script named DataFeeder is available in
 docs/jmeter folder.
 
+Jmeter plugins manager must be installed: see https://jmeter-plugins.org/wiki/PluginsManager/
+
+Once plugins manager installed, install Random CSV Data Set plugin (vendor BlazeMeter)
+
 TIP: When working on high resolution, change the default scale:
 
 ```sh
