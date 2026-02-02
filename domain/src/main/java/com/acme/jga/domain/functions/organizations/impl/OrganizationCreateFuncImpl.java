@@ -63,7 +63,6 @@ public class OrganizationCreateFuncImpl implements OrganizationCreateInput {
             throw new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.ALREADY_EXISTS.name(), BundleFactory.getMessage("organization.code_already_used", organization.code()));
         }
 
-
         Tenant tenant = tenantFindInput.findById(organization.tenantId());
 
         Organization org = new Organization(null, tenant.id(), organization.label(), organization.code(), organization.kind(), organization.country(), organization.status());

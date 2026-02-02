@@ -1,6 +1,7 @@
 package com.acme.jga.spi.adapter.user;
 
 import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.metadata.KeyValuePair;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.domain.output.functions.users.UserFindOutput;
 import com.acme.jga.search.filtering.constants.SearchParams;
@@ -41,6 +42,11 @@ public class UserFindOutputImpl implements UserFindOutput {
     @Override
     public boolean loginUsed(String login) {
         return usersDao.loginExists(login);
+    }
+
+    @Override
+    public User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey) {
+        return usersDao.findBySingleCriteria(tenantId, organizationId, searchKey);
     }
 
 }

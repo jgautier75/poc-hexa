@@ -1,25 +1,33 @@
 package com.acme.jga.rest.adapters.users.impl;
 
+import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
+import com.acme.jga.domain.exceptions.Scope;
+import com.acme.jga.domain.exceptions.WrappedFunctionalException;
+import com.acme.jga.domain.i18n.BundleFactory;
 import com.acme.jga.domain.input.functions.users.UserCreateInput;
 import com.acme.jga.domain.input.functions.users.UserDeleteInput;
 import com.acme.jga.domain.input.functions.users.UserFindInput;
 import com.acme.jga.domain.input.functions.users.UserUpdateInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.PaginatedResults;
+import com.acme.jga.domain.model.metadata.KeyValuePair;
 import com.acme.jga.domain.model.user.User;
+import com.acme.jga.rest.adapters.users.api.AppUsersService;
 import com.acme.jga.rest.dtos.shared.Pagination;
+import com.acme.jga.rest.dtos.v1.kcspi.UserOidcDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
 import com.acme.jga.rest.dtos.v1.users.UserDto;
 import com.acme.jga.rest.dtos.v1.users.UserUpdateDto;
-import com.acme.jga.rest.adapters.users.api.AppUsersService;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AppUsersServiceImpl implements AppUsersService {
@@ -62,5 +70,21 @@ public class AppUsersServiceImpl implements AppUsersService {
     @Override
     public void delete(String tenantUid, String organizationUid, String uid) throws FunctionalException {
         userDeleteInput.delete(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), new CompositeId(null, uid));
+    }
+
+    @Override
+    public UserOidcDto findForOidc(String tenantUid, String organizationUid, String key, String value) throws FunctionalException {
+        User userByCriteria = userFindInput.findBySingleCriteria(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), new KeyValuePair(key, value));
+        return Optional.ofNullable(userByCriteria).map(u ->
+                        new UserOidcDto(
+                                userByCriteria.id().externalId(),
+                                userByCriteria.login(),
+                                userByCriteria.firstName(),
+                                userByCriteria.lastName(),
+                                userByCriteria.secrets(),
+                                userByCriteria.email()
+                        )
+                )
+                .orElseThrow(() -> new WrappedFunctionalException(new FunctionalException(Scope.USER.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("user_not_found", key))));
     }
 }

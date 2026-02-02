@@ -1,6 +1,7 @@
 package com.acme.jga.rest.adapters.users.api;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
+import com.acme.jga.rest.dtos.v1.kcspi.UserOidcDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
 import com.acme.jga.rest.dtos.v1.users.UserDto;
@@ -17,4 +18,6 @@ public interface AppUsersService {
     void update(String tenantUid, String organizationUid, UserUpdateDto userUpdateDto) throws FunctionalException;
 
     void delete(String tenantUid, String organizationUid, String uid) throws FunctionalException;
+
+    UserOidcDto findForOidc(String tenantUid, String organizationUid, String key, String value) throws FunctionalException;
 }

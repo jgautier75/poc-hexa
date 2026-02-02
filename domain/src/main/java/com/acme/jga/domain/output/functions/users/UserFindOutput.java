@@ -1,6 +1,7 @@
 package com.acme.jga.domain.output.functions.users;
 
 import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.metadata.KeyValuePair;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.search.filtering.constants.SearchParams;
 
@@ -17,4 +18,6 @@ public interface UserFindOutput {
     boolean emailUsed(String email);
 
     boolean loginUsed(String login);
+
+    User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey);
 }

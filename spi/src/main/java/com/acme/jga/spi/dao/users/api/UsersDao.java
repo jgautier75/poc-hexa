@@ -1,6 +1,7 @@
 package com.acme.jga.spi.dao.users.api;
 
 import com.acme.jga.domain.model.generic.CompositeId;
+import com.acme.jga.domain.model.metadata.KeyValuePair;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.search.filtering.constants.SearchParams;
 
@@ -27,4 +28,6 @@ public interface UsersDao {
     Integer deleteByOrganization(CompositeId tenantId, CompositeId organizationId);
 
     Integer deleteByTenant(CompositeId tenantId);
+
+    User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey);
 }

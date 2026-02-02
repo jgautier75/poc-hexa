@@ -10,11 +10,11 @@ import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.dao.users.api.UsersDao;
 import com.acme.jga.spi.jdbc.extractors.UserExtractor;
+import com.acme.jga.spi.jdbc.extractors.UserOidcExtractor;
 import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
 import com.acme.jga.spi.jdbc.utils.WhereClause;
 import com.acme.jga.spi.jdbc.utils.WhereOperator;
-import io.micrometer.common.annotation.ValueResolver;
 import io.micrometer.observation.annotation.ObservationKeyValue;
 import io.micrometer.observation.annotation.Observed;
 import org.springframework.jdbc.core.RowMapper;
@@ -183,6 +183,52 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         Map<String, Object> params = new HashMap<>();
         params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
         return super.getNamedParameterJdbcTemplate().update(baseQuery, params);
+    }
+
+    @Override
+    public User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey) {
+        String baseQuery = super.getQuery("user_oidc");
+        Map<String, Object> params = new HashMap<>();
+        /*params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
+        params.put(DaoConstants.P_ORG_ID, organizationId.internalId());*/
+
+        List<WhereClause> whereClauses = new ArrayList<>();
+        switch (searchKey.getKey()) {
+            case DaoConstants.FIELD_UID -> {
+                whereClauses.add(
+                        WhereClause.builder()
+                                .expression(super.buildSQLEqualsExpression(DaoConstants.FIELD_UID, DaoConstants.P_UID))
+                                .operator(WhereOperator.AND)
+                                .paramName(DaoConstants.P_UID)
+                                .paramValue(searchKey.getValue())
+                                .build());
+                params.put(DaoConstants.P_UID, searchKey.getValue());
+            }
+            case DaoConstants.FIELD_EMAIL -> {
+                whereClauses.add(
+                        WhereClause.builder()
+                                .expression(super.buildSQLEqualsExpression(DaoConstants.FIELD_EMAIL, DaoConstants.P_EMAIL))
+                                .operator(WhereOperator.AND)
+                                .paramName(DaoConstants.P_EMAIL)
+                                .paramValue(searchKey.getValue())
+                                .build());
+                params.put(DaoConstants.P_EMAIL, searchKey.getValue());
+            }
+            case DaoConstants.FIELD_LOGIN -> {
+                whereClauses.add(
+                        WhereClause.builder()
+                                .expression(super.buildSQLEqualsExpression(DaoConstants.FIELD_LOGIN, DaoConstants.P_LOGIN))
+                                .operator(WhereOperator.AND)
+                                .paramName(DaoConstants.P_LOGIN)
+                                .paramValue(searchKey.getValue())
+                                .build());
+                params.put(DaoConstants.P_LOGIN, searchKey.getValue());
+            }
+        }
+        String fullQuery = super.buildFullQuery(baseQuery, whereClauses, Collections.emptyList());
+        return super.getNamedParameterJdbcTemplate().query(fullQuery, params, rs -> {
+            return UserOidcExtractor.extractUser(rs, true, tenantId, organizationId);
+        });
     }
 
     private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {

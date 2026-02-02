@@ -8,6 +8,7 @@ services:
       - type: bind
         source: ${PWD}/poc-hexa-openbao/config.hcl
         target: /openbao/config/config.hcl
+      - ${PWD}/openbao-data:/openbao/file
     ports:
       - 8200:8200
     labels:
@@ -192,7 +193,7 @@ services:
       #KC_LOG: "file"
       DEBUG: "true"
       # DEBUG_PORT: '*:8787'
-      federation_endpoint: http://MYIPADDRESS:8080/poc-st/api/v1/spi/user
+      federation_endpoint: http://MYIPADDRESS:8080/poc-hexa/api/v1/spi/user
       federation_user: admin
       federation_pass: admin
       kafka_consumer_topic: audit_events

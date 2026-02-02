@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.*;
 
-public class AbstractJdbcDaoSupport /*extends MicrometerWrapper*/ {
+public class AbstractJdbcDaoSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractJdbcDaoSupport.class);
 
