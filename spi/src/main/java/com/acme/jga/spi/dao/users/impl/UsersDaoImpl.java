@@ -114,11 +114,11 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
 
     @Observed(name = "user_dao_find_all")
     @Override
-    public List<User> findAll(@ObservationKeyValue(key = "tenantId", expression = "externalId") CompositeId tenantId,
-                              @ObservationKeyValue(key = "organizationId", expression = "externalId") CompositeId organizationId,
+    public List<User> findAll(@ObservationKeyValue(key = "tenantId") CompositeId tenantId,
+                              @ObservationKeyValue(key = "organizationId") CompositeId organizationId,
                               @ObservationKeyValue(key = "searchParams") Map<SearchParams, Object> searchParams) {
         String baseQuery = super.getQuery("user_sel_base");
-        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams);
+        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams, false);
         return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), new RowMapper<>() {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -130,7 +130,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     @Override
     public Integer countAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
         String baseQuery = super.getQuery("user_count");
-        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams);
+        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams, true);
         return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), resultSet -> {
             if (resultSet.next()) {
                 return resultSet.getInt(1);
@@ -231,7 +231,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         });
     }
 
-    private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
+    private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams, boolean count) {
         List<WhereClause> whereClauses = new ArrayList<>();
         whereClauses.add(
                 WhereClause.builder()
@@ -259,7 +259,11 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         if (compositeQuery.notEmpty()) {
             fQuery += DaoConstants.AND + compositeQuery.query();
         }
-        String fullQuery = fQuery + compositeQuery.orderBy() + compositeQuery.pagination();
+        String fullQuery = fQuery;
+        if (!count){
+            fullQuery += compositeQuery.orderBy();
+        }
+        fullQuery += compositeQuery.pagination();
         return new OrganizationsDaoImpl.QueryAndParams(fullQuery, params);
     }
 

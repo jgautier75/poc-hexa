@@ -19,4 +19,5 @@ public class EventPublisherImpl implements EventPublisher {
     public void pushAuditEvents() {
         this.publishSubscribeChannel.send(MessageBuilder.withPayload(EventType.AUDIT_EVENTS.name()).build());
     }
+
 }
