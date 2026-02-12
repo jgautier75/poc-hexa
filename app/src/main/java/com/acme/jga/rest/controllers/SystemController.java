@@ -6,6 +6,7 @@ import com.acme.jga.rest.utils.WebApiVersions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,6 +21,12 @@ public class SystemController {
     public ResponseEntity<ApiVersionList> listVersions() {
         ApiVersionList versions = appSystemService.versions();
         return new ResponseEntity<>(versions, HttpStatus.OK);
+    }
+
+    @PostMapping(value = WebApiVersions.SystemResourceVersion.KAFKA_WAKEUP)
+    public ResponseEntity<Void> kafkaWakeUp() {
+        appSystemService.kafkaWakeup();
+        return ResponseEntity.ok().build();
     }
 
 }

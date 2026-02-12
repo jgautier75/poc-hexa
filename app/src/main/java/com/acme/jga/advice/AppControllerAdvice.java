@@ -56,11 +56,13 @@ public class AppControllerAdvice {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiError> handleValidationException(Exception ex) {
-        List<ApiErrorDetail> apiErrorDetails = ofNullableList(((ValidationException) ex).getValidationErrors()).map(validationError -> ApiErrorDetail.builder()
-                .code(validationError.getValidationRule())
-                .field(validationError.getFieldName())
-                .message(validationError.getMessage())
-                .build()).toList();
+        List<ApiErrorDetail> apiErrorDetails = ofNullableList(((ValidationException) ex).getValidationErrors())
+                .map(validationError -> ApiErrorDetail.builder()
+                    .code(validationError.getValidationRule())
+                    .field(validationError.getFieldName())
+                    .message(validationError.getMessage())
+                    .build()
+                ).toList();
         final ApiError apiError = ApiError.builder()
                 .scope(Scope.REQUEST.name())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
