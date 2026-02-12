@@ -15,37 +15,41 @@ import java.util.UUID;
 
 public class OrganizationFindOutputStub implements OrganizationFindOutput {
     public static final CompositeId DEFAULT_ORG_ID = new CompositeId(1L, UUID.randomUUID().toString());
-    private static final List<Organization> organizations = new ArrayList<>();
+    public static final List<Organization> ORGANIZATIONS = new ArrayList<>();
 
     public OrganizationFindOutputStub(Tenant tenant) {
         Organization org = new Organization(DEFAULT_ORG_ID, tenant.id(), "deforg", "deforg", OrganizationKind.COMMUNITY, "fr", OrganizationStatus.ACTIVE);
-        organizations.add(org);
+        ORGANIZATIONS.add(org);
     }
 
     @Override
     public Organization findById(CompositeId tenantId, CompositeId organizationId) {
-        return organizations.stream().filter(org -> org.tenantId().internalId().equals(tenantId.internalId())
+        return ORGANIZATIONS.stream().filter(org -> org.tenantId().internalId().equals(tenantId.internalId())
                 && org.id().internalId().equals(organizationId.internalId())
         ).findFirst().orElse(null);
     }
 
     @Override
     public boolean existsByCode(String code) {
-        return organizations.stream().anyMatch(org -> org.code().equals(code));
+        return ORGANIZATIONS.stream().anyMatch(org -> org.code().equals(code));
     }
 
     @Override
     public List<Organization> findAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
-        return organizations;
+        return ORGANIZATIONS;
     }
 
     @Override
     public Integer countAll(CompositeId tenantId, Map<SearchParams, Object> searchParams) {
-        return organizations.size();
+        return ORGANIZATIONS.size();
     }
 
     @Override
     public Organization findByCode(String code) {
-        return organizations.stream().filter(org -> org.code().equals(code)).findFirst().orElse(null);
+        return ORGANIZATIONS.stream().filter(org -> org.code().equals(code)).findFirst().orElse(null);
+    }
+
+    public List<Organization> orgsStub() {
+        return ORGANIZATIONS;
     }
 }
