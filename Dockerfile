@@ -1,4 +1,4 @@
-FROM debian:13.3 as nativebuilder
+FROM debian:13.3 AS nativebuilder
 ARG MAVEN_ROOT
 COPY ${MAVEN_ROOT}/settings.xml /root/.m2/settings.xml
 COPY ${MAVEN_ROOT}/toolchains.xml /root/.m2/toolchains.xml
