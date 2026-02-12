@@ -82,4 +82,13 @@ class OrganizationCreateFuncImplTest {
         assertEquals(FunctionalErrors.ALREADY_EXISTS.name(), functionalException.getCode(), FunctionalErrors.ALREADY_EXISTS.name() + " code ");
     }
 
+    @Test
+    public void Organization_Country_Invalid() throws FunctionalException {
+        Organization org = new Organization(null, TENANT_ID, "mylabel", "mycode", OrganizationKind.COMMUNITY, "zz", OrganizationStatus.ACTIVE);
+        ValidationException validationException = assertThrows(ValidationException.class, () -> ORGANIZATION_CREATE_FUNC.create(org));
+        boolean notNullError = validationException.getValidationErrors().stream().anyMatch(ve -> ValidationRule.COUNTRY_ISO.name().equals(ve.getValidationRule())
+        );
+        assertTrue(notNullError);
+    }
+
 }
