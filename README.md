@@ -494,12 +494,6 @@ Update adapter-rest/Dockerfile accordingly in jlinks section
 
 `RUN jlink --compress=2 --no-header-files --no-man-pages --add-modules java.base,java.desktop,java.instrument,java.net.http,java.prefs,java.rmi,java.scripting,java.security.jgss,java.security.sasl,java.sql.rowset,jdk.compiler,jdk.jfr,jdk.management,jdk.unsupported,jdk.crypto.ec  --output /app/customjre`
 
-Building Docker image:
-
-```sh
-docker build -t jga-spotel:1.0.0 . --build-arg="MAVEN_ROOT=maven"
-```
-
 ## Native image with GraalVM
 
 Issue the following command to build a native image (Dockerfile in root directory):
@@ -507,6 +501,8 @@ Issue the following command to build a native image (Dockerfile in root director
 ```sh
 docker build -t jga-spotel:1.0.0 . --build-arg="MAVEN_ROOT=maven"
 ```
+
+On your computer, to build native image locally, follow the following steps.
 
 Prerequisite: Graalvm installed https://www.graalvm.org/downloads/
 
