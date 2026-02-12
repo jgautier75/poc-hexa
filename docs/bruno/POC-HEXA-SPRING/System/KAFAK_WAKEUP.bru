@@ -1,0 +1,20 @@
+meta {
+  name: KAFAK_WAKEUP
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/system/wakeup
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{basicAuthUser}}
+  password: {{basicAuthPassword}}
+}
+
+settings {
+  encodeUrl: true
+}

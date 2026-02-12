@@ -5,6 +5,7 @@ import com.acme.jga.domain.model.event.EventStatus;
 import com.acme.jga.spi.adapter.event.api.EventAdapter;
 import com.acme.jga.spi.dao.events.api.EventsDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +23,8 @@ public class EventAdapterImpl implements EventAdapter {
     }
 
     @Override
+    @Transactional
     public Integer updateEvents(List<String> eventsUidList, EventStatus eventStatus) {
-        return eventsDao.updateEvents(eventsUidList, EventStatus.PROCESSED);
+        return eventsDao.updateEvents(eventsUidList, eventStatus);
     }
 }
