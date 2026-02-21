@@ -22,6 +22,7 @@
         <lombok-version>1.18.42</lombok-version>
         <protobuf-version>4.32.0</protobuf-version>
         <otel-version>1.57.0</otel-version>
+        <pg-driver-version>42.7.10</pg-driver-version>
     </properties>
     <repositories>
         <repository>
@@ -37,7 +38,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.2</version>
+        <version>4.0.3</version>
     </parent>
     <build>
         <pluginManagement>
