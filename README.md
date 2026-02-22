@@ -40,13 +40,13 @@ Start using the following order:
 * [Docker - Base] to start base containers
 * [Docker - Grafana Loki - Grafana Tempo] for monitoring
 
-All docker images versions and applications properties are centralized in ap.env file:
+All docker images versions and applications properties are centralized in app.env file:
 
 ```
 DOCKER_UBI9_VERSION=9.7
-DOCKER_OPENBAO_VERSION=2.4.4
-DOCKER_POSTGRESQL=18.1
-DOCKER_KEYCLOAK_VERSION=26.4.7
+DOCKER_OPENBAO_VERSION=2.5.0
+DOCKER_POSTGRESQL=18.2
+DOCKER_KEYCLOAK_VERSION=26.5.4
 DOCKER_AKHQ_VERSION=0.26.0
 DOCKER_CONFLUENT_VERSION=7.9.5
 OPENBAO_TOKEN=dev-root-token
@@ -82,10 +82,10 @@ Use docker/setup_all.sh script to start the following "base" containers/services
 
 | Service             | Version | Port | Description                               |
 |---------------------|---------|------|-------------------------------------------|
-| postgreSQL          | 18.1    | 5434 | Spring app storage                        |
-| keycloak            | 26.4.7  | 7080 | Keycloak dev instance                     |
-| keycloak-postgreSQL | 18.1    | 5433 | Keycloak app storage                      |
-| openbao             | 2.4.4   | 8200 | OpenBao port                              |
+| postgreSQL          | 18.2    | 5434 | Spring app storage                        |
+| keycloak            | 26.5.4  | 7080 | Keycloak dev instance                     |
+| keycloak-postgreSQL | 18.2    | 5433 | Keycloak app storage                      |
+| openbao             | 2.5.0   | 8200 | OpenBao port                              |
 | akhq                | 0.26.0  | 8086 | GUI for kafka (topics, consumers, ...)    | 
 | zookeeper           | 7.9.5   | 2181 | Centralized service for kafka management  |
 | kafka               | 7.9.5   | 9092 | Kafka broker                              |
