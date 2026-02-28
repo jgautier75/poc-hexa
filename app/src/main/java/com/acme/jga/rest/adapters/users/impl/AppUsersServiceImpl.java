@@ -55,13 +55,13 @@ public class AppUsersServiceImpl implements AppUsersService {
     @Override
     public UserDisplayListDto findAll(String tenantUid, String organizationUid, Map<SearchParams, Object> searchParams) throws FunctionalException {
         PaginatedResults<User> pres = userFindInput.findAll(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), searchParams);
-        List<UserDisplayDto> displayDtos = pres.results().stream().map(usr -> new UserDisplayDto(usr.login(), usr.firstName(), usr.lastName(), usr.middleName(), usr.email(), usr.status(), usr.notifEmail())).toList();
+        List<UserDisplayDto> displayDtos = pres.results().stream().map(usr -> new UserDisplayDto(usr.id().externalId(), usr.login(), usr.firstName(), usr.lastName(), usr.middleName(), usr.email(), usr.status(), usr.notifEmail())).toList();
         return new UserDisplayListDto(displayDtos, new Pagination(pres.nbResults(), pres.pageIndex(), pres.nbPages()));
     }
 
     @Override
-    public void update(String tenantUid, String organizationUid, UserUpdateDto userUpdateDto) throws FunctionalException {
-        User usr = new User(null, new CompositeId(null, tenantUid), new CompositeId(null, organizationUid),
+    public void update(String tenantUid, String organizationUid,String userUid, UserUpdateDto userUpdateDto) throws FunctionalException {
+        User usr = new User(new CompositeId(null, userUid), new CompositeId(null, tenantUid), new CompositeId(null, organizationUid),
                 userUpdateDto.getLogin(), userUpdateDto.getFirstName(), userUpdateDto.getLastName(),
                 userUpdateDto.getMiddleName(), userUpdateDto.getEmail(), userUpdateDto.getStatus(), userUpdateDto.getNotifEmail(), null);
         userUpdateInput.update(usr);

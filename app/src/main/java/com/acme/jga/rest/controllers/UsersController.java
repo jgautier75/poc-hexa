@@ -49,9 +49,10 @@ public class UsersController {
 
     @PostMapping(value = WebApiVersions.UsersResourceVersion.WITH_UID)
     public ResponseEntity<Void> updateUser(@PathVariable("tenantUid") String tenantUid,
-                                           @PathVariable("orgUid") String orgUid, @PathVariable("userUid") String userUid,
+                                           @PathVariable("orgUid") String orgUid,
+                                           @PathVariable("userUid") String userUid,
                                            @RequestBody UserUpdateDto userDto) throws FunctionalException {
-        appUsersService.update(tenantUid, orgUid, userDto);
+        appUsersService.update(tenantUid, orgUid, userUid, userDto);
         return ResponseEntity.noContent().build();
     }
 

@@ -18,7 +18,7 @@ public abstract class AbstractEventBuilder {
                     .operation(AuditOperation.REMOVE)
                     .build();
         } else {
-            if (!from.equals(to)) {
+            if (from != null && to != null && !from.equals(to)) {
                 return AuditChange.builder()
                         .from(from)
                         .to(to)

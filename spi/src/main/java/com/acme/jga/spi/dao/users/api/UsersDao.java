@@ -15,7 +15,7 @@ public interface UsersDao {
 
     boolean loginExists(String login);
 
-    User findById(CompositeId id, CompositeId tenantId, CompositeId organizationId);
+    User findById(CompositeId tenantId, CompositeId organizationId, CompositeId id);
 
     List<User> findAll(CompositeId tenantId, CompositeId organizationId, Map<SearchParams,Object> searchParams);
 

@@ -87,7 +87,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     }
 
     @Override
-    public User findById(CompositeId id, CompositeId tenantId, CompositeId organizationId) {
+    public User findById(CompositeId tenantId, CompositeId organizationId, CompositeId id) {
         String baseQuery = super.getQuery("user_sel_base");
         List<WhereClause> whereClauses = new ArrayList<>();
         whereClauses.add(

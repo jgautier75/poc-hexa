@@ -33,7 +33,7 @@ public class EventUserBuilder extends AbstractEventBuilder {
         Optional.ofNullable(buildChange(oldUser.middleName(), newUser.middleName(), "middleName")).map(changes::add);
         Optional.ofNullable(buildChange(oldUser.notifEmail(), newUser.notifEmail(), "notifEmail")).map(changes::add);
 
-        if (oldUser.status().equals(newUser.status())) {
+        if (!oldUser.status().equals(newUser.status())) {
             changes.add(AuditChange.builder()
                     .from(oldUser.status().name())
                     .to(newUser.status().name())

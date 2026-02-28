@@ -15,7 +15,7 @@ public interface AppUsersService {
 
     UserDisplayListDto findAll(String tenantUid, String organizationUid, Map<SearchParams, Object> searchParams) throws FunctionalException;
 
-    void update(String tenantUid, String organizationUid, UserUpdateDto userUpdateDto) throws FunctionalException;
+    void update(String tenantUid, String organizationUid, String userUid, UserUpdateDto userUpdateDto) throws FunctionalException;
 
     void delete(String tenantUid, String organizationUid, String uid) throws FunctionalException;
 

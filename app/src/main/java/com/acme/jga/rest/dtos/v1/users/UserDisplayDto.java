@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder(toBuilder = true)
 public class UserDisplayDto {
+    private String uuid;
     private String login;
     private String firstName;
     private String lastName;
