@@ -160,7 +160,7 @@ public class ExpressionsProcessor {
         if (OrganizationMetaData.KIND.getAlias().equalsIgnoreCase(paramName.toString())) {
             params.put(paramName.toString(), OrganizationKind.valueOf(value).getValue());
         } else {
-            params.put(paramName.toString(), isLikeOperator ? "%" + value + "%" : value);
+            params.put(paramName.toString(), isLikeOperator ? value.replace("*", "%") : value);
         }
     }
 

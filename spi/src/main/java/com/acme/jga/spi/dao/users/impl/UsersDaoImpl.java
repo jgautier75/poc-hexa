@@ -231,7 +231,17 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         });
     }
 
-    private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams, boolean count) {
+    /**
+     * Build SQL query based on search parameters.
+     * @param baseQuery Base SQL query
+     * @param tenantId Tenant id
+     * @param organizationId Organization id
+     * @param searchParams Search parameters
+     * @param count Is count query
+     * @return SQL query and named parameters
+     */
+    private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, CompositeId organizationId,
+                                            Map<SearchParams, Object> searchParams, boolean count) {
         List<WhereClause> whereClauses = new ArrayList<>();
         whereClauses.add(
                 WhereClause.builder()
@@ -254,16 +264,16 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
         params.put(DaoConstants.P_ORG_ID, organizationId.internalId());
 
-        // Where clause, force filtering on tenant
         String fQuery = super.buildFullQuery(baseQuery, whereClauses, Collections.emptyList());
         if (compositeQuery.notEmpty()) {
             fQuery += DaoConstants.AND + compositeQuery.query();
         }
         String fullQuery = fQuery;
+        // Do not add orderBy clause for a count query (useless)
         if (!count){
             fullQuery += compositeQuery.orderBy();
+            fullQuery += compositeQuery.pagination();
         }
-        fullQuery += compositeQuery.pagination();
         return new OrganizationsDaoImpl.QueryAndParams(fullQuery, params);
     }
 
