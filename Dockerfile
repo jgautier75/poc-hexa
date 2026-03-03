@@ -16,11 +16,11 @@ RUN tar -zxf apache-maven-3.9.12-bin.tar.gz
 RUN mkdir /java-sources
 WORKDIR /java-sources
 COPY . /java-sources
-RUN export JAVA_HOME="/opt/graalvm-jdk-25.0.1+8.1" && export PATH=$PATH:$JAVA_HOME/bin && ls -al && /opt/apache-maven-3.9.12/bin/mvn clean install -DskipTests -Pnative
+RUN export JAVA_HOME="/opt/graalvm-jdk-25.0.2+10.1" && export PATH=$PATH:$JAVA_HOME/bin && ls -al && /opt/apache-maven-3.9.12/bin/mvn clean install -DskipTests -Pnative
 
 FROM redhat/ubi9-minimal:9.7
 EXPOSE 8080/tcp
 RUN mkdir -p /app/
 RUN mkdir -p /errors/
 COPY --from=nativebuilder /java-sources/app/target/app /app/poc-hexa-app
-CMD ["/app/poc-hexa-app"]
+ENTRYPOINT ["/app/poc-hexa-app"]

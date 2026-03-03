@@ -120,7 +120,7 @@ under the License.
             <vendor>graalvm</vendor>
         </provides>
         <configuration>
-            <jdkHome>/opt/graalvm-jdk-25.0.1+8.1</jdkHome>
+            <jdkHome>/opt/graalvm-jdk-25.0.2+10.1</jdkHome>
         </configuration>
     </toolchain>
 
