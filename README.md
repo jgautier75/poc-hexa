@@ -617,7 +617,7 @@ email.
 
 > spi-kafka is also a fat jar. However, to minimize jar's size, dependencies can be copied in /opt/keycloak/lib/lib/main
 > folder (see docker-services.yml file where kafka-clients jar is copied in keycloak container)
-> Moreover, if a dependency is copied in keycloak container, don't forget ro mark dependecy with scope provided in spi
+> Moreover, if a dependency is copied in keycloak container, don't forget to mark dependency with scope provided in spi
 > pom.xml file and to remove/comment target library in maven-shade-plugin configuration
 
 ### Init Database
