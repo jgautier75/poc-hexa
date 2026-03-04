@@ -44,8 +44,8 @@ public class UserFindFuncImpl implements UserFindInput {
         return new PaginatedResults<>(nbUsers,
                 nbUsers != null ? (nbUsers / (Integer) searchParams.get(SearchParams.PAGE_SIZE) + 1) : 0,
                 users,
-                (Integer) searchParams.get(SearchParams.PAGE_INDEX),
-                (Integer) searchParams.get(SearchParams.PAGE_SIZE)
+                (Integer) searchParams.get(SearchParams.PAGE_SIZE),
+                (Integer) searchParams.get(SearchParams.PAGE_INDEX)
         );
     }
 

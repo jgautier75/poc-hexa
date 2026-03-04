@@ -39,8 +39,8 @@ public class OrganizationFindFuncImpl implements OrganizationFindInput {
         return new PaginatedResults<>(nbOrgs,
                 nbOrgs != null ? (nbOrgs / (Integer) searchParams.get(SearchParams.PAGE_SIZE) + 1) : 0,
                 orgs,
-                (Integer) searchParams.get(SearchParams.PAGE_INDEX),
-                (Integer) searchParams.get(SearchParams.PAGE_SIZE)
+                (Integer) searchParams.get(SearchParams.PAGE_SIZE),
+                (Integer) searchParams.get(SearchParams.PAGE_INDEX)
         );
     }
 
@@ -49,7 +49,7 @@ public class OrganizationFindFuncImpl implements OrganizationFindInput {
         Tenant tenant = tenantFindInput.findById(tenantId);
         Organization organization = this.organizationFindOutput.findById(tenant.id(), organizationId);
         return Optional
-                .of(organization)
+                .ofNullable(organization)
                 .orElseThrow(() -> new FunctionalException(Scope.ORGANIZATION.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("organization.not_found", organizationId.externalId())));
     }
 }
