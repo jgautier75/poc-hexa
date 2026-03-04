@@ -5,15 +5,15 @@ meta {
 }
 
 get {
-  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations/ff866a02-5d23-4c30-815e-ddad655b83fe/users?orderBy=+lastName&size=50
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations/c538fb14-95ba-458b-b1aa-34cd80d0bc31/users?orderBy=+lastName&size=20&index=2
   body: none
   auth: bearer
 }
 
 params:query {
   orderBy: +lastName
-  size: 50
-  ~index: 2
+  size: 20
+  index: 2
   ~filter: (login eq 's.beal57' or login eq 'd.bocquet29') or (email eq 'hassane.benoit30@test.fr')
 }
 
@@ -33,4 +33,5 @@ body:json {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

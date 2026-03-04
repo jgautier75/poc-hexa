@@ -1,11 +1,11 @@
 meta {
-  name: UPDATE
+  name: CREATE
   type: http
-  seq: 3
+  seq: 4
 }
 
-put {
-  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8
+post {
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants
   body: json
   auth: bearer
 }

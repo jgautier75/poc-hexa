@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations?pageSize=50
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations?pageSize=20
   body: none
   auth: bearer
 }
 
 params:query {
-  pageSize: 50
+  pageSize: 20
   ~filter: code eq 'abnamro'
 }
 
@@ -21,4 +21,5 @@ auth:bearer {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
