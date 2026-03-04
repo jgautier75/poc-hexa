@@ -148,8 +148,7 @@ mvn clean package install -DskipTests
 4. Perform Liquibase update manually:
 
 ```java
-java -
-jar db-migration.jar --classpath=db-migration.jar --driver=org.postgresql.Driver --url="jdbc:postgresql://localhost:5432/poc-st"--changeLogFile="postgresql/changelogs.xml"--username=poc_st_dba --password=poc_st_dba --logLevel=info --contexts="all,grants"update
+java -jar db-migration.jar --classpath=db-migration.jar --driver=org.postgresql.Driver --url="jdbc:postgresql://localhost:5434/poc-st" --changeLogFile="postgresql/changelogs.xml" --username=poc_st_dba --password=poc_st_dba --logLevel=info --contexts="all,grants" update
 ```
 
 #### Docker image
