@@ -29,7 +29,7 @@ public class TenantsController {
     }
 
     @GetMapping(value = WebApiVersions.TenantsResourceVersion.WITH_UID)
-    public ResponseEntity<TenantDisplayDto> findTenantByUid(@PathVariable(name = "uid", required = true) String uid)
+    public ResponseEntity<TenantDisplayDto> findTenantByUid(@PathVariable(required = true) String uid)
             throws FunctionalException {
         TenantDisplayDto tenantDto = appTenantsService.findByUid(uid);
         return new ResponseEntity<>(tenantDto, HttpStatus.OK);
@@ -41,8 +41,8 @@ public class TenantsController {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(tenantListDisplayDto);
     }
 
-    @PostMapping(value = WebApiVersions.TenantsResourceVersion.WITH_UID)
-    public ResponseEntity<Void> updateTenantByUid(@PathVariable(name = "uid", required = true) String uid,
+    @PutMapping(value = WebApiVersions.TenantsResourceVersion.WITH_UID)
+    public ResponseEntity<Void> updateTenantByUid(@PathVariable(required = true) String uid,
                                                   @RequestBody TenantDto tenantDto)
             throws FunctionalException {
         appTenantsService.updateTenant(uid, tenantDto);
@@ -50,7 +50,7 @@ public class TenantsController {
     }
 
     @DeleteMapping(value = WebApiVersions.TenantsResourceVersion.WITH_UID)
-    public ResponseEntity<Void> deleteTenantByUid(@PathVariable(name = "uid", required = true) String uid)
+    public ResponseEntity<Void> deleteTenantByUid(@PathVariable(required = true) String uid)
             throws FunctionalException {
         appTenantsService.deleteTenant(uid);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
