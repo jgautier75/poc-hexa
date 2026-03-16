@@ -47,7 +47,7 @@ public class UsersController {
         return new ResponseEntity<>(displayListDto, HttpStatus.OK);
     }
 
-    @PostMapping(value = WebApiVersions.UsersResourceVersion.WITH_UID)
+    @PutMapping(value = WebApiVersions.UsersResourceVersion.WITH_UID)
     public ResponseEntity<Void> updateUser(@PathVariable("tenantUid") String tenantUid,
                                            @PathVariable("orgUid") String orgUid,
                                            @PathVariable("userUid") String userUid,
