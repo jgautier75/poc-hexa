@@ -13,7 +13,7 @@ public class KafkaConsumerConstants {
     public static final String SHEMA_REGISTRY = "kafka_consumer_schema_registry_url";
     public static final int EVENT_USER = 2;
     public static final String EVENT_UPDATE = "UPDATE";
-    public static final String EVENT_CHANGE_FIRST_NAME = "commons_firstName";
-    public static final String EVENT_CHANGE_LAST_NAME = "commons_lastName";
-    public static final String EVENT_CHANGE_EMAIL = "credentials_email";
+    public static final String EVENT_CHANGE_FIRST_NAME = "firstName";
+    public static final String EVENT_CHANGE_LAST_NAME = "lastName";
+    public static final String EVENT_CHANGE_EMAIL = "email";
 }
