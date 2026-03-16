@@ -39,7 +39,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.11.4</version>
+                        <version>0.11.5</version>
                         <configuration>
                             <debug>true</debug>
                         </configuration>
