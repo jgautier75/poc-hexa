@@ -455,6 +455,57 @@ public class KafkaSimpleConsumer {
 }
 ```
 
+## Debugging HTTP Requests
+
+To debug HTTP requests content dynamically, add an http header or parameter namedf X-APP-DEBUG with value 1
+
+Debugging mechanisms rely on JDK25 ScopedValues, a lighter option thant ThreadLocal.
+
+Components involved:
+
+com.acme.jga.rest.filters.ContentCachingFilter: cache request body since a stream is not readeable twice
+
+```java
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class ContentCachingFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request, 2048);
+        filterChain.doFilter(wrappedRequest, response);
+    }
+}
+```
+
+com.acme.jga.rest.filters.RequestDebugFilter: if debug header or parameter is found, dump http request and print using slf4j logger.
+
+```java
+@Component
+public class RequestDebugFilter extends OncePerRequestFilter {
+    private static final String DEBUG_PARAM = "X-APP-DEBUG";
+    public final static ScopedValue<Boolean> DEBUG_REQ = ScopedValue.newInstance();
+    private static final Logger LOG = LoggerFactory.getLogger(RequestDebugFilter.class);
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        boolean debugMode = Optional.ofNullable(request.getHeader(DEBUG_PARAM)).isPresent()
+                || Optional.ofNullable(request.getParameter(DEBUG_PARAM)).isPresent();
+        ScopedValue.where(DEBUG_REQ, debugMode).run(() -> {
+            try {
+                if (debugMode && DEBUG_REQ.get()) {
+                    String httpReqDump = HttpUtils.dumpHttpRequest(request);
+                    LOG.info(">>>>>> HTTP REQUEST >>>>> {}", httpReqDump);
+                }
+                filterChain.doFilter(request, response);
+            } catch (IOException | ServletException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+}
+```
+
 ## Testing REST APIS
 
 An [Bruno](https://www.usebruno.com/) collection (UsersManagement.json) is available in docs directory.
