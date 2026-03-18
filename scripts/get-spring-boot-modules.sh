@@ -6,7 +6,7 @@ set -eu
 # Ensure JAVA_HOME variable is set
 # Parameters:
 #   1: Full path to spring-boot fat jar
-#   2: Jdk version (17)
+#   2: Jdk version (25)
 #   3: Temp directory for spring-boot app extraction
 #   4: Automatic modules: list of automatic modules, typically legacy libraries (multiple values separator is the comma)
 # Example: get-springboot-modules.sh mymodule/target/mymodule.jar 17 mymodule/target/tmp "snakeyaml-1.28.jar,jakarta.annotation-api-1.3.5.jar,slf4j-api-1.7.32.jar"

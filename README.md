@@ -463,7 +463,7 @@ Debugging mechanisms rely on JDK25 ScopedValues, a lighter option thant ThreadLo
 
 Components involved:
 
-com.acme.jga.rest.filters.ContentCachingFilter: cache request body since a stream is not readeable twice
+com.acme.jga.rest.filters.ContentCachingFilter: cache request body since a stream is not readable twice
 
 ```java
 @Component
@@ -536,8 +536,13 @@ Parameters:
 - 4: Automatic modules: list of automatic modules, typically legacy libraries (multiple values separator is the comma)
 
 ```sh
-./get-spring-boot-modules.sh ../app/target/app-1.0.0-SNAPSHOT.jar 25 ../adapter-rest/target/tmp "okio-jvm-3.16.2.jar"
-java.base,java.desktop,java.instrument,java.net.http,java.prefs,java.rmi,java.scripting,java.security.jgss,java.security.sasl,java.sql.rowset,jdk.compiler,jdk.jfr,jdk.management,jdk.unsupported,org.graalvm.nativeimage
+./get-spring-boot-modules.sh ../app/target/app-1.0.0-SNAPSHOT.jar 25 ../app/target/tmp "okio-jvm-3.16.4.jar"
+```
+
+Sample Output:
+
+```
+java.base,java.desktop,java.instrument,java.net.http,java.prefs,java.scripting,java.security.jgss,java.security.sasl,java.sql.rowset,jdk.compiler,jdk.jfr,jdk.management,jdk.net,jdk.unsupported,org.graalvm.nativeimage
 ```
 
 Update adapter-rest/Dockerfile accordingly in jlinks section
