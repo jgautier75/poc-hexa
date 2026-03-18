@@ -7,6 +7,7 @@ import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.validation.ValidationException;
 import com.acme.jga.rest.dtos.shared.ApiError;
 import com.acme.jga.rest.dtos.shared.ApiErrorDetail;
+import com.acme.jga.utils.HttpUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class AppControllerAdvice {
         try (StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw);
              BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(appProperties.getErrorPath() + "/" + dumpFileName))) {
             exception.printStackTrace(pw);
-            String httpRequestDump = dumpHttpRequest(request);
+            String httpRequestDump = HttpUtils.dumpHttpRequest(request);
             bufferedWriter.write(httpRequestDump);
             bufferedWriter.newLine();
             bufferedWriter.write(sw.toString());
@@ -58,10 +59,10 @@ public class AppControllerAdvice {
     public ResponseEntity<ApiError> handleValidationException(Exception ex) {
         List<ApiErrorDetail> apiErrorDetails = ofNullableList(((ValidationException) ex).getValidationErrors())
                 .map(validationError -> ApiErrorDetail.builder()
-                    .code(validationError.getValidationRule())
-                    .field(validationError.getFieldName())
-                    .message(validationError.getMessage())
-                    .build()
+                        .code(validationError.getValidationRule())
+                        .field(validationError.getFieldName())
+                        .message(validationError.getMessage())
+                        .build()
                 ).toList();
         final ApiError apiError = ApiError.builder()
                 .scope(Scope.REQUEST.name())
@@ -98,25 +99,4 @@ public class AppControllerAdvice {
         return prefix + System.currentTimeMillis() + suffix;
     }
 
-    /**
-     * Dump HttpServletRequest parameters & headers.
-     *
-     * @param request HttpServletRequest.
-     * @return Dump
-     */
-    private String dumpHttpRequest(HttpServletRequest request) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Request URI=").append(request.getRequestURI());
-        sb.append("\n").append("Request Method=").append(request.getMethod());
-        sb.append("\n").append("Server Name=").append(request.getServerName());
-        sb.append("\n").append("Remote Address=").append(request.getRemoteAddr());
-        sb.append("\n").append("Headers");
-        request.getHeaderNames().asIterator().forEachRemaining(name -> {
-            sb.append("\n").append(name).append("=").append(request.getHeader(name));
-        });
-        request.getParameterNames().asIterator().forEachRemaining(name -> {
-            sb.append("\n").append("param: [").append(name).append("]=[").append(request.getParameter(name)).append("]");
-        });
-        return sb.toString();
-    }
 }
