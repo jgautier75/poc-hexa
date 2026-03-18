@@ -72,7 +72,7 @@ public class AppLoadingTest {
     public static PostgreSQLContainer<?> PG_CONTAINER = new PostgreSQLContainer<>(DaoTestUtils.POSTGRESQL_VERSION);
 
     @Container
-    public static GenericContainer<?> OTEL_CONTAINER = new GenericContainer<>(DockerImageName.parse("otel/opentelemetry-collector-contrib:0.142.0"))
+    public static GenericContainer<?> OTEL_CONTAINER = new GenericContainer<>(DockerImageName.parse("otel/opentelemetry-collector-contrib:0.147.0"))
             .withExposedPorts(4317, 4318)
             .withCopyFileToContainer(
                     MountableFile.forClasspathResource("otel-collector-config.yml"),
