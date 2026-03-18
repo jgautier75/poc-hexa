@@ -25,7 +25,7 @@ public class RequestDebugFilter extends OncePerRequestFilter {
                 || Optional.ofNullable(request.getParameter(DEBUG_PARAM)).isPresent();
         ScopedValue.where(DEBUG_REQ, debugMode).run(() -> {
             try {
-                if (DEBUG_REQ.get() != null && DEBUG_REQ.get()) {
+                if (debugMode && DEBUG_REQ.get()) {
                     String httpReqDump = HttpUtils.dumpHttpRequest(request);
                     LOG.info(">>>>>> HTTP REQUEST >>>>> {}", httpReqDump);
                 }
