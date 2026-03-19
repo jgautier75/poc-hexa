@@ -5,21 +5,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum OrganizationMetaData {
-    UID("uid", "uid", DataType.STRING),
-    UUID("uuid", "uid", DataType.STRING),
-    LABEL("label", "label", DataType.STRING),
-    CODE("code", "code", DataType.STRING),
-    COUNTRY("country", "country", DataType.STRING),
-    KIND("kind", "kind", DataType.ENUM_NUMBER);
+    UID("uid", "uid", DataType.STRING, false),
+    UUID("uuid", "uid", DataType.STRING, false),
+    LABEL("label", "search_label", DataType.STRING, true),
+    CODE("code", "code", DataType.STRING, false),
+    COUNTRY("country", "country", DataType.STRING, false),
+    KIND("kind", "kind", DataType.ENUM_NUMBER, false),
+    ;
 
     private final String alias;
     private final String columnName;
     private final DataType dataType;
+    private final boolean diacritic;
 
-    OrganizationMetaData(String alias, String columnName, DataType dataType) {
+    OrganizationMetaData(String alias, String columnName, DataType dataType, boolean diacritic) {
         this.alias = alias;
         this.columnName = columnName;
         this.dataType = dataType;
+        this.diacritic = diacritic;
     }
 
     public DataType getDataType() {
@@ -32,6 +35,10 @@ public enum OrganizationMetaData {
 
     public String getAlias() {
         return alias;
+    }
+
+    public boolean isDiacritic() {
+        return diacritic;
     }
 
     public static Map<String, KeyValuePair> columnsByAlias() {

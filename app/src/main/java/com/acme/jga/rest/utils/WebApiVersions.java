@@ -1,6 +1,5 @@
 package com.acme.jga.rest.utils;
 
-import com.google.common.cache.Cache;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -130,7 +129,8 @@ public class WebApiVersions {
         public static final String VAULT_READ = VAULT_STORE;
         public static final String VAULT_LIST = VAULT_STORE + "/list";
         public static final String DEPS_LIST = ROOT + "/dependencies";
-        public static final String DIACRITIC = ROOT + "/diacritic";
+        public static final String USER_DIACRITIC = ROOT + "/users_diacritic";
+        public static final String ORG_DIACRITIC = ROOT + "/orgs_diacritic";
 
         @Getter
         public enum Endpoints {
@@ -142,7 +142,9 @@ public class WebApiVersions {
             VAULT_READ(CATEGORY, "vault_read", SystemResourceVersion.VAULT_READ, V1),
             VAULT_LIST(CATEGORY, "vault_list", SystemResourceVersion.VAULT_LIST, V1),
             DEPENDENCIES_LIST(CATEGORY, "dependencies_list", SystemResourceVersion.DEPS_LIST, V1),
-            DIACRITIC(CATEGORY, "diacritic", SystemResourceVersion.DIACRITIC, V1);
+            USER_DIACRITIC(CATEGORY, "user_diacritic", SystemResourceVersion.USER_DIACRITIC, V1),
+            ORG_DIACRITIC(CATEGORY, "org_diacritic", SystemResourceVersion.ORG_DIACRITIC, V1),
+            ;
             final String category;
             final String code;
             final String uri;

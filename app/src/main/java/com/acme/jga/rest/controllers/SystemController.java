@@ -29,9 +29,15 @@ public class SystemController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = WebApiVersions.SystemResourceVersion.DIACRITIC)
-    public ResponseEntity<Void> migrateDiacritic() {
-        appSystemService.migrateDiacritic();
+    @PostMapping(value = WebApiVersions.SystemResourceVersion.USER_DIACRITIC)
+    public ResponseEntity<Void> migrateUsersDiacritic() {
+        appSystemService.migrateUsersDiacritic();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = WebApiVersions.SystemResourceVersion.ORG_DIACRITIC)
+    public ResponseEntity<Void> migrateOrgsDiacritic() {
+        appSystemService.migrateOrganizationsDiacritic();
         return ResponseEntity.ok().build();
     }
 

@@ -10,13 +10,11 @@ import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
 import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.jdbc.extractors.OrganizationExtractor;
-import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
-import com.acme.jga.spi.jdbc.utils.DaoConstants;
-import com.acme.jga.spi.jdbc.utils.WhereClause;
-import com.acme.jga.spi.jdbc.utils.WhereOperator;
+import com.acme.jga.spi.jdbc.utils.*;
 import io.micrometer.observation.annotation.Observed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.infrastructure.item.database.JdbcCursorItemReader;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,9 +22,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,11 +34,20 @@ import java.util.Map;
 public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements OrganizationsDao {
     private final ExpressionsProcessor expressionsProcessor;
     private static final Logger LOGGER = LoggerFactory.getLogger("OTEL");
+    private final JdbcCursorItemReader<Organization> orgsCursor;
 
-    public OrganizationsDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public OrganizationsDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(namedParameterJdbcTemplate);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"organizations.properties"});
         this.expressionsProcessor = new ExpressionsProcessor();
+        String selBase = super.getQuery("org_sel_base");
+        orgsCursor = new JdbcCursorItemReader<>(dataSource, selBase, new RowMapper<Organization>() {
+            @Override
+            public Organization mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return OrganizationExtractor.extractOrganization(rs, false, null);
+            }
+        });
+        orgsCursor.setFetchSize(500);
     }
 
     @Override
@@ -51,6 +60,7 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
         mapSqlParameterSource.addValue(DaoConstants.P_TENANT_ID, org.tenantId().internalId());
         mapSqlParameterSource.addValue(DaoConstants.P_CODE, org.code());
         mapSqlParameterSource.addValue(DaoConstants.P_LABEL, org.label());
+        mapSqlParameterSource.addValue(DaoConstants.P_SEARCH_LABEL, SQLUtils.diacritic(org.label()));
         mapSqlParameterSource.addValue(DaoConstants.P_COUNTRY, org.country());
         mapSqlParameterSource.addValue(DaoConstants.P_KIND, org.kind().getValue());
         mapSqlParameterSource.addValue(DaoConstants.P_STATUS, org.status().getValue());
@@ -89,6 +99,7 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
         Map<String, Object> params = super.buildParams(whereClauses);
         params.put(DaoConstants.P_CODE, code);
         params.put(DaoConstants.P_LABEL, label);
+        params.put(DaoConstants.P_SEARCH_LABEL, SQLUtils.diacritic(label));
         params.put(DaoConstants.P_COUNTRY, country);
         params.put(DaoConstants.P_STATUS, status.getValue());
         String fullQuery = super.buildFullQuery(baseQuery, whereClauses, null, (String[]) null);
@@ -174,6 +185,20 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
         Map<String, Object> params = super.buildParams(whereClauses);
         params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
         return super.getNamedParameterJdbcTemplate().update(fullQuery, params);
+    }
+
+    @Override
+    public JdbcCursorItemReader<Organization> orgsCursor() {
+        return this.orgsCursor;
+    }
+
+    @Override
+    public void updateDiacritic(Long id, String searchLabel) {
+        String orgsUpdateDiacritic = super.getQuery("orgs_update_diacritic");
+        Map<String, Object> params = new HashMap<>();
+        params.put(DaoConstants.P_ID, id);
+        params.put(DaoConstants.P_SEARCH_LABEL, searchLabel);
+        super.getNamedParameterJdbcTemplate().update(orgsUpdateDiacritic, params);
     }
 
     private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, Map<SearchParams, Object> searchParams) {

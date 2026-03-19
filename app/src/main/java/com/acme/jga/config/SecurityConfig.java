@@ -27,7 +27,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
     private final SecurityProperties securityProperties;
-    private static final String URI_PATTERNS = "^(\\/api\\/v([0-9]{1})\\/system\\/(wakeup|versions|errors|diacritic|dependencies|(.*))|\\/actuator|\\/actuator\\/(.*))|^(\\/api\\/v([0-9]{1})\\/spi/user?(.*))";
+    private static final String URI_PATTERNS = "^(\\/api\\/v([0-9]{1})\\/system\\/(wakeup|versions|errors|users_diacritic|orgs_diacritic|dependencies|(.*))|\\/actuator|\\/actuator\\/(.*))|^(\\/api\\/v([0-9]{1})\\/spi/user?(.*))";
 
     @Bean
     public SecurityFilterChain basicAuthFilterChain(HttpSecurity http) throws Exception {

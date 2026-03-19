@@ -4,6 +4,8 @@ public interface SystemActionsInput {
 
     void pushAuditEvents();
 
-    void migrateDiacritic();
+    void migrateUsersDiacritic();
+
+    void migrateOrganizationsDiacritic();
 
 }

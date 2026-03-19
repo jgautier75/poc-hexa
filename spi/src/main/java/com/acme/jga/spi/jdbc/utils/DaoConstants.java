@@ -24,6 +24,7 @@ public final class DaoConstants {
     public static final String P_UID = "pUid";
     public static final String P_CODE = "pCode";
     public static final String P_LABEL = "pLabel";
+    public static final String P_SEARCH_LABEL = "pSearchLabel";
     public static final String P_LOGIN = "pLogin";
     public static final String P_EMAIL = "pEmail";
     public static final String P_FIRST_NAME = "pFirstName";

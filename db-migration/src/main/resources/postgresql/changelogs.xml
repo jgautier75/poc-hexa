@@ -183,4 +183,20 @@
             <column name="search_last_name" type="varchar(50)"/>
         </addColumn>
     </changeSet>
+    <changeSet id="organizations_diacritic" author="jga">
+        <addColumn tableName="organizations">
+            <column name="search_label" type="varchar(80)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="diacritic_index" author="jga">
+        <createIndex tableName="organizations" indexName="idx_organizations_search_label">
+            <column name="search_label"/>
+        </createIndex>
+        <createIndex tableName="users" indexName="idx_users_search_first_name">
+            <column name="search_first_name"/>
+        </createIndex>
+        <createIndex tableName="users" indexName="idx_users_search_last_name">
+            <column name="search_last_name"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

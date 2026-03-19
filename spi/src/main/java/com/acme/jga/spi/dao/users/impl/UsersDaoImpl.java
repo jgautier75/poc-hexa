@@ -257,7 +257,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     }
 
     /**
-     * Build SQL query based on search parameters.
+     * Build SQL query based on search filter parameters.
      *
      * @param baseQuery      Base SQL query
      * @param tenantId       Tenant id

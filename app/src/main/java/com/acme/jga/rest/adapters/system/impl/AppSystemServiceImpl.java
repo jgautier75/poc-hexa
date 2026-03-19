@@ -35,7 +35,12 @@ public class AppSystemServiceImpl implements AppSystemService {
     }
 
     @Override
-    public void migrateDiacritic() {
-        systemActionsInput.migrateDiacritic();
+    public void migrateUsersDiacritic() {
+        systemActionsInput.migrateUsersDiacritic();
+    }
+
+    @Override
+    public void migrateOrganizationsDiacritic() {
+        systemActionsInput.migrateOrganizationsDiacritic();
     }
 }

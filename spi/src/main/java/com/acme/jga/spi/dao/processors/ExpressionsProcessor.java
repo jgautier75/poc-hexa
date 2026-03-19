@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Component
 public class ExpressionsProcessor {
@@ -100,14 +101,13 @@ public class ExpressionsProcessor {
     public AbstractJdbcDaoSupport.CompositeQuery buildFilterQuery(Map<String, Object> params, Map<SearchParams, Object> searchParams, Map<String, KeyValuePair> domainEntityMetaData) {
         ParsingResult parsingResult = (ParsingResult) searchParams.get(SearchParams.PARSING_RESULTS);
         StringBuilder sqlBuffer = new StringBuilder();
-        boolean hasExpressions = parsingResult != null && !CollectionUtils.isEmpty(parsingResult.getExpressions());
-        if (hasExpressions) {
+        Predicate<ParsingResult> hasExpressions = (pr) -> pr != null && !CollectionUtils.isEmpty(pr.getExpressions());
+        if (hasExpressions.test(parsingResult)) {
             buildSqlFromExpressions(parsingResult.getExpressions(), params, sqlBuffer, domainEntityMetaData);
         }
-
         // Compute pagination
         AbstractJdbcDaoSupport.PaginationResult paginationResult = computePagination(searchParams, domainEntityMetaData);
-        return new AbstractJdbcDaoSupport.CompositeQuery(hasExpressions, sqlBuffer.toString(), params, paginationResult.pagination(), paginationResult.orderBy());
+        return new AbstractJdbcDaoSupport.CompositeQuery(hasExpressions.test(parsingResult), sqlBuffer.toString(), params, paginationResult.pagination(), paginationResult.orderBy());
     }
 
     /**
@@ -238,6 +238,13 @@ public class ExpressionsProcessor {
         return columnNameAndColumnType != null && DataType.NUMBER.name().equals(columnNameAndColumnType.getValue());
     }
 
+    /**
+     * Is column a diacritic search.
+     *
+     * @param domainEntityMetaData Domain metadata
+     * @param propertyName         Property name
+     * @return Boolean
+     */
     private boolean isDiacritic(Map<String, KeyValuePair> domainEntityMetaData, String propertyName) {
         KeyValuePair columnNameAndColumnType = domainEntityMetaData.get(propertyName);
         return columnNameAndColumnType != null && columnNameAndColumnType.isDiacritic();

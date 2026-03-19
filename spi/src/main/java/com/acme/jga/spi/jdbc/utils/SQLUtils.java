@@ -10,7 +10,10 @@ public class SQLUtils {
 
     public static String diacritic(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
-                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceFirst(" ", "").toLowerCase();
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .replaceAll(" ", "")
+                .replaceAll("[^A-Za-z0-9]","")
+                .toLowerCase();
     }
 
 }

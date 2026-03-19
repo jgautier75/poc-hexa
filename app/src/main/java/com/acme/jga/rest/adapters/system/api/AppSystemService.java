@@ -7,6 +7,8 @@ public interface AppSystemService {
 
     void kafkaWakeup();
 
-    void migrateDiacritic();
+    void migrateUsersDiacritic();
+
+    void migrateOrganizationsDiacritic();
 
 }

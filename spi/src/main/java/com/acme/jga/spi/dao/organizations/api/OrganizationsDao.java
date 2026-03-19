@@ -4,6 +4,7 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.search.filtering.constants.SearchParams;
+import org.springframework.batch.infrastructure.item.database.JdbcCursorItemReader;
 
 import java.awt.*;
 import java.util.List;
@@ -28,4 +29,9 @@ public interface OrganizationsDao {
     Organization findByCode(String code);
 
     Integer deleteByTenant(CompositeId tenantId);
+
+    JdbcCursorItemReader<Organization> orgsCursor();
+
+    void updateDiacritic(Long id, String searchLabel);
+
 }
