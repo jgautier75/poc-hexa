@@ -36,11 +36,11 @@ public class AppSystemServiceImpl implements AppSystemService {
 
     @Override
     public void migrateUsersDiacritic() {
-        systemActionsInput.migrateUsersDiacritic();
+        Thread.ofVirtual().start(systemActionsInput::migrateUsersDiacritic);
     }
 
     @Override
     public void migrateOrganizationsDiacritic() {
-        systemActionsInput.migrateOrganizationsDiacritic();
+        Thread.ofVirtual().start(systemActionsInput::migrateOrganizationsDiacritic);
     }
 }
