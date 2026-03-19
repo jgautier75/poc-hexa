@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 public class RequestDebugFilter extends OncePerRequestFilter {
@@ -21,8 +22,11 @@ public class RequestDebugFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        boolean debugMode = Optional.ofNullable(request.getHeader(DEBUG_PARAM)).isPresent()
-                || Optional.ofNullable(request.getParameter(DEBUG_PARAM)).isPresent();
+        AtomicBoolean debugParam = new AtomicBoolean(false);
+        AtomicBoolean debugHeader = new AtomicBoolean(false);
+        Optional.ofNullable(request.getHeader(DEBUG_PARAM)).ifPresent(value -> debugHeader.set("1".equals(value)));
+        Optional.ofNullable(request.getParameter(DEBUG_PARAM)).ifPresent(value -> debugParam.set("1".equals(value)));
+        boolean debugMode = debugParam.get() || debugHeader.get();
         ScopedValue.where(DEBUG_REQ, debugMode).run(() -> {
             try {
                 if (debugMode && DEBUG_REQ.get()) {
