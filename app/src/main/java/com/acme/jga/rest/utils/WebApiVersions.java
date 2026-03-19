@@ -1,5 +1,6 @@
 package com.acme.jga.rest.utils;
 
+import com.google.common.cache.Cache;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -123,25 +124,25 @@ public class WebApiVersions {
         public static final String ROOT = API_PREFIX + V1_PREFIX + "/" + CATEGORY;
         public static final String KAFKA_WAKEUP = ROOT + "/wakeup";
         public static final String VERSIONS = ROOT + "/versions";
-        public static final String TECH_GAUGE_RESET = ROOT + "/techGaugeReset";
         public static final String ERRORS_LIST = ROOT + "/errors";
         public static final String ERRORS_READ = ERRORS_LIST + "/{fileName}";
         public static final String VAULT_STORE = ROOT + "/vault";
         public static final String VAULT_READ = VAULT_STORE;
         public static final String VAULT_LIST = VAULT_STORE + "/list";
         public static final String DEPS_LIST = ROOT + "/dependencies";
+        public static final String DIACRITIC = ROOT + "/diacritic";
 
         @Getter
         public enum Endpoints {
             EVENT_WAKEUP(CATEGORY, "events_wakeup", KAFKA_WAKEUP, V1),
             VERSIONS(CATEGORY, "versions", SystemResourceVersion.VERSIONS, V1),
-            TECH_GAUGE_RESET(CATEGORY, "tech_gauge_reset", SystemResourceVersion.TECH_GAUGE_RESET, V1),
             ERRORS_LIST(CATEGORY, "errors_list", SystemResourceVersion.ERRORS_LIST, V1),
             ERRORS_READ(CATEGORY, "errors_read", SystemResourceVersion.ERRORS_READ, V1),
             VAULT_STORE(CATEGORY, "vault_store", SystemResourceVersion.VAULT_STORE, V1),
             VAULT_READ(CATEGORY, "vault_read", SystemResourceVersion.VAULT_READ, V1),
             VAULT_LIST(CATEGORY, "vault_list", SystemResourceVersion.VAULT_LIST, V1),
-            DEPENDENCIES_LIST(CATEGORY, "dependencies_list", SystemResourceVersion.DEPS_LIST, V1);
+            DEPENDENCIES_LIST(CATEGORY, "dependencies_list", SystemResourceVersion.DEPS_LIST, V1),
+            DIACRITIC(CATEGORY, "diacritic", SystemResourceVersion.DIACRITIC, V1);
             final String category;
             final String code;
             final String uri;

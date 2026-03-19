@@ -51,8 +51,8 @@ public class DatabaseTestConfig {
     }
 
     @Bean
-    public UsersDaoImpl usersDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        return new UsersDaoImpl(namedParameterJdbcTemplate, new ExpressionsProcessor());
+    public UsersDaoImpl usersDao(@Autowired DataSource dataSource, @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new UsersDaoImpl(dataSource, namedParameterJdbcTemplate, new ExpressionsProcessor());
     }
 
     @Bean

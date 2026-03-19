@@ -27,7 +27,9 @@ public final class DaoConstants {
     public static final String P_LOGIN = "pLogin";
     public static final String P_EMAIL = "pEmail";
     public static final String P_FIRST_NAME = "pFirstName";
+    public static final String P_SEARCH_FIRST_NAME = "pSearchFirstName";
     public static final String P_LAST_NAME = "pLastName";
+    public static final String P_SEARCH_LAST_NAME = "pSearchLastName";
     public static final String P_MIDDLE_NAME = "pMiddleName";
     public static final String P_KIND = "pKind";
     public static final String P_COUNTRY = "pCountry";

@@ -6,4 +6,7 @@ public interface AppSystemService {
     ApiVersionList versions();
 
     void kafkaWakeup();
+
+    void migrateDiacritic();
+
 }

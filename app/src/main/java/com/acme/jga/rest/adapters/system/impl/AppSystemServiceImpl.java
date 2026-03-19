@@ -33,4 +33,9 @@ public class AppSystemServiceImpl implements AppSystemService {
     public void kafkaWakeup() {
         systemActionsInput.pushAuditEvents();
     }
+
+    @Override
+    public void migrateDiacritic() {
+        systemActionsInput.migrateDiacritic();
+    }
 }

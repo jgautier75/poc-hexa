@@ -8,4 +8,5 @@ import lombok.RequiredArgsConstructor;
 public class KeyValuePair {
     private final String key;
     private final String value;
+    private final boolean isDiacritic;
 }

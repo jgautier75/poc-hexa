@@ -175,4 +175,12 @@
             <column name="secrets" type="varchar(200)"/>
         </addColumn>
     </changeSet>
+    <changeSet id="user_diacritic" author="jga">
+        <addColumn tableName="users">
+            <column name="search_first_name" type="varchar(50)"/>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="search_last_name" type="varchar(50)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

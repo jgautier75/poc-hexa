@@ -29,4 +29,10 @@ public class SystemController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping(value = WebApiVersions.SystemResourceVersion.DIACRITIC)
+    public ResponseEntity<Void> migrateDiacritic() {
+        appSystemService.migrateDiacritic();
+        return ResponseEntity.ok().build();
+    }
+
 }

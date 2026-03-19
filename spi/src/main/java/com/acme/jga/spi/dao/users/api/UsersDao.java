@@ -4,6 +4,7 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.metadata.KeyValuePair;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.search.filtering.constants.SearchParams;
+import org.springframework.batch.infrastructure.item.database.JdbcCursorItemReader;
 
 import java.util.List;
 import java.util.Map;
@@ -30,4 +31,9 @@ public interface UsersDao {
     Integer deleteByTenant(CompositeId tenantId);
 
     User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey);
+
+    JdbcCursorItemReader<User> usersCursor();
+
+    void updateDiacritic(Long id, String searchFirstName, String searchLastName);
+
 }

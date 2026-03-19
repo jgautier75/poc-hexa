@@ -20,4 +20,7 @@ public interface AppUsersService {
     void delete(String tenantUid, String organizationUid, String uid) throws FunctionalException;
 
     UserOidcDto findForOidc(String tenantUid, String organizationUid, String key, String value) throws FunctionalException;
+
+    void migrateDiacritic();
+
 }

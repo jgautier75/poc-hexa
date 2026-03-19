@@ -60,7 +60,7 @@ public class AppUsersServiceImpl implements AppUsersService {
     }
 
     @Override
-    public void update(String tenantUid, String organizationUid,String userUid, UserUpdateDto userUpdateDto) throws FunctionalException {
+    public void update(String tenantUid, String organizationUid, String userUid, UserUpdateDto userUpdateDto) throws FunctionalException {
         User usr = new User(new CompositeId(null, userUid), new CompositeId(null, tenantUid), new CompositeId(null, organizationUid),
                 userUpdateDto.getLogin(), userUpdateDto.getFirstName(), userUpdateDto.getLastName(),
                 userUpdateDto.getMiddleName(), userUpdateDto.getEmail(), userUpdateDto.getStatus(), userUpdateDto.getNotifEmail(), null);
@@ -74,7 +74,7 @@ public class AppUsersServiceImpl implements AppUsersService {
 
     @Override
     public UserOidcDto findForOidc(String tenantUid, String organizationUid, String key, String value) throws FunctionalException {
-        User userByCriteria = userFindInput.findBySingleCriteria(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), new KeyValuePair(key, value));
+        User userByCriteria = userFindInput.findBySingleCriteria(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), new KeyValuePair(key, value, false));
         return Optional.ofNullable(userByCriteria).map(u ->
                         new UserOidcDto(
                                 userByCriteria.id().externalId(),
@@ -86,5 +86,10 @@ public class AppUsersServiceImpl implements AppUsersService {
                         )
                 )
                 .orElseThrow(() -> new WrappedFunctionalException(new FunctionalException(Scope.USER.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("user_not_found", key))));
+    }
+
+    @Override
+    public void migrateDiacritic() {
+
     }
 }

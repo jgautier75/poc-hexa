@@ -13,6 +13,7 @@ import com.acme.jga.search.filtering.expr.FilterComparison;
 import com.acme.jga.search.filtering.utils.ParsingResult;
 import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
 import com.acme.jga.spi.jdbc.utils.DaoConstants;
+import com.acme.jga.spi.jdbc.utils.SQLUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -52,8 +53,8 @@ public class ExpressionsProcessor {
         int index = 0;
         StringBuilder paramName = new StringBuilder();
         StringBuilder propertyName = new StringBuilder();
-        boolean isTypeNumber = false;
         boolean isLikeOperator = false;
+        boolean isDiacritic = false;
 
         for (Expression expression : expressions) {
             switch (expression.getType()) {
@@ -77,11 +78,10 @@ public class ExpressionsProcessor {
                     propertyName.setLength(0);
                     propertyName.append(stripEnclosingQuotes(expression.getValue()));
                     appendPropertyToSql(expression, domainEntityMetaData, paramName, sqlBuffer, index);
-                    isTypeNumber = isNumberType(domainEntityMetaData, propertyName.toString());
+                    isDiacritic = isDiacritic(domainEntityMetaData, propertyName.toString());
                     break;
                 case VALUE:
-                    appendValueToSql(expression, params, sqlBuffer, paramName, isTypeNumber, isLikeOperator);
-                    isTypeNumber = false;
+                    appendValueToSql(expression, params, sqlBuffer, paramName, isLikeOperator, isDiacritic);
                     isLikeOperator = false;
                     break;
                 default:
@@ -150,17 +150,21 @@ public class ExpressionsProcessor {
      * @param expression     Expression
      * @param paramName      Parameter name
      * @param params         Map<Parameter Name, Parameter Value>
-     * @param isTypeInteger  Is value of type integer
      * @param isLikeOperator Is value of type like
+     * @param isDiacritic    Is diacritical search
      */
-    private void appendValueToSql(Expression expression, Map<String, Object> params, StringBuilder sqlBuffer, StringBuilder paramName, boolean isTypeInteger, boolean isLikeOperator) {
+    private void appendValueToSql(Expression expression, Map<String, Object> params, StringBuilder sqlBuffer, StringBuilder paramName, boolean isLikeOperator, boolean isDiacritic) {
         String value = stripEnclosingQuotes(expression.getValue());
         sqlBuffer.append(":").append(paramName);
 
         if (OrganizationMetaData.KIND.getAlias().equalsIgnoreCase(paramName.toString())) {
             params.put(paramName.toString(), OrganizationKind.valueOf(value).getValue());
         } else {
-            params.put(paramName.toString(), isLikeOperator ? value.replace("*", "%") : value);
+            String defaultValue = value;
+            if (isDiacritic) {
+                defaultValue = SQLUtils.diacritic(value);
+            }
+            params.put(paramName.toString(), isLikeOperator ? defaultValue.replace("*", "%") : defaultValue);
         }
     }
 
@@ -205,7 +209,7 @@ public class ExpressionsProcessor {
      */
     private String getOrderBy(Map<SearchParams, Object> searchParams, Map<String, KeyValuePair> columnsDefinitionsByAlias) {
         String orderByParam = (String) searchParams.get(SearchParams.ORDER_BY);
-        if (orderByParam == null || "".equals(orderByParam)) {
+        if (orderByParam == null || orderByParam.isEmpty()) {
             return "";
         }
 
@@ -228,8 +232,15 @@ public class ExpressionsProcessor {
         return FilterComparison.LIKE == FilterComparison.fromValueParam(expression.getValue());
     }
 
+    @SuppressWarnings("unused")
     private boolean isNumberType(Map<String, KeyValuePair> domainEntityMetaData, String propertyName) {
         KeyValuePair columnNameAndColumnType = domainEntityMetaData.get(propertyName);
         return columnNameAndColumnType != null && DataType.NUMBER.name().equals(columnNameAndColumnType.getValue());
     }
+
+    private boolean isDiacritic(Map<String, KeyValuePair> domainEntityMetaData, String propertyName) {
+        KeyValuePair columnNameAndColumnType = domainEntityMetaData.get(propertyName);
+        return columnNameAndColumnType != null && columnNameAndColumnType.isDiacritic();
+    }
+
 }

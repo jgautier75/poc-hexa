@@ -11,12 +11,10 @@ import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.dao.users.api.UsersDao;
 import com.acme.jga.spi.jdbc.extractors.UserExtractor;
 import com.acme.jga.spi.jdbc.extractors.UserOidcExtractor;
-import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
-import com.acme.jga.spi.jdbc.utils.DaoConstants;
-import com.acme.jga.spi.jdbc.utils.WhereClause;
-import com.acme.jga.spi.jdbc.utils.WhereOperator;
+import com.acme.jga.spi.jdbc.utils.*;
 import io.micrometer.observation.annotation.ObservationKeyValue;
 import io.micrometer.observation.annotation.Observed;
+import org.springframework.batch.infrastructure.item.database.JdbcCursorItemReader;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,6 +22,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -31,11 +30,20 @@ import java.util.*;
 @Repository
 public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     private final ExpressionsProcessor expressionsProcessor;
+    private final JdbcCursorItemReader<User> usersCursor;
 
-    public UsersDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, ExpressionsProcessor expressionsProcessor) {
+    public UsersDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate namedParameterJdbcTemplate, ExpressionsProcessor expressionsProcessor) {
         super(namedParameterJdbcTemplate);
         this.expressionsProcessor = expressionsProcessor;
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"users.properties"});
+        String userSelBase = super.getQuery("user_sel_base");
+        usersCursor = new JdbcCursorItemReader<>(dataSource, userSelBase, new RowMapper<User>() {
+            @Override
+            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return UserExtractor.extractUser(rs, false, null, null);
+            }
+        });
+        usersCursor.setFetchSize(500);
     }
 
     @Override
@@ -50,7 +58,9 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         mapSqlParameterSource.addValue(DaoConstants.P_LOGIN, user.login());
         mapSqlParameterSource.addValue(DaoConstants.P_EMAIL, user.email());
         mapSqlParameterSource.addValue(DaoConstants.P_FIRST_NAME, user.firstName());
+        mapSqlParameterSource.addValue(DaoConstants.P_SEARCH_FIRST_NAME, SQLUtils.diacritic(user.firstName()));
         mapSqlParameterSource.addValue(DaoConstants.P_LAST_NAME, user.lastName());
+        mapSqlParameterSource.addValue(DaoConstants.P_SEARCH_LAST_NAME, SQLUtils.diacritic(user.lastName()));
         mapSqlParameterSource.addValue(DaoConstants.P_MIDDLE_NAME, user.middleName());
         mapSqlParameterSource.addValue(DaoConstants.P_STATUS, user.status().getValue());
         mapSqlParameterSource.addValue(DaoConstants.P_SECRETS, user.secrets());
@@ -150,7 +160,9 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         params.put(DaoConstants.P_ORG_ID, user.organizationId().internalId());
         params.put(DaoConstants.P_EMAIL, user.email());
         params.put(DaoConstants.P_FIRST_NAME, user.firstName());
+        params.put(DaoConstants.P_SEARCH_FIRST_NAME, SQLUtils.diacritic(user.firstName()));
         params.put(DaoConstants.P_LAST_NAME, user.lastName());
+        params.put(DaoConstants.P_SEARCH_LAST_NAME, SQLUtils.diacritic(user.lastName()));
         params.put(DaoConstants.P_MIDDLE_NAME, user.middleName());
         params.put(DaoConstants.P_STATUS, user.status().getValue());
         params.put(DaoConstants.P_NOTIF, user.notifEmail());
@@ -189,8 +201,6 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     public User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey) {
         String baseQuery = super.getQuery("user_oidc");
         Map<String, Object> params = new HashMap<>();
-        /*params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
-        params.put(DaoConstants.P_ORG_ID, organizationId.internalId());*/
 
         List<WhereClause> whereClauses = new ArrayList<>();
         switch (searchKey.getKey()) {
@@ -231,13 +241,29 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         });
     }
 
+    @Override
+    public JdbcCursorItemReader<User> usersCursor() {
+        return this.usersCursor;
+    }
+
+    @Override
+    public void updateDiacritic(Long id, String searchFirstName, String searchLastName) {
+        String updateQuery = super.getQuery("user_update_diacritic");
+        Map<String, Object> params = new HashMap<>();
+        params.put(DaoConstants.P_ID, id);
+        params.put(DaoConstants.P_SEARCH_LAST_NAME, searchLastName);
+        params.put(DaoConstants.P_SEARCH_FIRST_NAME, searchFirstName);
+        super.getNamedParameterJdbcTemplate().update(updateQuery, params);
+    }
+
     /**
      * Build SQL query based on search parameters.
-     * @param baseQuery Base SQL query
-     * @param tenantId Tenant id
+     *
+     * @param baseQuery      Base SQL query
+     * @param tenantId       Tenant id
      * @param organizationId Organization id
-     * @param searchParams Search parameters
-     * @param count Is count query
+     * @param searchParams   Search parameters
+     * @param count          Is count query
      * @return SQL query and named parameters
      */
     private QueryAndParams buildFilterQuery(String baseQuery, CompositeId tenantId, CompositeId organizationId,
@@ -270,11 +296,11 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
         }
         String fullQuery = fQuery;
         // Do not add orderBy clause for a count query (useless)
-        if (!count){
+        if (!count) {
             fullQuery += compositeQuery.orderBy();
             fullQuery += compositeQuery.pagination();
         }
-        return new OrganizationsDaoImpl.QueryAndParams(fullQuery, params);
+        return new QueryAndParams(fullQuery, params);
     }
 
 }
