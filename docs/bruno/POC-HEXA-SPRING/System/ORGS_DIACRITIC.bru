@@ -1,0 +1,21 @@
+meta {
+  name: ORGS_DIACRITIC
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/system/orgs_diacritic
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{basicAuthUser}}
+  password: {{basicAuthPassword}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

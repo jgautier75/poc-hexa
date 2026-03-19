@@ -33,8 +33,8 @@ public class SystemUsersMigrateImpl implements SystemUsersMigrate {
                 User usr = userJdbcCursorItemReader.read();
                 if (usr == null) {
                     break;
-                }else {
-                    LOGGER.info("Processing user count {}", processed);
+                } else {
+                    LOGGER.info("Processing diacritic user count {}", processed);
                     usersDao.updateDiacritic(usr.id().internalId(), SQLUtils.diacritic(usr.firstName()), SQLUtils.diacritic(usr.lastName()));
                     userJdbcCursorItemReader.setCurrentItemCount(processed);
                 }

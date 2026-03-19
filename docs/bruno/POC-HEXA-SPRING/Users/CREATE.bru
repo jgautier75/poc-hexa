@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations/ff866a02-5d23-4c30-815e-ddad655b83fe/users
+  url: {{httpHost}}/{{appContext}}/{{apiBase}}/tenants/12ff7bba-22b9-4eb4-94e4-cdfc0cc6eba8/organizations/c538fb14-95ba-458b-b1aa-34cd80d0bc31/users
   body: json
   auth: bearer
 }
@@ -16,10 +16,10 @@ auth:bearer {
 
 body:json {
   {
-    "login": "jjoplin",
-    "firstName":"Janis",
-    "lastName": "JOPLIN",
-    "email": "j.joplin@test.fr",
+    "login": "glemaitre",
+    "firstName":"Georges",
+    "lastName": "LEMAITRE",
+    "email": "g.lemaitre@test.fr",
     "status": 1,
     "secrets": "test"
   }
@@ -27,4 +27,5 @@ body:json {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

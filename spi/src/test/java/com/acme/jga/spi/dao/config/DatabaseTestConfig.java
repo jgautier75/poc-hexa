@@ -16,6 +16,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 
 @Configuration
 public class DatabaseTestConfig {
@@ -41,8 +42,8 @@ public class DatabaseTestConfig {
     }
 
     @Bean
-    public OrganizationsDaoImpl organizationsDao(@Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        return new OrganizationsDaoImpl(namedParameterJdbcTemplate);
+    public OrganizationsDaoImpl organizationsDao(@Autowired DataSource dataSource, @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new OrganizationsDaoImpl(dataSource,namedParameterJdbcTemplate);
     }
 
     @Bean

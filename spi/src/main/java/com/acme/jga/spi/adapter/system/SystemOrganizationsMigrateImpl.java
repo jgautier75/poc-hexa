@@ -35,7 +35,7 @@ public class SystemOrganizationsMigrateImpl implements SystemOrganizationsMigrat
                 if (org == null) {
                     break;
                 } else {
-                    LOGGER.info("Processing organization count {}", processed);
+                    LOGGER.info("Processing diacritic organization count {}", processed);
                     organizationsDao.updateDiacritic(org.id().internalId(), SQLUtils.diacritic(org.label()));
                     orgsJdbcCursorItemReader.setCurrentItemCount(processed);
                 }
