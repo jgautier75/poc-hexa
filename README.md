@@ -233,64 +233,9 @@ If jq is intalled, secret values can be extracted using a command like:
 curl -H "X-Vault-Token: dev-root-token" -X GET http://192.168.1.13:8200/v1/dev-secrets/data/creds | jq '.data.data'
 ```
 
-## Entities
+## ERD
 
-- **Tenant**:
-    - A tenant aims at serving multiple organizations.
-    - Properties:
-        - id: internal identifier
-        - uid: external identifier (UUID)
-        - code: functional code (unique)
-        - label: tenant's label
-- **Organization**:
-    - An organization belongs to a tenant and holds users
-    - Properties:
-        - id: internal identifier
-        - uid: external identifier (UUID)
-        - tenant: Reference on tenant
-        - label: Organization's label
-        - code: functional code (unique)
-        - kind: Organization's code (Enumeration: TENANT,BU,COMMUNITY,ENTERPRISE)
-        - country: Country code (ISO 3166-1 Alpha2)
-        - status: status (Enumeration: DRAFT, ACTIVE, INACTIVE)
-- **Sector**:
-    - A sector is a logical subdivision of an organization.
-    - An organization always have a root sector.
-    - A root sector cannot be deleted.
-    - Properties:
-        - id: internal identifier
-        - uid: external identifier (UUID)
-        - code: functional code (unique)
-        - label: sector's label
-        - parentId: Parent sector internal identifier
-        - root: boolean, is current sector the root sector
-- **User**:
-    - A user belongs to an organization and thus to a tenant
-    - Properties:
-        - id: internal identifier
-        - uid: external identifier (UUID)
-        - tenant_id: Reference on tenant
-        - org_id: Reference on organization
-        - login: User login (unique)
-        - firstName: First name
-        - lastName: Last name
-        - middleName: Middle name
-        - email: Email address
-        - status: (Enumeration: DRAFT, ACTIVE, INACTIVE)
-        - notif_email: Email for notifications (non unique, e.g: a diffusion list)
-- **Events**:
-    - Storage of audit events.
-    - An audit event is always recorded when an entity is created (tenant, organization, sector, user), updated or
-      deleted
-    - Properties:
-        - uid: A unique identifier (uuid)
-        - created_at: Creation timestamp (UTC/ISO-8601)
-        - last_updated_at: Last update timestamp (UTC/ISO-8601)
-        - target: Entity type (Enumeration: Tenant(0), Organization(1), User(2), Sector(3))
-        - object_uid: Entity object uid
-        - action: Enumeration: CREATE, UPDATE, DELETE
-        - status: Event status (Enumeration: PENDING(0), PROCESSED(1), FAILED(2))
-        - payload: Audit event in json format (PostgreSQL jsonb)
+Check docs/model/model.adoc in asciidoc format
 
 ## Audit events
 

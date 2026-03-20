@@ -1,0 +1,164 @@
+= Database model
+Auteur: Jérôme GAUTIER
+:toc:
+:toc-title: Table of content
+:toclevels: 5
+:imagesdir: images/
+
+=== Diagramme
+
+[plantuml, erd, png, align="center"]
+....
+@startuml
+<style>
+class {
+  BackgroundColor White
+  BorderColor #000000
+  FontColor #000000
+}
+
+classHeader {
+  BackgroundColor #000000
+  FontColor White
+  FontStyle bold
+}
+
+classAttribute {
+  FontSize 12
+}
+</style>
+entity "tenants" as tenants {
+    *id: number <<generated>>
+    --
+    uid: text(40)
+    *code: text(50) <U>
+    *label: text(80)
+    status: int
+}
+entity "organizations" as orgs {
+    *tenant_id: number <<FK>>
+    *id: number <<generated>>
+    --
+    uid: text(40)
+    *code: number <U>
+    *label: text(80)
+    *search_label: text(80)
+    country: text(3)
+    kind: int
+    status: int
+}
+entity "sectors" as sectors {
+    *tenant_id: number <<FK>>
+    *org_id: number <<FK>>
+    *id: number <<generated>>
+    --
+    uid: text(40)
+    *code: number <U>
+    *label: text(80)
+    parent_id: number <<FK>>
+    root: boolean
+}
+entity "users" as users {
+    *tenant_id: number <<FK>>
+    *org_id: number <<FK>>
+    *id: number <<generated>>
+    --
+    uid: text(40)
+    *login: text(50) <U>
+    *first_name: text(50)
+    *last_name: text(50)
+    middle_name: text(5)
+    *email: text(50) <U>
+    *status: int
+    notif_email: text(50)
+    secrets: text(200)
+    *search_last_name: text(50)
+    *search_first_name: text(50)
+}
+entity "events" as events {
+    *uid: text(40) <U>
+    --
+    *created_at: timestamp
+    *last_updated_at: timestamp
+    *target int
+    *object_uid: text(40)
+    *action: text(40)
+    *status: int
+    *payload: jsonb
+}
+
+orgs }|..|| tenants
+users }|..|| orgs
+sectors }|..|| orgs
+@enduml
+....
+
+=== Tables
+
+==== TENANTS
+
+[options="header"]
+[cols="15,10,5,10,60"]
+|===
+| Colonne | Type | PK/FK | Mandatory | Description
+| id | Number | PK | **Y** | Primary key / Sequence
+| uid | Text(40) | - | **Y** | Unique external identifier
+| label | Text(80) | - | N | Tenant's label
+| code | Text(50) | - | N | **Unique** text code
+| status | Number | - | N | 0=Draft, 1=Active, 2=Inactive
+|===
+
+==== ORGANIZATIONS
+
+[options="header"]
+[cols="15,10,5,10,60"]
+|===
+| Colonne | Type | PK/FK | Mandatory | Description
+| id | Number | PK | **Y** | Primary key / Sequence
+| tenant_id | Number | PFK | **Y** | FK on tenants.id
+| uid | Text(40) | - | **Y** | Unique external identifier
+| code | Text(50) | - | **Y** | **Unique** text code
+| label | Text(80) | - | **Y** | Organization's label
+| search_label | Text(80) | - | **Y** | Organization's search label (normalized diacritic form)
+| country | Text(2) | - | **Y** | Country iso code
+| kind | Number | - | **Y** | 0=Root, 1=BU, 2=COMMUNITY
+| status | Number | - | **Y** | 0=Draft, 1=Active, 2=Inactive
+|===
+
+==== SECTORS
+
+[options="header"]
+[cols="15,10,5,10,60"]
+|===
+| Colonne | Type | PK/FK | Mandatory | Description
+| id | Number | PK | **Y** | Primary key / Sequence
+| tenant_id | Number | PFK | **Y** | FK on tenants.id
+| org_id | Number | PFK | **Y** | FK on organizations.id
+| uid | Text(40) | - | **Y** | Unique external identifier
+| code | Text(50) | - | **Y** | **Unique** text code
+| label | Text(80) | - | **Y** | Sector's label
+| parent_id | Number | - | N | FK on sectors.id
+| root | Boolean | - | **Y** | Is current sector root sector of organization
+|===
+
+==== USERS
+
+[options="header"]
+[cols="15,10,5,10,60"]
+|===
+| Colonne | Type | PK/FK | Mandatory | Description
+| id | Number | PK | **Y** | Primary key / Sequence
+| tenant_id | Number | PFK | **Y** | FK on tenants.id
+| org_id | Number | PFK | **Y** | FK on organizations.id
+| uid | Text(40) | - | **Y** | Unique external identifier
+| login | Text(50) | - | **Y** | **Unique** identifier (for authentication purposes)
+| first_name | Text(50) | - | **Y** | User's first name
+| last_name | Text(50) | - | **Y** | User's last name
+| middle_name | Text(5) | - | N | User's middle name
+| email | Text(50) | - | **Y** | **Unique** email (unique because it can be used as a login)
+| status | Number | - | **Y** | 0=Draft, 1=Active, 2=Inactive
+| notif_email | Text(50) | - | N | email used for notifications (can be an alias for mailing)
+| secrets | Text(200) | - | N | Ciphered secrets used as initial password
+| search_last_name | Text(50) | - | **Y** | last name normalized form for diacritic search
+| search_first_name | Text(50) | - | **Y** | first name normalized form for diacritic search
+|===
