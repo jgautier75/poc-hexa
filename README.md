@@ -6,14 +6,14 @@ A multi-tenants software architecture aims at serving multiple organizations.
 
 Code is organized in a hexagonal architecture style where:
 
-- app             : REST exposition layer, controller advice
-- auditing   : Protobuf stack for audit events
-- crypto           : Shared module for password encryption (used by domain & keycloak spi-federation)
-- domain   : Domain layer (model, business functions)
-- db-migration : Liquibase rdbms migrations
-- keycloak-spi  : Keycloak SPI (user federation & kafka consumer)
+- app: REST exposition layer, controller advice (input ports adapters)
+- auditing: Protobuf stack for audit events
+- crypto: Shared module for password encryption (used by domain & keycloak spi-federation)
+- domain: Domain layer (model, business functions, input ports)
+- db-migration: Liquibase rdbms migrations
+- keycloak-spi: Keycloak SPI (user federation & kafka consumer)
 - search-filter: Search filter management (antlr4)
-- spi: Infrastructure layer
+- spi: Infrastructure layer (output ports adapters)
 
 ## Technical stack
 
