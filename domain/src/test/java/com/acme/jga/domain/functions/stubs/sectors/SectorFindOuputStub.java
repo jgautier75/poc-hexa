@@ -4,7 +4,7 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
+import com.acme.jga.domain.ports.output.sectors.SectorFindOuput;
 
 import java.util.ArrayList;
 import java.util.List;

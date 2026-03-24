@@ -5,11 +5,11 @@ import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.i18n.BundleFactory;
-import com.acme.jga.domain.input.functions.tenants.TenantCreateInput;
+import com.acme.jga.domain.ports.input.tenants.TenantCreateInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.output.functions.tenants.TenantCreateOutput;
-import com.acme.jga.domain.output.functions.tenants.TenantExistsInput;
+import com.acme.jga.domain.ports.output.tenants.TenantCreateOutput;
+import com.acme.jga.domain.ports.output.tenants.TenantExistsInput;
 
 @DomainService
 public class TenantCreateFuncImpl implements TenantCreateInput {

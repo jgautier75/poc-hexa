@@ -2,8 +2,8 @@ package com.acme.jga.spi.adapter.user;
 
 import com.acme.jga.domain.model.event.EventData;
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.output.functions.events.EventOutput;
-import com.acme.jga.domain.output.functions.users.UserDeleteOutput;
+import com.acme.jga.domain.ports.output.events.EventOutput;
+import com.acme.jga.domain.ports.output.users.UserDeleteOutput;
 import com.acme.jga.spi.dao.users.api.UsersDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

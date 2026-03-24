@@ -1,10 +1,10 @@
 package com.acme.jga.domain.functions.sectors.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
-import com.acme.jga.domain.input.functions.sectors.SectorFindInput;
+import com.acme.jga.domain.ports.input.sectors.SectorFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
-import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
+import com.acme.jga.domain.ports.output.sectors.SectorFindOuput;
 
 import java.util.List;
 

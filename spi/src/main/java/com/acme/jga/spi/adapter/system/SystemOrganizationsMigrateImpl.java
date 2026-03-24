@@ -2,7 +2,7 @@ package com.acme.jga.spi.adapter.system;
 
 import com.acme.jga.domain.exceptions.TechnicalException;
 import com.acme.jga.domain.model.organization.Organization;
-import com.acme.jga.domain.output.functions.system.SystemOrganizationsMigrate;
+import com.acme.jga.domain.ports.output.system.SystemOrganizationsMigrate;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
 import com.acme.jga.spi.jdbc.utils.SQLUtils;
 import org.slf4j.Logger;

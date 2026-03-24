@@ -6,7 +6,7 @@ import com.acme.jga.domain.functions.stubs.tenants.TenantUpdateOutputStub;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
-import com.acme.jga.domain.output.functions.tenants.TenantUpdateOutput;
+import com.acme.jga.domain.ports.output.tenants.TenantUpdateOutput;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

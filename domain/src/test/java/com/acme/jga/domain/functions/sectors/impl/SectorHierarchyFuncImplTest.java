@@ -4,13 +4,13 @@ import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.functions.stubs.organizations.OrganizationFindInputStub;
 import com.acme.jga.domain.functions.stubs.sectors.SectorFindOuputStub;
 import com.acme.jga.domain.functions.stubs.tenants.TenantFindInputStub;
-import com.acme.jga.domain.input.functions.organizations.OrganizationFindInput;
-import com.acme.jga.domain.input.functions.tenants.TenantFindInput;
+import com.acme.jga.domain.ports.input.organizations.OrganizationFindInput;
+import com.acme.jga.domain.ports.input.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
-import com.acme.jga.domain.output.functions.sectors.SectorFindOuput;
+import com.acme.jga.domain.ports.output.sectors.SectorFindOuput;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;

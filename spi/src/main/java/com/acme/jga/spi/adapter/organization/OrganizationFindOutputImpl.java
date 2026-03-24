@@ -3,7 +3,7 @@ package com.acme.jga.spi.adapter.organization;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
-import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
+import com.acme.jga.domain.ports.output.organizations.OrganizationFindOutput;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
 import org.springframework.stereotype.Service;

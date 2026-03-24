@@ -3,7 +3,7 @@ package com.acme.jga.spi.adapter.tenant;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.output.functions.tenants.TenantFindOutput;
+import com.acme.jga.domain.ports.output.tenants.TenantFindOutput;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import org.springframework.stereotype.Service;
 

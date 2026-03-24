@@ -2,7 +2,7 @@ package com.acme.jga.spi.adapter.system;
 
 import com.acme.jga.domain.exceptions.TechnicalException;
 import com.acme.jga.domain.model.user.User;
-import com.acme.jga.domain.output.functions.system.SystemUsersMigrate;
+import com.acme.jga.domain.ports.output.system.SystemUsersMigrate;
 import com.acme.jga.spi.dao.users.api.UsersDao;
 import com.acme.jga.spi.jdbc.utils.SQLUtils;
 import org.slf4j.Logger;

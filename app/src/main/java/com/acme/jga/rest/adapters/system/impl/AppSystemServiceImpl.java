@@ -1,6 +1,6 @@
 package com.acme.jga.rest.adapters.system.impl;
 
-import com.acme.jga.domain.input.functions.system.SystemActionsInput;
+import com.acme.jga.domain.ports.input.system.SystemActionsInput;
 import com.acme.jga.rest.adapters.system.api.AppSystemService;
 import com.acme.jga.rest.dtos.v1.versions.ApiVersionDto;
 import com.acme.jga.rest.dtos.v1.versions.ApiVersionList;

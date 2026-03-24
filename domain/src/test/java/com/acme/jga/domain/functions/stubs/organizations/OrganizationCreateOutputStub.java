@@ -4,7 +4,7 @@ import com.acme.jga.domain.model.event.EventData;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.sector.Sector;
-import com.acme.jga.domain.output.functions.organizations.OrganizationCreateOutput;
+import com.acme.jga.domain.ports.output.organizations.OrganizationCreateOutput;
 
 import java.util.UUID;
 

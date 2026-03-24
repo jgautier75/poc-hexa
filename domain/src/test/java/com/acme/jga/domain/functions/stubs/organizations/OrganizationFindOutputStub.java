@@ -5,7 +5,7 @@ import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.output.functions.organizations.OrganizationFindOutput;
+import com.acme.jga.domain.ports.output.organizations.OrganizationFindOutput;
 import com.acme.jga.search.filtering.constants.SearchParams;
 
 import java.util.ArrayList;

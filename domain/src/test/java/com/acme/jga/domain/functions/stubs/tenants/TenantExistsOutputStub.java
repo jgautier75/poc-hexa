@@ -3,7 +3,7 @@ package com.acme.jga.domain.functions.stubs.tenants;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.IdKind;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.output.functions.tenants.TenantExistsOutput;
+import com.acme.jga.domain.ports.output.tenants.TenantExistsOutput;
 
 import java.util.List;
 

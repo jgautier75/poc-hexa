@@ -5,9 +5,9 @@ import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.i18n.BundleFactory;
-import com.acme.jga.domain.input.functions.tenants.TenantUpdateInput;
+import com.acme.jga.domain.ports.input.tenants.TenantUpdateInput;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.output.functions.tenants.TenantUpdateOutput;
+import com.acme.jga.domain.ports.output.tenants.TenantUpdateOutput;
 
 @DomainService
 public class TenantUpdateFuncImpl implements TenantUpdateInput {
