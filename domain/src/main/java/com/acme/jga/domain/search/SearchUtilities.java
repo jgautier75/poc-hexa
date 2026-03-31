@@ -25,24 +25,8 @@ public class SearchUtilities {
             params.put(SearchParams.PAGE_SIZE, DEFAULT_PAGE_SIZE);
             params.put(SearchParams.PAGE_INDEX, DEFAULT_PAGE_INDEX);
         } else {
-            if (!searchParams.containsKey(SearchParams.PAGE_SIZE)) {
-                params.put(SearchParams.PAGE_SIZE, DEFAULT_PAGE_SIZE);
-            } else {
-                if (((Integer) searchParams.get(SearchParams.PAGE_SIZE)) > MAX_PAGE_SIZE) {
-                    params.put(SearchParams.PAGE_SIZE, DEFAULT_PAGE_SIZE);
-                } else {
-                    params.put(SearchParams.PAGE_SIZE, searchParams.get(SearchParams.PAGE_SIZE));
-                }
-            }
-            if (!searchParams.containsKey(SearchParams.PAGE_INDEX)) {
-                params.put(SearchParams.PAGE_INDEX, DEFAULT_PAGE_INDEX);
-            } else {
-                if (((Integer) searchParams.get(SearchParams.PAGE_INDEX)) <= 0) {
-                    params.put(SearchParams.PAGE_INDEX, DEFAULT_PAGE_INDEX);
-                } else {
-                    params.put(SearchParams.PAGE_INDEX, searchParams.get(SearchParams.PAGE_INDEX));
-                }
-            }
+            checkPageSize(searchParams, params);
+            checkPageIndex(searchParams, params);
             if (searchParams.containsKey(SearchParams.ORDER_BY)) {
                 params.put(SearchParams.ORDER_BY, searchParams.get(SearchParams.ORDER_BY));
             }
@@ -55,6 +39,30 @@ public class SearchUtilities {
             throw new FunctionalException(Scope.REQUEST.name(), FunctionalErrors.INVALID_PROPERTY.name(), BundleFactory.getMessage("filter_invalid", sb.toString()));
         }
         return params;
+    }
+
+    private static void checkPageIndex(Map<SearchParams, Object> searchParams, HashMap<SearchParams, Object> params) {
+        if (!searchParams.containsKey(SearchParams.PAGE_INDEX)) {
+            params.put(SearchParams.PAGE_INDEX, DEFAULT_PAGE_INDEX);
+        } else {
+            if (((Integer) searchParams.get(SearchParams.PAGE_INDEX)) <= 0) {
+                params.put(SearchParams.PAGE_INDEX, DEFAULT_PAGE_INDEX);
+            } else {
+                params.put(SearchParams.PAGE_INDEX, searchParams.get(SearchParams.PAGE_INDEX));
+            }
+        }
+    }
+
+    private static void checkPageSize(Map<SearchParams, Object> searchParams, HashMap<SearchParams, Object> params) {
+        if (!searchParams.containsKey(SearchParams.PAGE_SIZE)) {
+            params.put(SearchParams.PAGE_SIZE, DEFAULT_PAGE_SIZE);
+        } else {
+            if (((Integer) searchParams.get(SearchParams.PAGE_SIZE)) > MAX_PAGE_SIZE) {
+                params.put(SearchParams.PAGE_SIZE, DEFAULT_PAGE_SIZE);
+            } else {
+                params.put(SearchParams.PAGE_SIZE, searchParams.get(SearchParams.PAGE_SIZE));
+            }
+        }
     }
 
     public static Map<SearchParams, Object> getDefaultParameters() {
