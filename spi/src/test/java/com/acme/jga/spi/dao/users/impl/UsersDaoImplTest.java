@@ -8,10 +8,8 @@ import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.domain.model.user.UserStatus;
-import com.acme.jga.search.filtering.expr.Expression;
 import com.acme.jga.spi.dao.config.DatabaseTestConfig;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
-import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import com.acme.jga.spi.dao.users.api.UsersDao;
 import com.acme.jga.spi.dao.utils.DaoTestUtils;
@@ -44,10 +42,8 @@ class UsersDaoImplTest {
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DaoTestUtils.POSTGRESQL_VERSION);
 
     @DynamicPropertySource
-    static void registerPgProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    static void registerPgProperties(DynamicPropertyRegistry registry) throws Exception {
+        DaoTestUtils.registerPgDatasource(registry, postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(), postgreSQLContainer.getPassword());
     }
 
     @Autowired

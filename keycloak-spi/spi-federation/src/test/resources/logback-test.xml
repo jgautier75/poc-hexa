@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{ISO8601} %-5level [%thread] - %msg%n%throwable</pattern>
+        </encoder>
+    </appender>
+    <root level="debug">
+        <appender-ref ref="Console" />
+    </root>
+</configuration>
