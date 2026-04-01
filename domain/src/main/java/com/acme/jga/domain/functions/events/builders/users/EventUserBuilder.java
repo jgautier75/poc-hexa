@@ -14,10 +14,10 @@ public class EventUserBuilder extends AbstractEventBuilder {
     public List<AuditChange> build(User oldUser, User newUser) {
         if (oldUser == null && newUser != null) {
             // CREATION
-            return buildUserChanges(newUser, AuditOperation.ADD);
+            return buildUserChangesCreate(newUser);
         } else if (oldUser != null && newUser == null) {
             // DELETION
-            return buildUserChanges(oldUser, AuditOperation.REMOVE);
+            return buildUserChangesDelete(oldUser);
         } else {
             // MODIFICATION
             return buildUserChanges(oldUser, newUser);
@@ -45,42 +45,81 @@ public class EventUserBuilder extends AbstractEventBuilder {
         return changes;
     }
 
-    private List<AuditChange> buildUserChanges(User newUser, AuditOperation operation) {
+    private List<AuditChange> buildUserChangesDelete(User oldUser) {
+        return List.of(
+                AuditChange.builder()
+                        .from(oldUser.login())
+                        .object("login")
+                        .operation(AuditOperation.REMOVE)
+                        .build(),
+                AuditChange.builder()
+                        .from(oldUser.firstName())
+                        .object("firstName")
+                        .operation(AuditOperation.REMOVE)
+                        .build(),
+                AuditChange.builder()
+                        .from(oldUser.lastName())
+                        .object("lastName")
+                        .operation(AuditOperation.REMOVE)
+                        .build(),
+                AuditChange.builder()
+                        .from(oldUser.email())
+                        .object("email")
+                        .operation(AuditOperation.REMOVE)
+                        .build(),
+                AuditChange.builder()
+                        .from(oldUser.notifEmail())
+                        .object("notifEmail")
+                        .operation(AuditOperation.REMOVE)
+                        .build(),
+                AuditChange.builder()
+                        .from(oldUser.middleName())
+                        .object("middleName")
+                        .operation(AuditOperation.REMOVE)
+                        .build(),
+                AuditChange.builder()
+                        .to(oldUser.status().getValue().toString())
+                        .object("status")
+                        .operation(AuditOperation.REMOVE)
+                        .build());
+    }
+
+    private List<AuditChange> buildUserChangesCreate(User newUser) {
         return List.of(
                 AuditChange.builder()
                         .to(newUser.login())
                         .object("login")
-                        .operation(operation)
+                        .operation(AuditOperation.ADD)
                         .build(),
                 AuditChange.builder()
                         .to(newUser.firstName())
                         .object("firstName")
-                        .operation(operation)
+                        .operation(AuditOperation.ADD)
                         .build(),
                 AuditChange.builder()
                         .to(newUser.lastName())
                         .object("lastName")
-                        .operation(operation)
+                        .operation(AuditOperation.ADD)
                         .build(),
                 AuditChange.builder()
                         .to(newUser.email())
                         .object("email")
-                        .operation(operation)
+                        .operation(AuditOperation.ADD)
                         .build(),
                 AuditChange.builder()
-                        .object("notifEmail")
-                        .operation(operation)
                         .to(newUser.notifEmail())
+                        .object("notifEmail")
+                        .operation(AuditOperation.ADD)
                         .build(),
                 AuditChange.builder()
-                        .object("middleName")
-                        .operation(operation)
                         .to(newUser.middleName())
+                        .object("middleName")
+                        .operation(AuditOperation.ADD)
                         .build(),
                 AuditChange.builder()
-                        .object("status")
-                        .operation(operation)
                         .to(newUser.status().getValue().toString())
+                        .object("status")
+                        .operation(AuditOperation.ADD)
                         .build()
         );
     }

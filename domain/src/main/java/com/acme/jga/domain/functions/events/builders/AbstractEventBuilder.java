@@ -17,15 +17,14 @@ public abstract class AbstractEventBuilder {
                     .object(field)
                     .operation(AuditOperation.REMOVE)
                     .build();
+        } else if (from != null && to != null && !from.equals(to)) {
+            return AuditChange.builder()
+                    .from(from)
+                    .to(to)
+                    .object(field)
+                    .operation(AuditOperation.UPDATE)
+                    .build();
         } else {
-            if (from != null && to != null && !from.equals(to)) {
-                return AuditChange.builder()
-                        .from(from)
-                        .to(to)
-                        .object(field)
-                        .operation(AuditOperation.UPDATE)
-                        .build();
-            }
             return null;
         }
     }
