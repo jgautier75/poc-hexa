@@ -1,7 +1,7 @@
 package com.acme.jga.spi.dao.organizations.impl;
 
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.model.metadata.KeyValuePair;
+import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.metadata.OrganizationMetaData;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
@@ -211,7 +211,7 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
                 .build());
 
         Map<String, Object> params = super.buildParams(whereClauses);
-        Map<String, KeyValuePair> columnsDefsByAlias = OrganizationMetaData.columnsByAlias();
+        Map<String, EntityMetaData> columnsDefsByAlias = OrganizationMetaData.columnsByAlias();
         CompositeQuery compositeQuery = expressionsProcessor.buildFilterQuery(params, searchParams, columnsDefsByAlias);
 
         // Where clause, force filtering on tenant

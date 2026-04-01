@@ -41,10 +41,10 @@ public enum OrganizationMetaData {
         return diacritic;
     }
 
-    public static Map<String, KeyValuePair> columnsByAlias() {
-        final Map<String, KeyValuePair> colsByAlias = new HashMap<>();
+    public static Map<String, EntityMetaData> columnsByAlias() {
+        final Map<String, EntityMetaData> colsByAlias = new HashMap<>();
         Arrays.stream(OrganizationMetaData.values()).forEach(userMetaData -> colsByAlias.put(userMetaData.getAlias(),
-                new KeyValuePair(userMetaData.getColumnName(), userMetaData.getDataType().name(), false)));
+                new EntityMetaData(userMetaData.getColumnName(), userMetaData.getDataType().name(), false)));
         return colsByAlias;
     }
 }

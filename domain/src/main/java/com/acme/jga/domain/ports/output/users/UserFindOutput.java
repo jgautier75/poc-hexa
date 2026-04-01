@@ -1,7 +1,7 @@
 package com.acme.jga.domain.ports.output.users;
 
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.model.metadata.KeyValuePair;
+import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.search.filtering.constants.SearchParams;
 
@@ -19,5 +19,5 @@ public interface UserFindOutput {
 
     boolean loginUsed(String login);
 
-    User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey);
+    User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, EntityMetaData searchKey);
 }

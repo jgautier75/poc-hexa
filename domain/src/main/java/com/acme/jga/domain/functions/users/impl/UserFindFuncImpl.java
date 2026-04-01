@@ -10,7 +10,7 @@ import com.acme.jga.domain.ports.input.tenants.TenantFindInput;
 import com.acme.jga.domain.ports.input.users.UserFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.PaginatedResults;
-import com.acme.jga.domain.model.metadata.KeyValuePair;
+import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.user.User;
@@ -61,7 +61,7 @@ public class UserFindFuncImpl implements UserFindInput {
     }
 
     @Override
-    public User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey) throws FunctionalException {
+    public User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, EntityMetaData searchKey) throws FunctionalException {
         /*Tenant tenant = tenantFindInput.findById(tenantId);
         Organization organization = organizationFindInput.findById(tenant.id(), organizationId);*/
         return userFindOutput.findBySingleCriteria(null, null, searchKey);

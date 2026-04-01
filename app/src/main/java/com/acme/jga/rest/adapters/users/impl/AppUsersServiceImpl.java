@@ -11,7 +11,7 @@ import com.acme.jga.domain.ports.input.users.UserFindInput;
 import com.acme.jga.domain.ports.input.users.UserUpdateInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.PaginatedResults;
-import com.acme.jga.domain.model.metadata.KeyValuePair;
+import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.rest.adapters.users.api.AppUsersService;
 import com.acme.jga.rest.dtos.shared.Pagination;
@@ -73,7 +73,7 @@ public class AppUsersServiceImpl implements AppUsersService {
 
     @Override
     public UserOidcDto findForOidc(String tenantUid, String organizationUid, String key, String value) throws FunctionalException {
-        User userByCriteria = userFindInput.findBySingleCriteria(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), new KeyValuePair(key, value, false));
+        User userByCriteria = userFindInput.findBySingleCriteria(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), new EntityMetaData(key, value, false));
         return Optional.ofNullable(userByCriteria).map(u ->
                         new UserOidcDto(
                                 userByCriteria.id().externalId(),

@@ -1,11 +1,10 @@
 package com.acme.jga.spi.dao.users.impl;
 
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.model.metadata.KeyValuePair;
+import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.metadata.UserMetaData;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.search.filtering.constants.SearchParams;
-import com.acme.jga.spi.dao.organizations.impl.OrganizationsDaoImpl;
 import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.dao.users.api.UsersDao;
@@ -198,7 +197,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     }
 
     @Override
-    public User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, KeyValuePair searchKey) {
+    public User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, EntityMetaData searchKey) {
         String baseQuery = super.getQuery("user_oidc");
         Map<String, Object> params = new HashMap<>();
 
@@ -285,7 +284,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
                         .build());
 
         Map<String, Object> params = super.buildParams(whereClauses);
-        Map<String, KeyValuePair> columnsDefsByAlias = UserMetaData.columnsByAlias();
+        Map<String, EntityMetaData> columnsDefsByAlias = UserMetaData.columnsByAlias();
         CompositeQuery compositeQuery = expressionsProcessor.buildFilterQuery(params, searchParams, columnsDefsByAlias);
         params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
         params.put(DaoConstants.P_ORG_ID, organizationId.internalId());

@@ -41,10 +41,10 @@ public enum UserMetaData {
         return diacritic;
     }
 
-    public static Map<String, KeyValuePair> columnsByAlias() {
-        final Map<String, KeyValuePair> colsByAlias = new HashMap<>();
+    public static Map<String, EntityMetaData> columnsByAlias() {
+        final Map<String, EntityMetaData> colsByAlias = new HashMap<>();
         Arrays.stream(UserMetaData.values()).forEach(userMetaData -> {
-            colsByAlias.put(userMetaData.getAlias(), new KeyValuePair(userMetaData.getColumnName(), userMetaData.getDataType().name(), userMetaData.isDiacritic()));
+            colsByAlias.put(userMetaData.getAlias(), new EntityMetaData(userMetaData.getColumnName(), userMetaData.getDataType().name(), userMetaData.isDiacritic()));
         });
         return colsByAlias;
     }

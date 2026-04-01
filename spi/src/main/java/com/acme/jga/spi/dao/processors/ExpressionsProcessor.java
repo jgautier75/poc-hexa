@@ -4,7 +4,7 @@ import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.WrappedFunctionalException;
 import com.acme.jga.domain.model.metadata.DataType;
-import com.acme.jga.domain.model.metadata.KeyValuePair;
+import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.metadata.OrganizationMetaData;
 import com.acme.jga.domain.model.organization.OrganizationKind;
 import com.acme.jga.search.filtering.constants.SearchParams;
@@ -32,7 +32,7 @@ public class ExpressionsProcessor {
      * @param searchParams Search parameters
      * @return Pagination result
      */
-    private AbstractJdbcDaoSupport.PaginationResult computePagination(Map<SearchParams, Object> searchParams, Map<String, KeyValuePair> columnsDefinitionsByAlias) {
+    private AbstractJdbcDaoSupport.PaginationResult computePagination(Map<SearchParams, Object> searchParams, Map<String, EntityMetaData> columnsDefinitionsByAlias) {
         int pageIndex = getPageIndex(searchParams);
         int pageSize = getPageSize(searchParams);
         int start = (pageIndex - 1) * pageSize;
@@ -50,7 +50,7 @@ public class ExpressionsProcessor {
      * @param params      Map<Parameters Name, Parameters Value> for SQL statements
      * @param sqlBuffer   SQL query buffer
      */
-    private void buildSqlFromExpressions(List<Expression> expressions, Map<String, Object> params, StringBuilder sqlBuffer, Map<String, KeyValuePair> domainEntityMetaData) {
+    private void buildSqlFromExpressions(List<Expression> expressions, Map<String, Object> params, StringBuilder sqlBuffer, Map<String, EntityMetaData> domainEntityMetaData) {
         int index = 0;
         StringBuilder paramName = new StringBuilder();
         StringBuilder propertyName = new StringBuilder();
@@ -98,7 +98,7 @@ public class ExpressionsProcessor {
      * @param searchParams Search params
      * @return Composite object with where clause, pagination and order by
      */
-    public AbstractJdbcDaoSupport.CompositeQuery buildFilterQuery(Map<String, Object> params, Map<SearchParams, Object> searchParams, Map<String, KeyValuePair> domainEntityMetaData) {
+    public AbstractJdbcDaoSupport.CompositeQuery buildFilterQuery(Map<String, Object> params, Map<SearchParams, Object> searchParams, Map<String, EntityMetaData> domainEntityMetaData) {
         ParsingResult parsingResult = (ParsingResult) searchParams.get(SearchParams.PARSING_RESULTS);
         StringBuilder sqlBuffer = new StringBuilder();
         Predicate<ParsingResult> hasExpressions = (pr) -> pr != null && !CollectionUtils.isEmpty(pr.getExpressions());
@@ -131,9 +131,9 @@ public class ExpressionsProcessor {
      * @param sqlBuffer  SQL query buffer
      * @param index      Index
      */
-    private void appendPropertyToSql(Expression expression, Map<String, KeyValuePair> domainEntityMetaData, StringBuilder paramName, StringBuilder sqlBuffer, int index) {
+    private void appendPropertyToSql(Expression expression, Map<String, EntityMetaData> domainEntityMetaData, StringBuilder paramName, StringBuilder sqlBuffer, int index) {
         String propertyName = stripEnclosingQuotes(expression.getValue());
-        KeyValuePair columnNameAndColumnType = domainEntityMetaData.get(propertyName);
+        EntityMetaData columnNameAndColumnType = domainEntityMetaData.get(propertyName);
         if (columnNameAndColumnType == null) {
             throw new WrappedFunctionalException(new FunctionalException(FunctionalErrors.INVALID_PROPERTY.name(), null, "Unmapped property named [" + propertyName + "]"));
         }
@@ -207,7 +207,7 @@ public class ExpressionsProcessor {
      * @param searchParams Search parameters
      * @return OrderBy instruction
      */
-    private String getOrderBy(Map<SearchParams, Object> searchParams, Map<String, KeyValuePair> columnsDefinitionsByAlias) {
+    private String getOrderBy(Map<SearchParams, Object> searchParams, Map<String, EntityMetaData> columnsDefinitionsByAlias) {
         String orderByParam = (String) searchParams.get(SearchParams.ORDER_BY);
         if (orderByParam == null || orderByParam.isEmpty()) {
             return "";
@@ -219,7 +219,7 @@ public class ExpressionsProcessor {
         }
 
         String orderColumn = orderByParam.substring(1);
-        KeyValuePair columnNameAndType = columnsDefinitionsByAlias.get(orderColumn);
+        EntityMetaData columnNameAndType = columnsDefinitionsByAlias.get(orderColumn);
         if (columnNameAndType == null) {
             throw new WrappedFunctionalException(new FunctionalException(FunctionalErrors.INVALID_PROPERTY.name(), null, "Unknown orderBy named [" + orderColumn + "]"));
         }
@@ -233,8 +233,8 @@ public class ExpressionsProcessor {
     }
 
     @SuppressWarnings("unused")
-    private boolean isNumberType(Map<String, KeyValuePair> domainEntityMetaData, String propertyName) {
-        KeyValuePair columnNameAndColumnType = domainEntityMetaData.get(propertyName);
+    private boolean isNumberType(Map<String, EntityMetaData> domainEntityMetaData, String propertyName) {
+        EntityMetaData columnNameAndColumnType = domainEntityMetaData.get(propertyName);
         return columnNameAndColumnType != null && DataType.NUMBER.name().equals(columnNameAndColumnType.getValue());
     }
 
@@ -245,8 +245,8 @@ public class ExpressionsProcessor {
      * @param propertyName         Property name
      * @return Boolean
      */
-    private boolean isDiacritic(Map<String, KeyValuePair> domainEntityMetaData, String propertyName) {
-        KeyValuePair columnNameAndColumnType = domainEntityMetaData.get(propertyName);
+    private boolean isDiacritic(Map<String, EntityMetaData> domainEntityMetaData, String propertyName) {
+        EntityMetaData columnNameAndColumnType = domainEntityMetaData.get(propertyName);
         return columnNameAndColumnType != null && columnNameAndColumnType.isDiacritic();
     }
 
