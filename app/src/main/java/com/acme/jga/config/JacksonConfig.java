@@ -20,13 +20,8 @@ public class JacksonConfig {
                 .enable(tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .disable(SerializationFeature.INDENT_OUTPUT)
                 .defaultTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC))
-                .changeDefaultPropertyInclusion(value -> {
-                    value.withContentInclusion(JsonInclude.Include.NON_NULL);
-                    value.withContentInclusion(JsonInclude.Include.NON_EMPTY);
-                    value.withValueInclusion(JsonInclude.Include.NON_NULL);
-                    value.withValueInclusion(JsonInclude.Include.NON_EMPTY);
-                    return value;
-                })
+                .changeDefaultPropertyInclusion(
+                        i -> JsonInclude.Value.construct(JsonInclude.Include.NON_ABSENT, JsonInclude.Include.NON_EMPTY))
                 .build();
     }
 
