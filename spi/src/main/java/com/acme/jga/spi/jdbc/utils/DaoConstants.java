@@ -1,5 +1,6 @@
 package com.acme.jga.spi.jdbc.utils;
 
+import com.fasterxml.uuid.Generators;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -49,6 +50,6 @@ public final class DaoConstants {
     public static final String AND = " and ";
 
     public static String generatedUUID() {
-        return UUID.randomUUID().toString();
+        return Generators.timeBasedEpochRandomGenerator().generate().toString();
     }
 }
