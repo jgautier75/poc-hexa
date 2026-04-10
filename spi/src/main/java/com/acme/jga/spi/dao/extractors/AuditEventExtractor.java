@@ -1,10 +1,10 @@
-package com.acme.jga.spi.jdbc.extractors;
+package com.acme.jga.spi.dao.extractors;
 
 import com.acme.jga.domain.model.event.AuditAction;
 import com.acme.jga.domain.model.event.AuditEvent;
 import com.acme.jga.domain.model.event.EventStatus;
 import com.acme.jga.domain.model.event.EventTarget;
-import com.acme.jga.spi.jdbc.utils.SQLExtractor;
+import com.acme.jga.spi.dao.utils.SQLExtractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

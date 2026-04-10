@@ -4,7 +4,7 @@ import com.acme.jga.domain.exceptions.TechnicalException;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.domain.ports.output.system.SystemUsersMigrate;
 import com.acme.jga.spi.dao.users.api.UsersDao;
-import com.acme.jga.spi.jdbc.utils.SQLUtils;
+import com.acme.jga.spi.dao.utils.SQLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.infrastructure.item.ExecutionContext;

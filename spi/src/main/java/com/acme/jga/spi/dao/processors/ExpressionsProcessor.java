@@ -11,9 +11,9 @@ import com.acme.jga.search.filtering.constants.SearchParams;
 import com.acme.jga.search.filtering.expr.Expression;
 import com.acme.jga.search.filtering.expr.FilterComparison;
 import com.acme.jga.search.filtering.utils.ParsingResult;
-import com.acme.jga.spi.jdbc.utils.AbstractJdbcDaoSupport;
-import com.acme.jga.spi.jdbc.utils.DaoConstants;
-import com.acme.jga.spi.jdbc.utils.SQLUtils;
+import com.acme.jga.spi.dao.utils.AbstractJdbcDaoSupport;
+import com.acme.jga.spi.dao.utils.DaoConstants;
+import com.acme.jga.spi.dao.utils.SQLUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 

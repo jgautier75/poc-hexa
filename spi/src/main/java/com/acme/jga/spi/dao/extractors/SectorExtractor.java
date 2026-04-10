@@ -1,9 +1,9 @@
-package com.acme.jga.spi.jdbc.extractors;
+package com.acme.jga.spi.dao.extractors;
 
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
-import com.acme.jga.spi.jdbc.utils.DaoConstants;
-import com.acme.jga.spi.jdbc.utils.SQLExtractor;
+import com.acme.jga.spi.dao.utils.DaoConstants;
+import com.acme.jga.spi.dao.utils.SQLExtractor;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
