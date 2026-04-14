@@ -41,7 +41,7 @@ public class SectorHierarchyFuncImpl implements SectorsListInput {
 
     private void mapSectorsRecursively(Sector parentSector, List<Sector> sectors) {
         List<Sector> children = sectors.stream()
-                .filter(sect -> sect.getParent() != null && sect.getParent().internalId().equals(parentSector.getId().internalId()))
+                .filter(sect -> sect.getParent() != null && sect.getParent().internalId().longValue() == parentSector.getId().internalId().longValue())
                 .sorted(Comparator.comparing(Sector::getLabel))
                 .toList();
         children.forEach(child -> {

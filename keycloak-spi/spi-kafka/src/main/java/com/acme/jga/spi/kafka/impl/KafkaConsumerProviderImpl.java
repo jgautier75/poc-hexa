@@ -149,6 +149,7 @@ public class KafkaConsumerProviderImpl implements KafkaConsumerProvider {
             });
             LOGGER.infof("Merging changes [%s]", userEntity.getUsername());
             jpaConnectionProvider.getEntityManager().merge(userEntity);
+            jpaConnectionProvider.getEntityManager().flush();
         }
     }
 
