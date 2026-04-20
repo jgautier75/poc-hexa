@@ -43,9 +43,6 @@ class KafkaSerializeDeserializeTest {
 
     @Test
     public void Kafka_SchemaRegistry_Protobuf_Serialize_Deserialize() throws ExecutionException, InterruptedException {
-
-        System.setProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager");
-
         // Start kafka and schema registry containers
         Network network = KafkaFactoryTest.createNetwork(KAFKA_NETWORK);
         ConfluentKafkaContainer confluentKafkaContainer = KafkaFactoryTest.createConfluentKafkaContainer(CONFLUENT_PLATFORM_VERSION, KAFKA_LISTENER_PORT, network);

@@ -25,21 +25,20 @@ public class KeycloakTest {
     private static final String REALM_URI = "/realms/myrealm";
 
     @Container
-    KeycloakContainer KEYCLOAK_CONTAINER = new KeycloakContainer()
+    KeycloakContainer KEYCLOAK_CONTAINER = new KeycloakContainer("quay.io/keycloak/keycloak:26.6.1")
             .withAdminPassword("admin")
             .withAdminUsername("admin")
             .withRealmImportFiles("/myrealm-realm.json", "/myrealm-users-0.json")
             .withProviderClassesFrom("target/classes")
+            .withLogConsumer(of -> {
+                LOGGER.warn(of.getUtf8String());
+            })
             .waitingFor(Wait.forHttp("/").forStatusCode(200));
 
     @BeforeEach
     public void startKeycloak() {
-        if (!KEYCLOAK_CONTAINER.isRunning()) {
-            KEYCLOAK_CONTAINER.followOutput(of -> {
-                LOGGER.info(of.getUtf8String());
-            });
-            KEYCLOAK_CONTAINER.start();
-        }
+        // To enable logging, add the following variable argument to runtime: -Djava.util.logging.manager=org.jboss.logmanager.LogManager
+        KEYCLOAK_CONTAINER.start();
     }
 
     @Test
@@ -54,13 +53,11 @@ public class KeycloakTest {
         assertEquals("MyLastName", claims.get("family_name"));
         assertEquals("MyFirstName", claims.get("given_name"));
         LOGGER.info("Claims: {}", claims);
-
     }
 
     private String getAccessToken() {
         final String authServerUrl = getAuthServerUrl();
-
-        final String accessToken = given().contentType(ContentType.URLENC)
+        return given().contentType(ContentType.URLENC)
                 .formParams(Map.of(
                         "username", "myuser",
                         "password", "mypass",
@@ -73,7 +70,6 @@ public class KeycloakTest {
                 .statusCode(200)
                 .extract()
                 .path("access_token");
-        return accessToken;
     }
 
     private String getAuthServerUrl() {

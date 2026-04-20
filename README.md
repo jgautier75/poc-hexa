@@ -44,11 +44,11 @@ All docker images versions and applications properties are centralized in app.en
 
 ```
 DOCKER_UBI9_VERSION=9.7
-DOCKER_OPENBAO_VERSION=2.5.0
-DOCKER_POSTGRESQL=18.2
-DOCKER_KEYCLOAK_VERSION=26.5.4
-DOCKER_AKHQ_VERSION=0.26.0
-DOCKER_CONFLUENT_VERSION=7.9.5
+DOCKER_OPENBAO_VERSION=2.5.2
+DOCKER_POSTGRESQL=18.3
+DOCKER_KEYCLOAK_VERSION=26.6.1
+DOCKER_AKHQ_VERSION=0.27.0
+DOCKER_CONFLUENT_VERSION=7.9.6
 OPENBAO_TOKEN=dev-root-token
 OPENBAO_ROOT_SECRETS=dev-secrets
 OPENBAO_CREDENTIALS=creds
@@ -82,11 +82,11 @@ Use docker/setup_all.sh script to start the following "base" containers/services
 
 | Service             | Version | Port | Description                               |
 |---------------------|---------|------|-------------------------------------------|
-| postgreSQL          | 18.2    | 5434 | Spring app storage                        |
-| keycloak            | 26.5.4  | 7080 | Keycloak dev instance                     |
-| keycloak-postgreSQL | 18.2    | 5433 | Keycloak app storage                      |
-| openbao             | 2.5.0   | 8200 | OpenBao port                              |
-| akhq                | 0.26.0  | 8086 | GUI for kafka (topics, consumers, ...)    | 
+| postgreSQL          | 18.3    | 5434 | Spring app storage                        |
+| keycloak            | 26.6.1  | 7080 | Keycloak dev instance                     |
+| keycloak-postgreSQL | 18.3    | 5433 | Keycloak app storage                      |
+| openbao             | 2.5.2   | 8200 | OpenBao port                              |
+| akhq                | 0.27.0  | 8086 | GUI for kafka (topics, consumers, ...)    | 
 | zookeeper           | 7.9.5   | 2181 | Centralized service for kafka management  |
 | kafka               | 7.9.5   | 9092 | Kafka broker                              |
 | schema-registry     | 7.9.5   | 8085 | Schema registry (protobuf schemas storage |
@@ -144,7 +144,7 @@ mvn clean package install -DskipTests
 ```
 
 3. Move to db-migration/target folder
-
+   
 4. Perform Liquibase update manually:
 
 ```java
