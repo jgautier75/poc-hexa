@@ -30,4 +30,4 @@ DIR=$(ls -d jdk-21* | head -n 1)
 
 echo "📁 Installed in: $DIR"
 
-
+return $DIR

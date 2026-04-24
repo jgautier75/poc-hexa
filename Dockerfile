@@ -1,26 +1,21 @@
 FROM debian:13.4 AS nativebuilder
 ARG MAVEN_ROOT
 COPY ${MAVEN_ROOT}/settings.xml /root/.m2/settings.xml
-COPY ${MAVEN_ROOT}/toolchains.xml /root/.m2/toolchains.xml
+COPY ${MAVEN_ROOT}/template_toolchains.xml /root/.m2/template_toolchains.xml
 WORKDIR /opt
 RUN apt update && \
     apt install curl -y && \
     apt-get install build-essential -y && \
-    apt-get install libz-dev
-RUN curl -L "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.9%2B10/OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz" --output OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz
-RUN curl -L "https://download.oracle.com/graalvm/25/latest/graalvm-jdk-25_linux-x64_bin.tar.gz" --output graalvm-jdk-25_linux-x64_bin.tar.gz
-RUN curl -L "https://dlcdn.apache.org/maven/maven-3/3.9.15/binaries/apache-maven-3.9.15-bin.tar.gz" --output apache-maven-3.9.15-bin.tar.gz
-RUN tar -zxf OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz
-RUN tar -zxf graalvm-jdk-25_linux-x64_bin.tar.gz
-RUN tar -zxf apache-maven-3.9.15-bin.tar.gz
-RUN mkdir /java-sources
+    apt-get install libz-dev && \
+    apt-get install jq -y && \
+    mkdir /java-sources
 WORKDIR /java-sources
 COPY . /java-sources
-RUN export JAVA_HOME="/opt/graalvm-jdk-25.0.3+9.1" && export PATH=$PATH:$JAVA_HOME/bin && /opt/apache-maven-3.9.15/bin/mvn clean install -DskipTests -Pnative
+RUN native-builder-scripts/buildNative.sh
 
 FROM redhat/ubi9-minimal:9.7
 EXPOSE 8080/tcp
 RUN mkdir -p /app/
 RUN mkdir -p /app/errors/
-COPY --from=nativebuilder /java-sources/app/target/app /app/poc-hexa-app
+COPY --from=nativebuilder /java-sources/com.acme.jga.PocApplication /app/poc-hexa-app
 ENTRYPOINT ["/app/poc-hexa-app"]

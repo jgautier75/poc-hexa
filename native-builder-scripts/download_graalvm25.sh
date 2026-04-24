@@ -45,3 +45,5 @@ tar -xzf "$JDK_ARCHIVE"
 
 DIR=$(ls -d graalvm-community-openjdk-25* | head -n 1)
 echo "📁 Installed in: $DIR"
+
+return $DIR
