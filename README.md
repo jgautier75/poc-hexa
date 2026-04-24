@@ -163,6 +163,10 @@ docker build . -t db-migration:1.2.0 --build-arg="JAR_FILE=target/db-migration.j
 docker run -it --env P_PGHOST=192.168.1.15 --env P_PGPORT=5432 --env P_PGUSER=postgres --env P_PGPASS=posgres --env P_DBNAME=orm-test --env P_DBAUSER=orm_dba --env P_DBAPASS=dba_pass --env P_APPUSER=orm_app --env P_APPPASS=pass_app ec29fd57abd9
 ```
 
+## LOGS
+
+If you run application using non native application; ensure to provide LOG_PATH environment variable
+
 ## OpenBao
 
 OpenBao is a fork of HashiCorp vault.

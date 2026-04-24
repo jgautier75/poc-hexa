@@ -6,9 +6,9 @@
         </encoder>
     </appender>
     <appender name="APP-MAIN-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./poc-st.log</file>
+        <file>${LOG_PATH:-/app/logs}/poc-st.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>./poc-st.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${LOG_PATH:-/app/logs}/poc-st.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
             <maxHistory>60</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>

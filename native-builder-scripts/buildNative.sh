@@ -87,8 +87,10 @@ downloadJDK21(){
   VALID_CSUM=${COMPUTED_CHECKSUM##*: }
 
   if [[ "$VALID_CSUM" != "OK" ]] ; then
-    echo "🫆 Invalid checksum: $COMPUTED_CHECKSUM"
+    echo "❌ Invalid checksum: $COMPUTED_CHECKSUM"
     exit -1
+  else
+    echo "✅ Valid checksum"
   fi
 
   echo "📦 Extracting..."
@@ -129,10 +131,10 @@ downloadGraalVM25(){
   echo "🫆 Verifying checksum"
   COMPUTED_CHECKSUM=$(sha256sum $JDK_ARCHIVE | cut -d ' ' -f1)
   if [[ "$COMPUTED_CHECKSUM" != "$CHECKSUM_CONTENT" ]] ; then
-    echo "🫆 Invalid checksum: file [$COMPUTED_CHECKSUM] sha256 [$CHECKSUM_CONTENT]"
+    echo "❌ Invalid checksum: file [$COMPUTED_CHECKSUM] sha256 [$CHECKSUM_CONTENT]"
     exit -1
     else
-      echo "🫆 Valid checksum"
+      echo "✅ Valid checksum"
   fi
 
   echo "📦 Extracting..."

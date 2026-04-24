@@ -95,10 +95,6 @@ server:
     context-path: /poc-hexa/
   port: 8080
 
-logging:
-  file:
-    path: .
-
 app:
   config:
     moduleName: poc-hexa
