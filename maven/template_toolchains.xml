@@ -22,21 +22,21 @@ under the License.
 <!--
  | This is the toolchains file for Maven. It can be specified at two levels:
  |
- |  1. User Level. This toolchains.xml file provides configuration for a single user,
- |                 and is normally provided in ${user.home}/.m2/toolchains.xml.
+ |  1. User Level. This template_toolchains.xml file provides configuration for a single user,
+ |                 and is normally provided in ${user.home}/.m2/template_toolchains.xml.
  |
  |                 NOTE: This location can be overridden with the CLI option:
  |
- |                 -t /path/to/user/toolchains.xml
+ |                 -t /path/to/user/template_toolchains.xml
  |
- |  2. Global Level. This toolchains.xml file provides configuration for all Maven
+ |  2. Global Level. This template_toolchains.xml file provides configuration for all Maven
  |                 users on a machine (assuming they're all using the same Maven
  |                 installation). It's normally provided in
- |                 ${maven.conf}/toolchains.xml.
+ |                 ${maven.conf}/template_toolchains.xml.
  |
  |                 NOTE: This location can be overridden with the CLI option:
  |
- |                 -gt /path/to/global/toolchains.xml
+ |                 -gt /path/to/global/template_toolchains.xml
  |
  | The sections in this sample file are intended to give you a running start at
  | getting the most out of your Maven installation.
@@ -108,7 +108,7 @@ under the License.
             <vendor>temurin</vendor>
         </provides>
         <configuration>
-            <jdkHome>/opt/jdk-21.0.9+10</jdkHome>
+            <jdkHome>JDK21BIN</jdkHome>
         </configuration>
     </toolchain>
 
@@ -120,7 +120,7 @@ under the License.
             <vendor>graalvm</vendor>
         </provides>
         <configuration>
-            <jdkHome>/opt/graalvm-jdk-25.0.3+9.1</jdkHome>
+            <jdkHome>GRAALVM25</jdkHome>
         </configuration>
     </toolchain>
 
