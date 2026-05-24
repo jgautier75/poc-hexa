@@ -52,7 +52,7 @@ public class KafkaConsumerProviderImpl implements KafkaConsumerProvider {
                         .poll(Duration.ofMillis(POLL_DURATION));
                 processRecords(consumerRecords);
             }
-        }).start();        
+        }).start();
     }
 
     /**
@@ -80,28 +80,24 @@ public class KafkaConsumerProviderImpl implements KafkaConsumerProvider {
                     }
                 });
 
-        eventTenants.forEach(tenantName -> {
-            if (!knownTenants.contains(tenantName)) {
-                try (KeycloakSession session = keycloakSessionFactory.create()) {
-                    JpaConnectionProvider jpaConnectionProvider = session.getProvider(JpaConnectionProvider.class);
-                    List<String> entities = findRealm(jpaConnectionProvider, tenantName);
-                    if (!entities.isEmpty()) {
-                        knownTenants.add(tenantName);
-                    } else {
-                        LOGGER.error("Unable to find any entity for tenant " + tenantName);
+        eventTenants.stream().filter(tenantName -> !knownTenants.contains(tenantName))
+                .forEach(tenantName -> {
+                    try (KeycloakSession session = keycloakSessionFactory.create()) {
+                        JpaConnectionProvider jpaConnectionProvider = session.getProvider(JpaConnectionProvider.class);
+                        List<String> entities = findRealm(jpaConnectionProvider, tenantName);
+                        if (!entities.isEmpty()) {
+                            knownTenants.add(tenantName);
+                        } else {
+                            LOGGER.error("Unable to find any entity for tenant " + tenantName);
+                        }
                     }
-                }
-            }
-        });
+                });
 
-        userEvents.forEach(userEvent -> {
-            if (knownTenants.contains(userEvent.getScope().getTenantCode())) {
-                KeycloakModelUtils.runJobInTransaction(keycloakSessionFactory, session -> {
+        userEvents.stream().filter(ue -> knownTenants.contains(ue.getScope().getTenantCode()))
+                .forEach(userEvent -> KeycloakModelUtils.runJobInTransaction(keycloakSessionFactory, session -> {
                     JpaConnectionProvider jpaConnectionProvider = session.getProvider(JpaConnectionProvider.class);
                     updateUser(userEvent, jpaConnectionProvider);
-                });
-            }
-        });
+                }));
 
     }
 

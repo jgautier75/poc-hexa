@@ -14,7 +14,7 @@ COPY . /java-sources
 ENV LOG_PATH=/app/logs
 RUN native-builder-scripts/buildNative.sh
 
-FROM redhat/ubi9-minimal:9.7
+FROM redhat/ubi9-minimal:9.8
 EXPOSE 8080/tcp
 RUN mkdir -p /app/
 RUN mkdir -p /app/logs/
