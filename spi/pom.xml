@@ -16,7 +16,7 @@
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
         <project.build.sourceEncoding>${project-encoding}</project.build.sourceEncoding>
-        <kafka-main-version>8.1.0</kafka-main-version>
+        <kafka-main-version>8.2.1</kafka-main-version>
     </properties>
 
     <build>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.springframework.batch</groupId>
             <artifactId>spring-batch-core</artifactId>
-            <version>6.0.3</version>
+            <version>6.0.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

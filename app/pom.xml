@@ -159,22 +159,22 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-opentelemetry</artifactId>
-            <version>4.0.6</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-otlp</artifactId>
-            <version>1.16.5</version>
+            <version>1.17.0</version>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing-bridge-otel</artifactId>
-            <version>1.6.5</version>
+            <version>1.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aspectj</artifactId>
-            <version>4.0.6</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
@@ -184,7 +184,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-micrometer-observation</artifactId>
-            <version>4.0.6</version>
+            <version>4.1.0</version>
         </dependency>
         <!-- TEST -->
         <dependency>

@@ -30,7 +30,6 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>${project-encoding}</project.build.sourceEncoding>
         <kafka-clients-version>4.1.1</kafka-clients-version>
-        <kafka-main-version>8.1.0</kafka-main-version>
     </properties>
 
     <build>
