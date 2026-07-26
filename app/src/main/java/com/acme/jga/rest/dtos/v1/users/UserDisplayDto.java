@@ -15,8 +15,6 @@ public class UserDisplayDto {
     private String login;
     private String firstName;
     private String lastName;
-    private String middleName;
     private String email;
     private UserStatus status;
-    private String notifEmail;
 }

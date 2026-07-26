@@ -5,6 +5,7 @@ import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.exceptions.WrappedFunctionalException;
 import com.acme.jga.domain.i18n.BundleFactory;
+import com.acme.jga.domain.model.user.UserList;
 import com.acme.jga.domain.ports.input.users.UserCreateInput;
 import com.acme.jga.domain.ports.input.users.UserDeleteInput;
 import com.acme.jga.domain.ports.input.users.UserFindInput;
@@ -53,8 +54,8 @@ public class AppUsersServiceImpl implements AppUsersService {
 
     @Override
     public UserDisplayListDto findAll(String tenantUid, String organizationUid, Map<SearchParams, Object> searchParams) throws FunctionalException {
-        PaginatedResults<User> pres = userFindInput.findAll(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), searchParams);
-        List<UserDisplayDto> displayDtos = pres.results().stream().map(usr -> new UserDisplayDto(usr.id().externalId(), usr.login(), usr.firstName(), usr.lastName(), usr.middleName(), usr.email(), usr.status(), usr.notifEmail())).toList();
+        PaginatedResults<UserList> pres = userFindInput.filter(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), searchParams);
+        List<UserDisplayDto> displayDtos = pres.results().stream().map(usr -> new UserDisplayDto(usr.id().externalId(), usr.login(), usr.firstName(), usr.lastName(), usr.email(), usr.status())).toList();
         return new UserDisplayListDto(displayDtos, new Pagination(pres.nbResults(), pres.pageIndex(), pres.nbPages()));
     }
 

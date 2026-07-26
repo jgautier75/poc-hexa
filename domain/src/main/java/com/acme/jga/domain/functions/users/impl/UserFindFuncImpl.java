@@ -5,6 +5,7 @@ import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.i18n.BundleFactory;
+import com.acme.jga.domain.model.user.UserList;
 import com.acme.jga.domain.ports.input.organizations.OrganizationFindInput;
 import com.acme.jga.domain.ports.input.tenants.TenantFindInput;
 import com.acme.jga.domain.ports.input.users.UserFindInput;
@@ -41,6 +42,21 @@ public class UserFindFuncImpl implements UserFindInput {
         Map<SearchParams, Object> params = SearchUtilities.checkParameters(searchParams);
         Integer nbUsers = this.userFindOutput.countAll(tenant.id(), organization.id(), params);
         List<User> users = this.userFindOutput.findAll(tenant.id(), organization.id(), params);
+        return new PaginatedResults<>(nbUsers,
+                nbUsers != null ? (nbUsers / (Integer) searchParams.get(SearchParams.PAGE_SIZE)) : 0,
+                users,
+                (Integer) searchParams.get(SearchParams.PAGE_SIZE),
+                (Integer) searchParams.get(SearchParams.PAGE_INDEX)
+        );
+    }
+
+    @Override
+    public PaginatedResults<UserList> filter(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) throws FunctionalException {
+        Tenant tenant = tenantFindInput.findById(tenantId);
+        Organization organization = organizationFindInput.findById(tenant.id(), organizationId);
+        Map<SearchParams, Object> params = SearchUtilities.checkParameters(searchParams);
+        Integer nbUsers = this.userFindOutput.countAll(tenant.id(), organization.id(), params);
+        List<UserList> users = this.userFindOutput.filter(tenant.id(), organization.id(), params);
         return new PaginatedResults<>(nbUsers,
                 nbUsers != null ? (nbUsers / (Integer) searchParams.get(SearchParams.PAGE_SIZE)) : 0,
                 users,

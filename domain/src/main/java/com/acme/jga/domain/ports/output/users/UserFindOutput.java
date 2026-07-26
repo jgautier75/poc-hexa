@@ -3,6 +3,7 @@ package com.acme.jga.domain.ports.output.users;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.user.User;
+import com.acme.jga.domain.model.user.UserList;
 import com.acme.jga.search.filtering.constants.SearchParams;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface UserFindOutput {
     boolean loginUsed(String login);
 
     User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, EntityMetaData searchKey);
+
+    List<UserList> filter(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams);
 }

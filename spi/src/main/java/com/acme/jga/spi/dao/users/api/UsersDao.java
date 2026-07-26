@@ -3,6 +3,7 @@ package com.acme.jga.spi.dao.users.api;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.user.User;
+import com.acme.jga.domain.model.user.UserList;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.batch.infrastructure.item.database.JdbcCursorItemReader;
 
@@ -35,5 +36,7 @@ public interface UsersDao {
     JdbcCursorItemReader<User> usersCursor();
 
     void updateDiacritic(Long id, String searchFirstName, String searchLastName);
+
+    List<UserList> filter(CompositeId tenantId, CompositeId organizationId, Map<SearchParams,Object> searchParams);
 
 }

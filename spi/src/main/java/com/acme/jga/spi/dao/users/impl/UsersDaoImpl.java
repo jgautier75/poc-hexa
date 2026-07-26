@@ -4,7 +4,9 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.metadata.UserMetaData;
 import com.acme.jga.domain.model.user.User;
+import com.acme.jga.domain.model.user.UserList;
 import com.acme.jga.search.filtering.constants.SearchParams;
+import com.acme.jga.spi.dao.extractors.UserFilterExtractor;
 import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.dao.users.api.UsersDao;
@@ -132,6 +134,18 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return UserExtractor.extractUser(rs, false, tenantId, organizationId);
+            }
+        });
+    }
+
+    @Override
+    public List<UserList> filter(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
+        String baseQuery = super.getQuery("user_filter");
+        QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams, false);
+        return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), new RowMapper<>() {
+            @Override
+            public UserList mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return UserFilterExtractor.extractUser(rs, false, tenantId, organizationId);
             }
         });
     }

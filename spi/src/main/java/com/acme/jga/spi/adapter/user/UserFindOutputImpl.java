@@ -3,6 +3,7 @@ package com.acme.jga.spi.adapter.user;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.user.User;
+import com.acme.jga.domain.model.user.UserList;
 import com.acme.jga.domain.ports.output.users.UserFindOutput;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import com.acme.jga.spi.dao.users.api.UsersDao;
@@ -47,6 +48,11 @@ public class UserFindOutputImpl implements UserFindOutput {
     @Override
     public User findBySingleCriteria(CompositeId tenantId, CompositeId organizationId, EntityMetaData searchKey) {
         return usersDao.findBySingleCriteria(tenantId, organizationId, searchKey);
+    }
+
+    @Override
+    public List<UserList> filter(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
+        return usersDao.filter(tenantId, organizationId, searchParams);
     }
 
 }
