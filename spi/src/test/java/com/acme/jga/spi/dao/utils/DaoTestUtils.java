@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DaoTestUtils {
-    public static final String POSTGRESQL_VERSION = "postgres:18.3";
+    public static final String POSTGRESQL_VERSION = "postgres:18.4";
     public static final String SPRING_DS_URL = "spring.datasource.url";
     public static final String SPRING_DS_USER = "spring.datasource.username";
     public static final String SPRING_DS_PASS = "spring.datasource.password";

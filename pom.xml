@@ -21,8 +21,8 @@
         <project-encoding>UTF-8</project-encoding>
         <lombok-version>1.18.46</lombok-version>
         <protobuf-version>4.33.2</protobuf-version>
-        <pg-driver-version>42.7.11</pg-driver-version>
-        <junit-jupiter-version>6.0.1</junit-jupiter-version>
+        <pg-driver-version>42.7.13</pg-driver-version>
+        <junit-jupiter-version>6.1.1</junit-jupiter-version>
         <kafka-main-version>8.2.1</kafka-main-version>
     </properties>
     <repositories>
