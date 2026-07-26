@@ -82,11 +82,11 @@ Use docker/setup_all.sh script to start the following "base" containers/services
 
 | Service             | Version | Port | Description                               |
 |---------------------|---------|------|-------------------------------------------|
-| postgreSQL          | 18.3    | 5434 | Spring app storage                        |
-| keycloak            | 26.6.1  | 7080 | Keycloak dev instance                     |
-| keycloak-postgreSQL | 18.3    | 5433 | Keycloak app storage                      |
-| openbao             | 2.5.2   | 8200 | OpenBao port                              |
-| akhq                | 0.27.0  | 8086 | GUI for kafka (topics, consumers, ...)    | 
+| postgreSQL          | 18.4    | 5434 | Spring app storage                        |
+| keycloak            | 26.7.0  | 7080 | Keycloak dev instance                     |
+| keycloak-postgreSQL | 18.4    | 5433 | Keycloak app storage                      |
+| openbao             | 2.5.5   | 8200 | OpenBao port                              |
+| akhq                | 0.27.1  | 8086 | GUI for kafka (topics, consumers, ...)    | 
 | zookeeper           | 7.9.5   | 2181 | Centralized service for kafka management  |
 | kafka               | 7.9.5   | 9092 | Kafka broker                              |
 | schema-registry     | 7.9.5   | 8085 | Schema registry (protobuf schemas storage |
