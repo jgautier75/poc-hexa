@@ -1,7 +1,7 @@
 package com.acme.jga.spi.dao.config;
 
 import com.acme.jga.spi.dao.organizations.impl.OrganizationsDaoImpl;
-import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
+import com.acme.jga.spi.dao.processors.ExpressionsHandler;
 import com.acme.jga.spi.dao.sectors.impl.SectorsDaoImpl;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
@@ -16,7 +16,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 
 @Configuration
 public class DatabaseTestConfig {
@@ -53,7 +52,7 @@ public class DatabaseTestConfig {
 
     @Bean
     public UsersDaoImpl usersDao(@Autowired DataSource dataSource, @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        return new UsersDaoImpl(dataSource, namedParameterJdbcTemplate, new ExpressionsProcessor());
+        return new UsersDaoImpl(dataSource, namedParameterJdbcTemplate, new ExpressionsHandler());
     }
 
     @Bean

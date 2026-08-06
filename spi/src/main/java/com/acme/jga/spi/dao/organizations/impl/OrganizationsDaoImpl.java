@@ -7,7 +7,7 @@ import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.organization.OrganizationStatus;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
-import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
+import com.acme.jga.spi.dao.processors.ExpressionsHandler;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.dao.extractors.OrganizationExtractor;
 import com.acme.jga.spi.dao.utils.*;
@@ -32,14 +32,14 @@ import java.util.Map;
 
 @Repository
 public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements OrganizationsDao {
-    private final ExpressionsProcessor expressionsProcessor;
+    private final ExpressionsHandler expressionsHandler;
     private static final Logger LOGGER = LoggerFactory.getLogger("OTEL");
     private final JdbcCursorItemReader<Organization> orgsCursor;
 
     public OrganizationsDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(namedParameterJdbcTemplate);
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"organizations.properties"});
-        this.expressionsProcessor = new ExpressionsProcessor();
+        this.expressionsHandler = new ExpressionsHandler();
         String selBase = super.getQuery("org_sel_base");
         orgsCursor = new JdbcCursorItemReader<>(dataSource, selBase, new RowMapper<Organization>() {
             @Override
@@ -212,7 +212,7 @@ public class OrganizationsDaoImpl extends AbstractJdbcDaoSupport implements Orga
 
         Map<String, Object> params = super.buildParams(whereClauses);
         Map<String, EntityMetaData> columnsDefsByAlias = OrganizationMetaData.columnsByAlias();
-        CompositeQuery compositeQuery = expressionsProcessor.buildFilterQuery(params, searchParams, columnsDefsByAlias);
+        CompositeQuery compositeQuery = expressionsHandler.buildFilterQuery(params, searchParams, columnsDefsByAlias);
 
         // Where clause, force filtering on tenant
         String whereClause = DaoConstants.WHERE_CLAUSE + super.buildSQLEqualsExpression(DaoConstants.FIELD_TENANT_ID, DaoConstants.P_TENANT_ID);
