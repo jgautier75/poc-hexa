@@ -1,8 +1,8 @@
 package com.acme.jga.rest.adapters.sectors.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.ports.input.sectors.SectorCreateInput;
-import com.acme.jga.domain.ports.input.sectors.SectorsListInput;
+import com.acme.jga.domain.ports.primary.sectors.SectorCreateInput;
+import com.acme.jga.domain.ports.primary.sectors.SectorsListInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.domain.shared.StreamUtil;

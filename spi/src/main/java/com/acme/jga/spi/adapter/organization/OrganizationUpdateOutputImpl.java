@@ -2,8 +2,8 @@ package com.acme.jga.spi.adapter.organization;
 
 import com.acme.jga.domain.model.event.EventData;
 import com.acme.jga.domain.model.organization.Organization;
-import com.acme.jga.domain.ports.output.events.EventOutput;
-import com.acme.jga.domain.ports.output.organizations.OrganizationUpdateOutput;
+import com.acme.jga.domain.ports.secondary.events.EventOutput;
+import com.acme.jga.domain.ports.secondary.organizations.OrganizationUpdateOutput;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,11 +2,11 @@ package com.acme.jga.domain.functions.tenants.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.ports.input.tenants.TenantDeleteInput;
-import com.acme.jga.domain.ports.input.tenants.TenantFindInput;
+import com.acme.jga.domain.ports.primary.tenants.TenantDeleteInput;
+import com.acme.jga.domain.ports.primary.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.ports.output.tenants.TenantDeleteOuput;
+import com.acme.jga.domain.ports.secondary.tenants.TenantDeleteOuput;
 
 @DomainService
 public class TenantDeleteFuncImpl implements TenantDeleteInput {

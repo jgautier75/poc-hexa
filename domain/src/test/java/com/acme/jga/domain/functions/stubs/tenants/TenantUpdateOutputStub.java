@@ -2,7 +2,7 @@ package com.acme.jga.domain.functions.stubs.tenants;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.ports.output.tenants.TenantUpdateOutput;
+import com.acme.jga.domain.ports.secondary.tenants.TenantUpdateOutput;
 
 import java.util.List;
 

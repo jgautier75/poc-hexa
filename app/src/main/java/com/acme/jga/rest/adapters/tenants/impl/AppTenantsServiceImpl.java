@@ -3,7 +3,7 @@ package com.acme.jga.rest.adapters.tenants.impl;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.ports.input.tenants.*;
+import com.acme.jga.domain.ports.primary.tenants.*;
 import com.acme.jga.domain.shared.StreamUtil;
 import com.acme.jga.rest.dtos.v1.tenants.TenantDisplayDto;
 import com.acme.jga.rest.dtos.v1.tenants.TenantDto;

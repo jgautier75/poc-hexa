@@ -2,7 +2,7 @@ package com.acme.jga.spi.adapter.tenant;
 
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.ports.output.tenants.TenantUpdateOutput;
+import com.acme.jga.domain.ports.secondary.tenants.TenantUpdateOutput;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

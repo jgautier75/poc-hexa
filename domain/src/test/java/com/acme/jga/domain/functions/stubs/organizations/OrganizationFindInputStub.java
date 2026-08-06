@@ -2,7 +2,7 @@ package com.acme.jga.domain.functions.stubs.organizations;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
-import com.acme.jga.domain.ports.input.organizations.OrganizationFindInput;
+import com.acme.jga.domain.ports.primary.organizations.OrganizationFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.PaginatedResults;
 import com.acme.jga.domain.model.organization.Organization;

@@ -1,10 +1,10 @@
 package com.acme.jga.rest.adapters.organizations.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.ports.input.organizations.OrganizationCreateInput;
-import com.acme.jga.domain.ports.input.organizations.OrganizationDeleteInput;
-import com.acme.jga.domain.ports.input.organizations.OrganizationFindInput;
-import com.acme.jga.domain.ports.input.organizations.OrganizationUpdateInput;
+import com.acme.jga.domain.ports.primary.organizations.OrganizationCreateInput;
+import com.acme.jga.domain.ports.primary.organizations.OrganizationDeleteInput;
+import com.acme.jga.domain.ports.primary.organizations.OrganizationFindInput;
+import com.acme.jga.domain.ports.primary.organizations.OrganizationUpdateInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.PaginatedResults;
 import com.acme.jga.domain.model.organization.Organization;

@@ -16,11 +16,11 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.user.User;
-import com.acme.jga.domain.ports.input.organizations.OrganizationFindInput;
-import com.acme.jga.domain.ports.input.tenants.TenantFindInput;
-import com.acme.jga.domain.ports.input.users.UserCreateInput;
-import com.acme.jga.domain.ports.output.users.UserCreateOutput;
-import com.acme.jga.domain.ports.output.users.UserFindOutput;
+import com.acme.jga.domain.ports.primary.organizations.OrganizationFindInput;
+import com.acme.jga.domain.ports.primary.tenants.TenantFindInput;
+import com.acme.jga.domain.ports.primary.users.UserCreateInput;
+import com.acme.jga.domain.ports.secondary.users.UserCreateOutput;
+import com.acme.jga.domain.ports.secondary.users.UserFindOutput;
 import com.acme.jga.domain.security.holders.ContextUserHolder;
 
 import java.util.List;

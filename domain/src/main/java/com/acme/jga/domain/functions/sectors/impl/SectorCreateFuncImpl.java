@@ -5,15 +5,15 @@ import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.exceptions.Scope;
 import com.acme.jga.domain.i18n.BundleFactory;
-import com.acme.jga.domain.ports.input.organizations.OrganizationFindInput;
-import com.acme.jga.domain.ports.input.sectors.SectorFindInput;
-import com.acme.jga.domain.ports.input.tenants.TenantFindInput;
+import com.acme.jga.domain.ports.primary.organizations.OrganizationFindInput;
+import com.acme.jga.domain.ports.primary.sectors.SectorFindInput;
+import com.acme.jga.domain.ports.primary.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.organization.Organization;
 import com.acme.jga.domain.model.sector.Sector;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.ports.input.sectors.SectorCreateInput;
-import com.acme.jga.domain.ports.output.sectors.SectorCreateOutput;
+import com.acme.jga.domain.ports.primary.sectors.SectorCreateInput;
+import com.acme.jga.domain.ports.secondary.sectors.SectorCreateOutput;
 
 @DomainService
 public class SectorCreateFuncImpl implements SectorCreateInput {

@@ -2,7 +2,7 @@ package com.acme.jga.domain.functions.stubs.tenants;
 
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.ports.output.tenants.TenantFindOutput;
+import com.acme.jga.domain.ports.secondary.tenants.TenantFindOutput;
 
 import java.util.List;
 

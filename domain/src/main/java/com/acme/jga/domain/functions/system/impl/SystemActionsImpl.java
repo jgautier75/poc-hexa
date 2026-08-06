@@ -2,9 +2,9 @@ package com.acme.jga.domain.functions.system.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.events.EventPublisher;
-import com.acme.jga.domain.ports.input.system.SystemActionsInput;
-import com.acme.jga.domain.ports.output.system.SystemOrganizationsMigrate;
-import com.acme.jga.domain.ports.output.system.SystemUsersMigrate;
+import com.acme.jga.domain.ports.primary.system.SystemActionsInput;
+import com.acme.jga.domain.ports.secondary.system.SystemOrganizationsMigrate;
+import com.acme.jga.domain.ports.secondary.system.SystemUsersMigrate;
 
 @DomainService
 public class SystemActionsImpl implements SystemActionsInput {

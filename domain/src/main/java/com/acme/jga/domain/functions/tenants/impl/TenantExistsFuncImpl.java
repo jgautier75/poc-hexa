@@ -3,8 +3,8 @@ package com.acme.jga.domain.functions.tenants.impl;
 import com.acme.jga.domain.annotations.DomainService;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.ports.output.tenants.TenantExistsInput;
-import com.acme.jga.domain.ports.output.tenants.TenantExistsOutput;
+import com.acme.jga.domain.ports.secondary.tenants.TenantExistsInput;
+import com.acme.jga.domain.ports.secondary.tenants.TenantExistsOutput;
 
 @DomainService
 public class TenantExistsFuncImpl implements TenantExistsInput {

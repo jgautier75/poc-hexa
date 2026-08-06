@@ -1,7 +1,7 @@
 package com.acme.jga.domain.functions.stubs.tenants;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.domain.ports.input.tenants.TenantFindInput;
+import com.acme.jga.domain.ports.primary.tenants.TenantFindInput;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 

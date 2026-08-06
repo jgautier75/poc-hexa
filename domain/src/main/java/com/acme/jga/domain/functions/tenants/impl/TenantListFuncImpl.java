@@ -1,9 +1,9 @@
 package com.acme.jga.domain.functions.tenants.impl;
 
 import com.acme.jga.domain.annotations.DomainService;
-import com.acme.jga.domain.ports.input.tenants.TenantListInput;
+import com.acme.jga.domain.ports.primary.tenants.TenantListInput;
 import com.acme.jga.domain.model.tenant.Tenant;
-import com.acme.jga.domain.ports.output.tenants.TenantListOutput;
+import com.acme.jga.domain.ports.secondary.tenants.TenantListOutput;
 
 import java.util.List;
 

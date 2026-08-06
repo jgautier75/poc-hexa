@@ -2,7 +2,7 @@ package com.acme.jga.spi.adapter.sector;
 
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.sector.Sector;
-import com.acme.jga.domain.ports.output.sectors.SectorCreateOutput;
+import com.acme.jga.domain.ports.secondary.sectors.SectorCreateOutput;
 import com.acme.jga.spi.dao.sectors.api.SectorsDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,10 +2,10 @@ package com.acme.jga.spi.adapter.organization;
 
 import com.acme.jga.domain.model.event.EventData;
 import com.acme.jga.domain.model.generic.CompositeId;
-import com.acme.jga.domain.ports.output.events.EventOutput;
-import com.acme.jga.domain.ports.output.organizations.OrganizationDeleteOutput;
-import com.acme.jga.domain.ports.output.sectors.SectorDeleteOutput;
-import com.acme.jga.domain.ports.output.users.UserDeleteOutput;
+import com.acme.jga.domain.ports.secondary.events.EventOutput;
+import com.acme.jga.domain.ports.secondary.organizations.OrganizationDeleteOutput;
+import com.acme.jga.domain.ports.secondary.sectors.SectorDeleteOutput;
+import com.acme.jga.domain.ports.secondary.users.UserDeleteOutput;
 import com.acme.jga.spi.dao.organizations.api.OrganizationsDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

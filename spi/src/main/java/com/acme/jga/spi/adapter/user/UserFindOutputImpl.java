@@ -4,7 +4,7 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.user.User;
 import com.acme.jga.domain.model.user.UserList;
-import com.acme.jga.domain.ports.output.users.UserFindOutput;
+import com.acme.jga.domain.ports.secondary.users.UserFindOutput;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import com.acme.jga.spi.dao.users.api.UsersDao;
 import org.springframework.stereotype.Service;

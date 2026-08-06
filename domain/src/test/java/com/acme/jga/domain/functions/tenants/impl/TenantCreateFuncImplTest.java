@@ -6,7 +6,7 @@ import com.acme.jga.domain.functions.stubs.tenants.TenantExistsFuncStub;
 import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.tenant.Tenant;
 import com.acme.jga.domain.model.tenant.TenantStatus;
-import com.acme.jga.domain.ports.output.tenants.TenantCreateOutput;
+import com.acme.jga.domain.ports.secondary.tenants.TenantCreateOutput;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
