@@ -3,7 +3,7 @@ package com.acme.jga.rest.controllers;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.rest.dtos.v1.sectors.SectorDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
-import com.acme.jga.adapters.rest.sectors.impl.api.AppSectorsService;
+import com.acme.jga.adapters.rest.sectors.api.AppSectorsService;
 import com.acme.jga.rest.utils.WebApiVersions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

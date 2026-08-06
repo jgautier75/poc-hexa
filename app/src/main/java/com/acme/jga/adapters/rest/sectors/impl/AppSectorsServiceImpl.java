@@ -1,4 +1,4 @@
-package com.acme.jga.adapters.rest.sectors.impl.impl;
+package com.acme.jga.adapters.rest.sectors.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.domain.ports.primary.sectors.SectorCreateInput;
@@ -9,7 +9,7 @@ import com.acme.jga.domain.shared.StreamUtil;
 import com.acme.jga.rest.dtos.v1.sectors.SectorDisplayDto;
 import com.acme.jga.rest.dtos.v1.sectors.SectorDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
-import com.acme.jga.adapters.rest.sectors.impl.api.AppSectorsService;
+import com.acme.jga.adapters.rest.sectors.api.AppSectorsService;
 import org.springframework.stereotype.Service;
 
 @Service
