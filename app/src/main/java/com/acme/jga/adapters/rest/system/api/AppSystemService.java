@@ -1,4 +1,4 @@
-package com.acme.jga.rest.adapters.system.api;
+package com.acme.jga.adapters.rest.system.api;
 
 import com.acme.jga.rest.dtos.v1.versions.ApiVersionList;
 

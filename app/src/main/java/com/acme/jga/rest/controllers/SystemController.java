@@ -1,6 +1,6 @@
 package com.acme.jga.rest.controllers;
 
-import com.acme.jga.rest.adapters.system.api.AppSystemService;
+import com.acme.jga.adapters.rest.system.api.AppSystemService;
 import com.acme.jga.rest.dtos.v1.versions.ApiVersionList;
 import com.acme.jga.rest.utils.WebApiVersions;
 import org.springframework.http.HttpStatus;

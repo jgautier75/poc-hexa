@@ -1,7 +1,7 @@
 package com.acme.jga.rest.controllers;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
-import com.acme.jga.rest.adapters.users.api.AppUsersService;
+import com.acme.jga.adapters.rest.users.api.AppUsersService;
 import com.acme.jga.rest.dtos.v1.kcspi.UserOidcDto;
 import com.acme.jga.rest.utils.WebApiVersions;
 import org.springframework.http.HttpStatus;

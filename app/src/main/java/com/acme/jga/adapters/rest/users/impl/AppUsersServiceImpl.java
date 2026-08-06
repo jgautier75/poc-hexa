@@ -1,4 +1,4 @@
-package com.acme.jga.rest.adapters.users.impl;
+package com.acme.jga.adapters.rest.users.impl;
 
 import com.acme.jga.domain.exceptions.FunctionalErrors;
 import com.acme.jga.domain.exceptions.FunctionalException;
@@ -14,7 +14,7 @@ import com.acme.jga.domain.model.generic.CompositeId;
 import com.acme.jga.domain.model.generic.PaginatedResults;
 import com.acme.jga.domain.model.metadata.EntityMetaData;
 import com.acme.jga.domain.model.user.User;
-import com.acme.jga.rest.adapters.users.api.AppUsersService;
+import com.acme.jga.adapters.rest.users.api.AppUsersService;
 import com.acme.jga.rest.dtos.shared.Pagination;
 import com.acme.jga.rest.dtos.v1.kcspi.UserOidcDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
