@@ -12,4 +12,4 @@ RUN mkdir -p /app/ && apk add --no-cache curl jq
 COPY --from=customjre /app/customjre /app/customjre
 COPY --from=customjre /app/app.jar /app/app.jar
 ENV JAVA_HOME=/app/customjre
-CMD ["/app/customjre/bin/java","-Djava.security.egd=file:/dev/./urandom","-jar","/app/app.jar"]
+CMD ["/app/customjre/bin/java","-Xms64M","-Xmx128M","-XX:+UseG1GC","-XX:+UseCompactObjectHeaders","-Djava.security.egd=file:/dev/./urandom","-jar","/app/app.jar"]
