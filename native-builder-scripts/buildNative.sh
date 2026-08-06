@@ -140,7 +140,10 @@ downloadGraalVM25(){
   echo "📦 Extracting..."
   tar -xzf "$JDK_ARCHIVE"
 
-  DIR=$(ls -d graalvm-community-openjdk-25* | head -n 1)
+  echo "Current directory"
+  ls -al
+
+  DIR=$(ls -d graalvm-community-* | head -n 1)
 
   GRAALVM_25_NAME=$DIR
 }
