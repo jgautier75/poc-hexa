@@ -27,10 +27,18 @@ import java.util.function.Predicate;
 public class ExpressionsHandler {
 
     public AbstractJdbcDaoSupport.CompositeQuery buildFilterQuery(Map<String, Object> sqlParams, Map<SearchParams, Object> searchParams, Map<String, EntityMetaData> domainEntityMetaData) {
-        ParsingResult parsingResult = (ParsingResult) searchParams.get(SearchParams.PARSING_RESULTS);
-        Predicate<ParsingResult> hasExpressions = (pr) -> !CollectionUtils.isEmpty(pr.getExpressions());
-        StringBuilder sqlQuery = new StringBuilder();
         AbstractJdbcDaoSupport.PaginationResult paginationResult = computePagination(searchParams, domainEntityMetaData);
+        StringBuilder sqlQuery = new StringBuilder();
+        if (searchParams==null || searchParams.isEmpty()) {
+            return new AbstractJdbcDaoSupport.CompositeQuery(false, sqlQuery.toString(), sqlParams, paginationResult.pagination(), paginationResult.orderBy());
+        }
+
+        ParsingResult parsingResult = (ParsingResult) searchParams.get(SearchParams.PARSING_RESULTS);
+        if (searchParams.get(SearchParams.PARSING_RESULTS) ==null){
+            return new AbstractJdbcDaoSupport.CompositeQuery(false, sqlQuery.toString(), sqlParams, paginationResult.pagination(), paginationResult.orderBy());
+        }
+
+        Predicate<ParsingResult> hasExpressions = (pr) -> !CollectionUtils.isEmpty(pr.getExpressions());
         if (!hasExpressions.test(parsingResult)) {
             return new AbstractJdbcDaoSupport.CompositeQuery(false, sqlQuery.toString(), sqlParams, paginationResult.pagination(), paginationResult.orderBy());
         }
