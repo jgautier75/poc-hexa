@@ -46,12 +46,8 @@ public class PaginationBuilder {
         }
         String propertyName = orderByParam.substring(1);
         EntityMetaData propertyMetadata = metadata.get(propertyName);
-        if (propertyMetadata == null) {
-            throw invalidProperty(
-                    "Unknown orderBy named [" + propertyName + "]"
-            );
+        if (propertyMetadata == null) {throw invalidProperty("Unknown orderBy named [" + propertyName + "]");
         }
-
         String sqlDirection = DaoConstants.ORDER_ASC_SIGN.equals(direction) ? DaoConstants.ORDER_ASC_KEYWORD : DaoConstants.ORDER_DESC_KEYWORD;
         return DaoConstants.ORDER_BY + propertyMetadata.getKey() + sqlDirection;
     }
