@@ -7,7 +7,7 @@ import com.acme.jga.domain.model.user.User;
 import com.acme.jga.domain.model.user.UserList;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import com.acme.jga.spi.dao.extractors.UserFilterExtractor;
-import com.acme.jga.spi.dao.processors.ExpressionsHandler;
+import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
 import com.acme.jga.spi.dao.users.api.UsersDao;
 import com.acme.jga.spi.dao.extractors.UserExtractor;
@@ -30,12 +30,12 @@ import java.util.*;
 
 @Repository
 public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
-    private final ExpressionsHandler expressionsHandler;
+    private final ExpressionsProcessor expressionsProcessor;
     private final JdbcCursorItemReader<User> usersCursor;
 
-    public UsersDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate namedParameterJdbcTemplate, ExpressionsHandler expressionsHandler) {
+    public UsersDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate namedParameterJdbcTemplate, ExpressionsProcessor expressionsProcessor) {
         super(namedParameterJdbcTemplate);
-        this.expressionsHandler = expressionsHandler;
+        this.expressionsProcessor = expressionsProcessor;
         super.loadQueryFilePath(TenantsDaoImpl.class.getClassLoader(), new String[]{"users.properties"});
         String userSelBase = super.getQuery("user_sel_base");
         usersCursor = new JdbcCursorItemReader<>(dataSource, userSelBase, new RowMapper<User>() {
@@ -299,7 +299,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
 
         Map<String, Object> params = super.buildParams(whereClauses);
         Map<String, EntityMetaData> columnsDefsByAlias = UserMetaData.columnsByAlias();
-        CompositeQuery compositeQuery = expressionsHandler.buildFilterQuery(params, searchParams, columnsDefsByAlias);
+        CompositeQuery compositeQuery = expressionsProcessor.buildFilterQuery(params, searchParams, columnsDefsByAlias);
         params.put(DaoConstants.P_TENANT_ID, tenantId.internalId());
         params.put(DaoConstants.P_ORG_ID, organizationId.internalId());
 

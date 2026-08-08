@@ -1,7 +1,10 @@
 package com.acme.jga.spi.dao.config;
 
 import com.acme.jga.spi.dao.organizations.impl.OrganizationsDaoImpl;
-import com.acme.jga.spi.dao.processors.ExpressionsHandler;
+import com.acme.jga.spi.dao.processors.ExpressionsProcessor;
+import com.acme.jga.spi.dao.processors.FilterSqlBuilder;
+import com.acme.jga.spi.dao.processors.PaginationBuilder;
+import com.acme.jga.spi.dao.processors.PropertyMetadataResolver;
 import com.acme.jga.spi.dao.sectors.impl.SectorsDaoImpl;
 import com.acme.jga.spi.dao.tenants.api.TenantsDao;
 import com.acme.jga.spi.dao.tenants.impl.TenantsDaoImpl;
@@ -41,8 +44,10 @@ public class DatabaseTestConfig {
     }
 
     @Bean
-    public OrganizationsDaoImpl organizationsDao(@Autowired DataSource dataSource, @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        return new OrganizationsDaoImpl(dataSource,namedParameterJdbcTemplate);
+    public OrganizationsDaoImpl organizationsDao(@Autowired DataSource dataSource,
+                                                 @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                                                 @Autowired ExpressionsProcessor expressionsProcessor) {
+        return new OrganizationsDaoImpl(dataSource, namedParameterJdbcTemplate, expressionsProcessor);
     }
 
     @Bean
@@ -51,8 +56,30 @@ public class DatabaseTestConfig {
     }
 
     @Bean
-    public UsersDaoImpl usersDao(@Autowired DataSource dataSource, @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        return new UsersDaoImpl(dataSource, namedParameterJdbcTemplate, new ExpressionsHandler());
+    public PaginationBuilder paginationBuilder() {
+        return new PaginationBuilder();
+    }
+
+    @Bean
+    public PropertyMetadataResolver propertyMetadataResolver() {
+        return new PropertyMetadataResolver();
+    }
+
+    @Bean
+    public FilterSqlBuilder filterSqlBuilder(@Autowired PropertyMetadataResolver propertyMetadataResolver) {
+        return new FilterSqlBuilder(propertyMetadataResolver);
+    }
+
+    @Bean
+    public ExpressionsProcessor expressionsHandler(@Autowired FilterSqlBuilder filterSqlBuilder, @Autowired PaginationBuilder paginationBuilder) {
+        return new ExpressionsProcessor(filterSqlBuilder, paginationBuilder);
+    }
+
+    @Bean
+    public UsersDaoImpl usersDao(@Autowired DataSource dataSource,
+                                 @Autowired NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                                 @Autowired ExpressionsProcessor expressionsProcessor) {
+        return new UsersDaoImpl(dataSource, namedParameterJdbcTemplate, expressionsProcessor);
     }
 
     @Bean
