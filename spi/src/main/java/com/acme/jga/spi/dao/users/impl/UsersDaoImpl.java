@@ -139,7 +139,9 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     }
 
     @Override
-    public List<UserList> filter(CompositeId tenantId, CompositeId organizationId, Map<SearchParams, Object> searchParams) {
+    public List<UserList> filter(@ObservationKeyValue(key = "tenantId") CompositeId tenantId,
+                                 @ObservationKeyValue(key = "organizationId") CompositeId organizationId,
+                                 @ObservationKeyValue(key = "searchParams") Map<SearchParams, Object> searchParams) {
         String baseQuery = super.getQuery("user_filter");
         QueryAndParams queryAndParams = buildFilterQuery(baseQuery, tenantId, organizationId, searchParams, false);
         return super.getNamedParameterJdbcTemplate().query(queryAndParams.query(), queryAndParams.params(), new RowMapper<>() {
