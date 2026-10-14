@@ -25,7 +25,7 @@ public class KeycloakTest {
     private static final String REALM_URI = "/realms/myrealm";
 
     @Container
-    KeycloakContainer KEYCLOAK_CONTAINER = new KeycloakContainer("quay.io/keycloak/keycloak:26.6.1")
+    KeycloakContainer KEYCLOAK_CONTAINER = new KeycloakContainer("quay.io/keycloak/keycloak:26.8.1")
             .withAdminPassword("admin")
             .withAdminUsername("admin")
             .withRealmImportFiles("/myrealm-realm.json", "/myrealm-users-0.json")
