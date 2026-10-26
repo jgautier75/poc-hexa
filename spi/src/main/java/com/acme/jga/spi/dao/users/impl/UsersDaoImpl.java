@@ -15,6 +15,7 @@ import com.acme.jga.spi.dao.extractors.UserOidcExtractor;
 import com.acme.jga.spi.dao.utils.*;
 import io.micrometer.observation.annotation.ObservationKeyValue;
 import io.micrometer.observation.annotation.Observed;
+import io.micrometer.observation.aop.Cardinality;
 import org.springframework.batch.infrastructure.item.database.JdbcCursorItemReader;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -125,7 +126,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
 
     @Observed(name = "user_dao_find_all")
     @Override
-    public List<User> findAll(@ObservationKeyValue(key = "tenantId") CompositeId tenantId,
+    public List<User> findAll(@ObservationKeyValue(key = "tenantId", cardinality = Cardinality.HIGH) CompositeId tenantId,
                               @ObservationKeyValue(key = "organizationId") CompositeId organizationId,
                               @ObservationKeyValue(key = "searchParams") Map<SearchParams, Object> searchParams) {
         String baseQuery = super.getQuery("user_sel_base");
@@ -139,6 +140,7 @@ public class UsersDaoImpl extends AbstractJdbcDaoSupport implements UsersDao {
     }
 
     @Override
+    @Observed
     public List<UserList> filter(@ObservationKeyValue(key = "tenantId") CompositeId tenantId,
                                  @ObservationKeyValue(key = "organizationId") CompositeId organizationId,
                                  @ObservationKeyValue(key = "searchParams") Map<SearchParams, Object> searchParams) {
