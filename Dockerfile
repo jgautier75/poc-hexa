@@ -26,7 +26,7 @@ RUN chmod u+w /app/errors
 RUN chmod u+w /app/logs
 RUN chown appusr /app/errors
 RUN chown appusr /app/logs
-COPY --from=nativebuilder /java-sources/com.acme.jga.PocApplication /app/poc-hexa-app
+COPY --from=nativebuilder /java-sources/app/target/app /app/poc-hexa-app
 RUN chmod u+x /app/poc-hexa-app
 USER appusr
 ENTRYPOINT ["/app/poc-hexa-app"]

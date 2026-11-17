@@ -39,7 +39,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>1.1.17</version>
+                        <version>1.1.18</version>
                         <configuration>
                             <debug>true</debug>
                         </configuration>
@@ -52,7 +52,7 @@
                                 <configuration>
                                     <mainClass>com.acme.jga.PocApplication</mainClass>
                                     <buildArgs>
-                                        <arg>--enable-sbom=false</arg>
+                                        <!--<arg>&#45;&#45;enable-sbom=false</arg>-->
                                         <arg>-H:Class=com.acme.jga.PocApplication</arg>
                                         <!--<arg>&#45;&#45;emit build-report</arg>
                                         <arg>-O0</arg>
@@ -100,6 +100,11 @@
             <version>${project.parent.version}</version>
         </dependency>
         <!--  TECHNICAL DEPENDENCIES-->
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-logback-appender-1.0</artifactId>
+            <version>2.27.0-alpha</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
@@ -176,10 +181,14 @@
             <artifactId>spring-boot-starter-aspectj</artifactId>
             <version>4.1.2</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
-            <artifactId>opentelemetry-logback-appender-1.0</artifactId>
+            <artifactId>opentelemetry-log4j-appender-2.17</artifactId>
             <version>2.27.0-alpha</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

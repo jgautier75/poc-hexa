@@ -43,7 +43,7 @@ downloadMaven(){
   SHA_URL="$URL.sha512"
   CHECKSUM_FILE=${SHA_URL##*/}
 
-  echo "⬇️ Donwload $ARCHIVE ..."
+  echo "⬇️ Download $ARCHIVE ..."
   curl -o "$MAVEN_ARCHIVE" "$URL"
   curl -o "$CHECKSUM_FILE" "$SHA_URL"
 
