@@ -20,7 +20,7 @@ Code is organized in a hexagonal architecture style where:
 Standard REST application relying on:
 
 - Java 25 ([Graalvm](https://www.graalvm.org/downloads/) for native images )
-- Sprint boot (4.0.x)
+- Sprint boot (4.01.x)
 - PostgreSQL (18.x) for persistence
 - Liquibase for rdbms schema versions management
 - Spring JDBC for persistence (No f****** ORM)
@@ -43,12 +43,12 @@ Start using the following order:
 All docker images versions and applications properties are centralized in app.env file:
 
 ```
-DOCKER_UBI9_VERSION=9.7
-DOCKER_OPENBAO_VERSION=2.5.2
-DOCKER_POSTGRESQL=18.3
-DOCKER_KEYCLOAK_VERSION=26.6.1
-DOCKER_AKHQ_VERSION=0.27.0
-DOCKER_CONFLUENT_VERSION=7.9.6
+DOCKER_UBI9_VERSION=9.9
+DOCKER_OPENBAO_VERSION=2.7.2
+DOCKER_POSTGRESQL=18.7
+DOCKER_KEYCLOAK_VERSION=26.8.2
+DOCKER_AKHQ_VERSION=0.29.0
+DOCKER_CONFLUENT_VERSION=7.9.11
 OPENBAO_TOKEN=dev-root-token
 OPENBAO_ROOT_SECRETS=dev-secrets
 OPENBAO_CREDENTIALS=creds
@@ -82,14 +82,14 @@ Use docker/setup_all.sh script to start the following "base" containers/services
 
 | Service             | Version | Port | Description                               |
 |---------------------|---------|------|-------------------------------------------|
-| postgreSQL          | 18.4    | 5434 | Spring app storage                        |
-| keycloak            | 26.7.0  | 7080 | Keycloak dev instance                     |
-| keycloak-postgreSQL | 18.4    | 5433 | Keycloak app storage                      |
-| openbao             | 2.5.5   | 8200 | OpenBao port                              |
-| akhq                | 0.27.1  | 8086 | GUI for kafka (topics, consumers, ...)    | 
-| zookeeper           | 7.9.5   | 2181 | Centralized service for kafka management  |
-| kafka               | 7.9.5   | 9092 | Kafka broker                              |
-| schema-registry     | 7.9.5   | 8085 | Schema registry (protobuf schemas storage |
+| postgreSQL          | 18.7    | 5434 | Spring app storage                        |
+| keycloak            | 26.8.2  | 7080 | Keycloak dev instance                     |
+| keycloak-postgreSQL | 18.7    | 5433 | Keycloak app storage                      |
+| openbao             | 2.7.2   | 8200 | OpenBao port                              |
+| akhq                | 0.29.0  | 8086 | GUI for kafka (topics, consumers, ...)    | 
+| zookeeper           | 7.9.11  | 2181 | Centralized service for kafka management  |
+| kafka               | 7.9.11  | 9092 | Kafka broker                              |
+| schema-registry     | 7.9.11  | 8085 | Schema registry (protobuf schemas storage |
 
 Use shutdown_all.sh script to stop all containers.
 
