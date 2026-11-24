@@ -52,7 +52,7 @@
                                 <configuration>
                                     <mainClass>com.acme.jga.PocApplication</mainClass>
                                     <buildArgs>
-                                        <!--<arg>&#45;&#45;enable-sbom=false</arg>-->
+                                        <arg>&#45;&#45;enable-sbom=false</arg>
                                         <arg>-H:Class=com.acme.jga.PocApplication</arg>
                                         <!--<arg>&#45;&#45;emit build-report</arg>
                                         <arg>-O0</arg>
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-logback-appender-1.0</artifactId>
-            <version>2.27.0-alpha</version>
+            <version>2.34.0-alpha</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -190,6 +190,11 @@
             <artifactId>spring-boot-micrometer-observation</artifactId>
             <version>4.2.0</version>
         </dependency>
+        <!--<dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-api</artifactId>
+            <version>1.66.0</version>
+        </dependency>-->
         <!-- TEST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
