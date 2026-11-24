@@ -20,7 +20,7 @@ Code is organized in a hexagonal architecture style where:
 Standard REST application relying on:
 
 - Java 25 ([Graalvm](https://www.graalvm.org/downloads/) for native images )
-- Sprint boot (4.01.x)
+- Sprint boot (4.2.x)
 - PostgreSQL (18.x) for persistence
 - Liquibase for rdbms schema versions management
 - Spring JDBC for persistence (No f****** ORM)
@@ -32,6 +32,8 @@ Standard REST application relying on:
 INFO: This application relies on JDK 25 for application but JDK 21 for keycloak spi.
 
 Thus, ensure both JDK 21 & 25 are installed and maven toolchain is set up. (see maven directory)
+
+**Warning** : Use latest LTS version of Graalvm graalvm-jdk-25.0.4+7.1 because reflect-config.json changed between minor versions of jdk 25 
 
 ## Docker
 
