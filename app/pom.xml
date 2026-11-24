@@ -54,6 +54,7 @@
                                     <buildArgs>
                                         <arg>&#45;&#45;enable-sbom=false</arg>
                                         <arg>-H:Class=com.acme.jga.PocApplication</arg>
+					                    <!--<arg>&#45;&#45;initialize-at-build-time=java.io.ProxyingConsole</arg>-->
                                         <!--<arg>&#45;&#45;emit build-report</arg>
                                         <arg>-O0</arg>
                                         <arg>-g</arg>
