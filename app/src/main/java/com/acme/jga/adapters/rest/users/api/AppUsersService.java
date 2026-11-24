@@ -3,6 +3,7 @@ package com.acme.jga.adapters.rest.users.api;
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.rest.dtos.v1.kcspi.UserOidcDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
+import com.acme.jga.rest.dtos.v1.users.UserDetailsDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
 import com.acme.jga.rest.dtos.v1.users.UserDto;
 import com.acme.jga.rest.dtos.v1.users.UserUpdateDto;
@@ -23,4 +24,5 @@ public interface AppUsersService {
 
     void migrateDiacritic();
 
+    UserDetailsDto findDetails(String tenantUid, String organizationUid, String userUid) throws FunctionalException;
 }

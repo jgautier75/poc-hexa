@@ -18,10 +18,7 @@ import com.acme.jga.adapters.rest.users.api.AppUsersService;
 import com.acme.jga.rest.dtos.shared.Pagination;
 import com.acme.jga.rest.dtos.v1.kcspi.UserOidcDto;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
-import com.acme.jga.rest.dtos.v1.users.UserDisplayDto;
-import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
-import com.acme.jga.rest.dtos.v1.users.UserDto;
-import com.acme.jga.rest.dtos.v1.users.UserUpdateDto;
+import com.acme.jga.rest.dtos.v1.users.*;
 import com.acme.jga.search.filtering.constants.SearchParams;
 import org.springframework.stereotype.Service;
 
@@ -91,5 +88,21 @@ public class AppUsersServiceImpl implements AppUsersService {
     @Override
     public void migrateDiacritic() {
 
+    }
+
+    @Override
+    public UserDetailsDto findDetails(String tenantUid, String organizationUid, String userUid) throws FunctionalException {
+        final User user = this.userFindInput.findById(new CompositeId(null, tenantUid), new CompositeId(null, organizationUid), new CompositeId(null, userUid));
+        return Optional.ofNullable(user).map(u ->
+                        new UserDetailsDto(
+                                user.id().externalId(),
+                                user.login(),
+                                user.firstName(),
+                                user.lastName(),
+                                user.email(),
+                                user.status()
+                        )
+                )
+                .orElseThrow(() -> new WrappedFunctionalException(new FunctionalException(Scope.USER.name(), FunctionalErrors.NOT_FOUND.name(), BundleFactory.getMessage("user_not_found", userUid))));
     }
 }

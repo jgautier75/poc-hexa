@@ -2,6 +2,7 @@ package com.acme.jga.rest.controllers;
 
 import com.acme.jga.domain.exceptions.FunctionalException;
 import com.acme.jga.rest.dtos.v1.tenants.UidDto;
+import com.acme.jga.rest.dtos.v1.users.UserDetailsDto;
 import com.acme.jga.rest.dtos.v1.users.UserDisplayListDto;
 import com.acme.jga.rest.dtos.v1.users.UserDto;
 import com.acme.jga.rest.dtos.v1.users.UserUpdateDto;
@@ -62,6 +63,13 @@ public class UsersController {
                                            @PathVariable("userUid") String userUid) throws FunctionalException {
         appUsersService.delete(tenantUid, orgUid, userUid);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = WebApiVersions.UsersResourceVersion.WITH_UID)
+    public ResponseEntity<UserDetailsDto> getDetails(@PathVariable("tenantUid") String tenantUid,
+                                                     @PathVariable(value = "orgUid") String orgUid,
+                                                     @PathVariable("userUid") String userUid) throws FunctionalException {
+        return new ResponseEntity<>(appUsersService.findDetails(tenantUid, orgUid, userUid), HttpStatus.OK);
     }
 
 }
