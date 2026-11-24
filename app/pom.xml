@@ -190,11 +190,6 @@
             <artifactId>spring-boot-micrometer-observation</artifactId>
             <version>4.2.0</version>
         </dependency>
-        <!--<dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-api</artifactId>
-            <version>1.66.0</version>
-        </dependency>-->
         <!-- TEST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
